@@ -11,6 +11,8 @@
 #include <thread>
 #include <sstream>
 #include <mmsystem.h>
+#include <chrono>
+#include <iomanip>
 
 using namespace std;
 
@@ -37,6 +39,8 @@ using namespace std;
 struct Info {
     string name;
     int diem;
+    string day;
+    string time;
 
     // Constructor
     Info() : diem(0) {}
