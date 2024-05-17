@@ -1,0 +1,20 @@
+﻿
+		██╗███╗   ██╗███████╗████████╗██████╗ ██╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗
+		██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║
+		██║██╔██╗ ██║███████╗   ██║   ██████╔╝██║   ██║██║        ██║   ██║██║   ██║██╔██╗ ██║
+		██║██║╚██╗██║╚════██║   ██║   ██╔══██╗██║   ██║██║        ██║   ██║██║   ██║██║╚██╗██║
+		██║██║ ╚████║███████║   ██║   ██║  ██║╚██████╔╝╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║
+		╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+                                                                                       		
+		
+		
+		                1.Use the arrow keys a,w,d,s on your keyboard to direct the 
+		                snake around the screen and eat the food. 
+
+		                2.The more food the snake eats, the longer it 
+		                will grow and the more points you'll score.
+
+		                3.If the snake eats enough, it can pass to the next
+		                stage. There are five stages.
+
+		                4.Be careful not to direct the snake into its own tail!

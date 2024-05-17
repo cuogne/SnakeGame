@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\FileText">
+      <UniqueIdentifier>{3047bf58-8753-41f6-9fec-3f81c8138ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sound">
+      <UniqueIdentifier>{efa52db1-25a5-460f-bb82-d29b6e2e0587}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FunctionsGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HeaderGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Sound\pop.wav">
+      <Filter>Source Files\Sound</Filter>
+    </Media>
+    <Media Include="Sound\soundtrack.wav">
+      <Filter>Source Files\Sound</Filter>
+    </Media>
+    <Media Include="Sound\click1.wav">
+      <Filter>Source Files\Sound</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="FileText\about.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\guide.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\highscore.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\leaderboard.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\logo.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\logosnake.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\ready.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\setting.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\SnakePic.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\youlose.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
