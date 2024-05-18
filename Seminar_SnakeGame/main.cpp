@@ -6,10 +6,25 @@ int main() {
     FixConsoleWindow(); // fix phong to cua so
     ShowScrollbar(FALSE); // tat thanh cuon
 
-    displayImageSnake("FileText//SnakePic.txt");
-    system("cls");
+    setConsoleBackgroundColor(7);
+    SetColor(7);
+
+    int** snakePic = new int* [100];
+    for (int i = 0; i < 100; ++i)
+        snakePic[i] = new int[100];
+
+    
+    readImageFromFile(snakePic, 21, 21, "FileText//SnakePic.txt", 15);
+    displayImage(snakePic, 21, 21, 38, 5);
+
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
     showStartMenu();
+
+    for (int i = 0; i < 100; i++) {
+        delete[] snakePic[i];
+    }
+    delete[] snakePic;
     
     //printTextUTF8("check.txt", 20, 3, 233);
     // ----------------------------------------------------------------------

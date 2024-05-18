@@ -108,6 +108,66 @@ void drawBox() {
     }
 }
 
+void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
+    const int buttonWidth = 30;
+    const int buttonHeight = 3;
+    const unsigned char horizontalLineTop = 223; //viền trên
+    const unsigned char horizontalLineBottom = 220; // viền dưới 
+    const unsigned char verticalLine = 219; // viền trái, phải 
+    const unsigned char topLeftCorner = 219; // góc trái trên
+    const unsigned char topRightCorner = 219;
+    const unsigned char bottomLeftCorner = 219;
+    const unsigned char bottomRightCorner = 219;
+
+    int borderColor = 8; // Màu đỏ cho khung viền
+    // Vẽ khung viền của nút button
+    SetColor(borderColor); // Đặt màu sắc cho khung viền là màu mặc định
+
+    yPos += 8; // Dời các ô xuống 4 ô
+
+    SetColor(highlighted ? 10 : borderColor);
+    gotoxy(xPos, yPos);
+    cout << topLeftCorner;
+    for (int i = 0; i < buttonWidth - 2; ++i) cout << horizontalLineTop;
+    cout << topRightCorner;
+
+
+    for (int i = 1; i <= buttonHeight - 2; ++i) {
+        gotoxy(xPos, yPos + i);
+        std::cout << verticalLine << std::setw(buttonWidth - 2) << ' ' << verticalLine; // Đảm bảo kích thước của dòng là buttonWidth - 1
+    }
+
+    gotoxy(xPos, yPos + buttonHeight - 1);
+    cout << bottomLeftCorner;
+    for (int i = 0; i < buttonWidth - 2; ++i) cout << horizontalLineBottom;
+    cout << bottomRightCorner;
+
+    // Đặt màu sắc cho phần văn bản bên trong nút button
+    SetColor(highlighted ? 10 : 8);
+    int textStartX = xPos + (buttonWidth - text.length()) / 2;
+    int textStartY = yPos + (buttonHeight - 1) / 2;
+    gotoxy(textStartX, textStartY);
+    cout << text;
+}
+
+void drawMenu(const std::vector<std::string>& options, int highlightedOption) {
+    const int startX = 45; // Đặt vị trí x bắt đầu của các nút button
+    const int startY = 3; // Đặt vị trí y bắt đầu của menu
+    const int buttonSpacing = 1; // Khoảng cách giữa các nút button
+
+    // Xóa các nút button đã vẽ trước đó
+    for (int i = 0; i < options.size(); ++i) {
+        gotoxy(startX, startY + i * (buttonSpacing + 3) + 8); // Di chuyển con trỏ in đến vị trí của nút button cũ
+        cout << std::string(30, ' '); // Xóa nút button bằng cách in một chuỗi rỗng có độ dài bằng kích thước của nút button
+    }
+
+    // Vẽ các nút button mới
+    for (int i = 0; i < options.size(); ++i) {
+        drawButton(options[i], i == highlightedOption, startX, startY + i * (buttonSpacing + 3));
+    }
+
+}
+
 // ve mau nen cho background
 void drawBackground(int x, int maxX, int y, int maxY, int numColor) {
     for (int i = x; i < maxX; i++) {
@@ -162,13 +222,13 @@ void displayHighScore(Info inf[], int n) {
     system("cls");
     //displayFileDrawASCII("FileText//leaderboard.txt",0,1,234);
     //SetColor(234);
-
-    printTextUTF8("FileText//leaderboard.txt", 16, 1, 234);
+    setConsoleBackgroundColor(7);
+    printTextUTF8("FileText//leaderboard.txt", 16, 1, 113);
     int i;
     quickSort(inf, 0, n - 1); // sap xep danh sach
 
     // draw box highscore
-    SetColor(228);
+    SetColor(112);
     gotoxy(37, 10); // subtracted 1 from x-coordinate
     cout << "                LEADERBOARD" << endl;
     gotoxy(24, 12); // subtracted 1 from x-coordinate
@@ -181,71 +241,71 @@ void displayHighScore(Info inf[], int n) {
     for (i = 0; i < min(10, n); i++) {
         gotoxy(27, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(237);
+            SetColor(113);
             cout << i + 1;
         }
 
         gotoxy(24, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(228);
+            SetColor(112);
             cout << "|";
         }
 
         gotoxy(33, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(237);
+            SetColor(113);
             cout << inf[i].name;
         }
 
         gotoxy(30, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(228);
+            SetColor(112);
             cout << "|";
         }
         gotoxy(62, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(237);
+            SetColor(113);
             cout << inf[i].diem;
         }
         gotoxy(59, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(228);
+            SetColor(112);
             cout << "|";
         }
 
         gotoxy(67, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(228);
+            SetColor(112);
             cout << "|";
         }
 
         gotoxy(70, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(237);
+            SetColor(113);
             cout << inf[i].day;
         }
 
         gotoxy(82, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(228);
+            SetColor(112);
             cout << "|";
         }
 
         gotoxy(86, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(237);
+            SetColor(113);
             cout << inf[i].time;
         }
         gotoxy(97, 15 + i); // subtracted 1 from x-coordinate
         {
-            SetColor(228);
+            SetColor(112);
             cout << "|";
         }
     }
 
     gotoxy(24, 15 + i); // subtracted 1 from x-coordinate
     {
-        SetColor(228);
+        SetColor(112);
         cout << "--------------------------------------------------------------------------" << endl;
     }
     gotoxy(41, 16 + i); // subtracted 1 from x-coordinate
@@ -287,86 +347,67 @@ void MoveFirstChar(string& source, string& dest) {
 }
 
 // button new (dang trong giai doan nghien cuu)
-void INTRO(int& key)
-{
-    char board = 'w';
-    while (board != ' ')
-    {
-        gotoxy(30, 0);
-        cout << "===================== WELCOME TO ======================= ";
-        gotoxy(15, 1);
-        /*cout << R"(
-              /$$$$$$  /$$   /$$  /$$$$$$  /$$   /$$ /$$$$$$$$        /$$$$$$   /$$$$$$  /$$      /$$ /$$$$$$$$
-             /$$__  $$| $$$ | $$ /$$__  $$| $$  /$$/| $$_____/       /$$__  $$ /$$__  $$| $$$    /$$$| $$_____/
-            | $$  \__/| $$$$| $$| $$  \ $$| $$ /$$/ | $$            | $$  \__/| $$  \ $$| $$$$  /$$$$| $$
-            |  $$$$$$ | $$ $$ $$| $$$$$$$$| $$$$$/  | $$$$$         | $$ /$$$$| $$$$$$$$| $$ $$/$$ $$| $$$$$
-             \____  $$| $$  $$$$| $$__  $$| $$  $$  | $$__/         | $$|_  $$| $$__  $$| $$  $$$| $$| $$__/
-             /$$  \ $$| $$\  $$$| $$  | $$| $$\  $$ | $$            | $$  \ $$| $$  | $$| $$\  $ | $$| $$
-            |  $$$$$$/| $$ \  $$| $$  | $$| $$ \  $$| $$$$$$$$      |  $$$$$$/| $$  | $$| $$ \/  | $$| $$$$$$$$
-             \______/ |__/  \__/|__/  |__/|__/  \__/|________/       \______/ |__/  |__/|__/     |__/|________/
-)"
-<< "\n";*/
-        gotoxy(0, 10);
-        cout << "  =============  ";
-        if (board == 'a')
-        {
-            for (int i = 40; i < 69; i++)
-            {
-                gotoxy(i, 14);
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 127);
-            }
-            key = 1;
-        }
-        gotoxy(0, 11);
-        cout << "||             ||";
-        gotoxy(0, 12);
-        cout << "||    START    ||";
-        gotoxy(0, 13);
-        cout << "||             ||";
-        gotoxy(0, 14);
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-        cout << "  =============  ";
+void INTRO(int& keyPressed) {
+    std::vector<std::string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
+    int highlightedOption = 0;
 
-        gotoxy(30, 10);
-        cout << "  =============  ";
+    while (true) {
 
-        if (board == 'd')
-        {
-            key = 2;
-            for (int i = 40; i < 69; i++)
-            {
-                gotoxy(i, 20);
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 127);
-            }
+        drawMenu(options, highlightedOption);
+
+        int key = _getch();
+
+        if (key == 'w' || key == 72) {  // Up arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption - 1 + options.size()) % options.size();
         }
-        gotoxy(30, 11);
-        cout << "||             ||";
-        gotoxy(30, 12);
-        cout << "||     END     ||";
-        gotoxy(30, 13);
-        cout << "||             ||";
-        gotoxy(30, 14);
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-        cout << "  =============  ";
-        board = _getch();
+        else if (key == 's' || key == 80) {  // Down arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption + 1) % options.size();
+        }
+        else if (key == 13) {  // Enter key
+            // Trả về giá trị của phím được nhấn
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            keyPressed = highlightedOption + 1; // Vì chỉ số của options bắt đầu từ 0, nên cần +1 để phù hợp với các trường hợp trong switch case
+            break;
+        }
     }
-    system("cls");
 }
 
 // doc file anh
-void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor) {
+void displayFile(const string& fileName, int x, int y, int numColor) {
+    ifstream file(fileName); // mo file
+    string line; // bien nay se duyet qua tung dong trong file .txt
+
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            gotoxy(x, y);
+            SetColor(numColor);
+            //system("color 80");
+
+            cout << line << endl;
+            y++;
+        }
+        file.close(); // dong file
+    }
+    else {
+        return;
+    }
+}
+
+void readImageFromFile(int **image, int height, int width, const string& filename, int backgroundcolor) {
     ifstream file(filename);
     if (file.is_open()) {
-        string line;
+        std::string line;
         for (int i = 0; i < height && std::getline(file, line); ++i) {
-            istringstream iss(line);
+            std::istringstream iss(line);
             for (int j = 0; j < width && iss; ++j) {
-                string token;
-                if (getline(iss, token, ' ')) {
+                std::string token;
+                if (std::getline(iss, token, ' ')) {
                     try {
                         image[i][j] = std::stoi(token);
                     }
-                    catch (const invalid_argument& e) {
+                    catch (const std::invalid_argument&) {
                         image[i][j] = backgroundcolor;
                     }
                 }
@@ -378,12 +419,11 @@ void readImageFromFile(int** image, int height, int width, const string& filenam
         file.close();
     }
     else {
-        cerr << "Unable to open file: " << filename << endl;
+        std::cerr << "Unable to open file: " << filename << std::endl;
     }
 }
 
-// hien thi file anh co mau
-void displayImageColor(int** image, int height, int width, int x, int y) {
+void displayImage(int **image, int height, int width, int x, int y) {
     // In ra hình ảnh pixel có màu
     int bar1 = 177; // mã ANSI
     int bar2 = 219;
@@ -450,32 +490,6 @@ void displayImageColor(int** image, int height, int width, int x, int y) {
     }
 }
 
-// hien thi anh con ran
-void displayImageSnake(string fileName) {
-    ShowConsoleCursor(FALSE);
-    system("color 80");
-    SetColor(7);
-
-    const int rows = 21;
-    const int cols = 21;
-    int** snakePic = new int* [rows];
-    for (int i = 0; i < rows; ++i) {
-        snakePic[i] = new int[cols];
-    }
-    readImageFromFile(snakePic, rows, cols, fileName, 14);
-    displayImageColor(snakePic, rows, cols, 38, 5);
-    while (_kbhit()) {
-        char key = _getch(); // Đọc phím nhấn vào
-        if (key != '\r') {
-
-        }
-    }
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    for (int i = 0; i < rows; ++i) {
-        delete[] snakePic[i];
-    }
-    delete[] snakePic;
-}
 
 //====================================== Logic Game Functions ======================================
 
@@ -569,311 +583,250 @@ void move() {
 void showStartMenu() {
     system("cls");
 
+    ShowConsoleCursor(FALSE);
+
     Info* inf = new Info[LimitPlayers];
 
     if (checkMusic == true) { // check trang thai de bat nhac nen
         PlaySound(TEXT("Sound//soundtrack.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
     }
 
-    drawBackground(0,29,0,120,234); // fill mau cho background
+    setConsoleBackgroundColor(7);
+    SetColor(7);
+    int** snakePic2 = new int* [100];
+    for (int i = 0; i < 100; ++i)
+        snakePic2[i] = new int[100];
 
-    // meo hieu sao bi loi dong cuoi nen phai tu fill ngoai
-    for (int i = 0; i < 120; i++) {
-        gotoxy(i, 30);
-        SetColor(234);
-        cout << " ";
-    }
+    int** snakePic3 = new int* [100];
+    for (int i = 0; i < 100; ++i)
+        snakePic3[i] = new int[100];
 
-    int Set[] = { 234,228,228,228,228,228 }; // color option
-    int counter = 1;
-    char key;
+    int** menuPic = new int* [100];
+    for (int i = 0; i < 100; ++i)
+        menuPic[i] = new int[100];
+
+    readImageFromFile(snakePic2, 21, 21, "FileText//SnakePic2.txt", 15);
+    readImageFromFile(snakePic3, 21, 21, "FileText//SnakePic3.txt", 15);
+
+    system("cls");
 
     for (;;) {
-        //displayFileDrawASCII("FileText//logo.txt", 10, 2, 233);
-        printTextUTF8("FileText//logo.txt", 18, 2, 233);
+        setConsoleBackgroundColor(7);
+        printTextUTF8("FileText//logo.txt", 20, 1, 113);
+        displayImage(snakePic2, 21, 21, 2, 9);
+        displayImage(snakePic3, 21, 21, 76, 9);
 
-        ShowConsoleCursor(FALSE);
-        ShowScrollbar(0);
+        int key = 0;
+        INTRO(key);
 
-        gotoxy(55, 12);
-        SetColor(Set[0]);
-        cout << "START";
-
-        gotoxy(55, 15);
-        SetColor(Set[1]);
-        cout << "GUIDE";
-
-        gotoxy(54, 18);
-        SetColor(Set[2]);
-        cout << "RANKING";
-
-        gotoxy(54, 21);
-        SetColor(Set[3]);
-        cout << "SETTING";
-
-        gotoxy(54, 24);
-        SetColor(Set[4]);
-        cout << "ABOUT US";
-
-        gotoxy(53, 27);
-        SetColor(Set[5]);
-        cout << "QUIT GAME";
-
-        key = _getch();
-
-        if (key == 72 || key == 'w' && (counter >= 2 && counter <= 6)) {
-            counter--;
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            if (counter < 1) {
-                counter = 6; // Quay lại dòng EXIT
+        /*if (key == '\r') {*/
+        switch (key) {
+        case 1:					//BUTTON START
+        {
+            system("cls");
+            inputInfoPlayer();
+            break;
+        }
+        case 2:				//BUTTON RANKING
+        {
+            // xem bang xep hang
+            system("cls");
+            readFileHighScore(inf, n);
+            displayHighScore(inf, n);
+            while (key = _getch()) {
+                if (key == '\r') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    break;
+                }
             }
-        }
-        if (key == 80 || key == 's' && (counter >= 1 && counter <= 5)) {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            counter++;
-            if (counter > 6) {
-                counter = 1; // Quay lại dòng START
-            }
-        }
-
-        for (int j = 0; j < 6; j++) {
-            Set[j] = 228;
-        }
-
-        switch (counter) {
-        case 1: {
-            Set[0] = 234; break;
-        }
-        case 2: {
-            Set[1] = 234; break;
+            system("cls");
+            break;
         }
         case 3: {
-            Set[2] = 234; break;
-        }
-        case 4: {
-            Set[3] = 234; break;
-        }
-        case 5: {
-            Set[4] = 234; break;
-        }
-        case 6: {
-            Set[5] = 234; break;
-        }
-        }
-        if (key == '\r') {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            switch (counter) {
-            case 1://BUTTON START
-            {
-                inputInfoPlayer(); // vao nhap ten va chon level
-                break;
-            }
-            case 2:	//BUTTON INSTRUCTIONS
-            {
-                system("cls");
-                // doc huong dan su dung truoc khi dung
-                printTextUTF8("FileText//guide.txt", 0, 2, 237);
-                gotoxy(25, 24);
-                SetColor(237);
-                cout << "(*) Press enter to back to MENU" << endl;
-                while (key = _getch()) {
-                    if (key == '\r') {
-                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                        break;
-                    }
-                }
-                system("cls");
-                break;
-            }
-            case 3://BUTTON RANKING
-            {
-                // xem bang xep hang
-                system("cls");
-                readFileHighScore(inf, n);
-                displayHighScore(inf, n);
-                while (key = _getch()) {
-                    if (key == '\r') {
-                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                        break;
-                    }
-                }
-                system("cls");
-                break;
-            }
-            case 4: // BUTTON SETTING
-            {
-                // bat tat nhac nen
-                system("cls");
-                printTextUTF8("FileText//setting.txt", 30, 2, 237);
-                static int count = 1;
-                gotoxy(47, 15); cout << "MUSIC";
-                SetColor(226);
-                gotoxy(55, 15); cout << "<        >";
-                SetColor(224);
+            // bat tat nhac nen
+            system("cls");
+            setConsoleBackgroundColor(7);
+            SetColor(7);
+            printTextUTF8("FileText//setting.txt", 30, 2, 113);
+            static int count = 1;
+            gotoxy(47, 15); cout << "MUSIC";
+            SetColor(113);
+            gotoxy(55, 15); cout << "<        >";
+            SetColor(113);
 
-                switch (count)
-                {
-                case 1:
-                {
-                    gotoxy(59, 15); cout << "ON ";
+            switch (count)
+            {
+            case 1:
+            {
+                gotoxy(59, 15); cout << "ON ";
+                break;
+            }
+
+            case 2:
+            {
+                gotoxy(59, 15); cout << "OFF";
+                break;
+            }
+            }
+            gotoxy(40, 24);
+            SetColor(113);
+            cout << "(*) Press enter to back to MENU" << endl;
+            while (key = _getch()) {
+                if (key == '\r') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    system("cls");
                     break;
                 }
+                if (key == 75 || key == 'a') {
+                    count--;
+                    if (count == 0) count = 2;
+                }
+                else if (key == 77 || key == 'd') {
+                    count++;
+                    if (count == 3) count = 1;
+                }
 
-                case 2:
-                {
-                    gotoxy(59, 15); cout << "OFF";
+                switch (count) {
+
+                case 1: // TURN ON THE MUSIC
+                    gotoxy(59, 15);
+                    cout << "ON ";
+                    if (!checkMusic) {
+                        checkMusic = true;
+                    }
+                    break;
+                case 2: // TURN OFF THE MUSIC
+                    gotoxy(59, 15);
+                    cout << "OFF";
+                    if (checkMusic) {
+                        PlaySound(0, 0, 0);
+                        checkMusic = false;
+                    }
                     break;
                 }
-                }
-                gotoxy(40, 24);
-                SetColor(237);
-                cout << "(*) Press enter to back to MENU" << endl;
-                while (key = _getch()) {
-                    if (key == '\r') {
-                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                        system("cls");
-                        break;
-                    }
-                    if (key == 75 || key == 'a') {
-                        count--;
-                        if (count == 0) count = 2;
-                    }
-                    else if (key == 77 || key == 'd') {
-                        count++;
-                        if (count == 3) count = 1;
-                    }
-
-                    switch (count) {
-
-                    case 1: // TURN ON THE MUSIC
-                        gotoxy(59, 15);
-                        cout << "ON ";
-                        if (!checkMusic) {
-                            checkMusic = true;
-                        }
-                        break;
-                    case 2: // TURN OFF THE MUSIC
-                        gotoxy(59, 15);
-                        cout << "OFF";
-                        if (checkMusic) {
-                            PlaySound(0, 0, 0);
-                            checkMusic = false;
-                        }
-                        break;
-                    }
-                }
-                break;
             }
-            case 5://BUTTON ABOUT US
-            {
-                system("cls");
+            break;
+        }
 
-                printTextUTF8("FileText//About.txt", 29, 4, 237);
-
-                gotoxy(34, 24);
-                SetColor(226);
-                cout << "(*) Press enter to back to MENU" << endl;
-                while (key = _getch()) {
-                    if (key == '\r') {
-                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                        break;
-                    }
-                }
-                system("cls");
-                break;
-            }
-            case 6:	//BUTTON EXIT
-            {
-                // them giao dien exit game ;-;
+        case 5:					//BUTTON EXIT
+        {
+            // them giao dien exit game ;-;
                 //40 - 80
                 //12 - 20
-                gotoxy(38, 12); // subtracted 2 from x-coordinate
-                cout << char(218);
-                gotoxy(38, 20); // subtracted 2 from x-coordinate
-                cout << char(192);
-                gotoxy(78, 12); // subtracted 2 from x-coordinate
-                cout << char(191);
-                gotoxy(78, 20); // subtracted 2 from x-coordinate
-                cout << char(217);
+            gotoxy(38, 12); // subtracted 2 from x-coordinate
+            cout << char(218);
+            gotoxy(38, 20); // subtracted 2 from x-coordinate
+            cout << char(192);
+            gotoxy(78, 12); // subtracted 2 from x-coordinate
+            cout << char(191);
+            gotoxy(78, 20); // subtracted 2 from x-coordinate
+            cout << char(217);
 
-                for (int i = 39; i < 78; i++) { // adjusted loop range
-                    gotoxy(i, 12);
-                    cout << char(196);
+            for (int i = 39; i < 78; i++) { // adjusted loop range
+                gotoxy(i, 12);
+                cout << char(196);
 
-                    gotoxy(i, 20);
-                    cout << char(196);
+                gotoxy(i, 20);
+                cout << char(196);
+            }
+
+            for (int i = 13; i < 20; i++) {
+                gotoxy(38, i); // subtracted 2 from x-coordinate
+                cout << '|';
+
+                gotoxy(78, i); // subtracted 2 from x-coordinate
+                cout << '|';
+            }
+
+            // Fill color inside the frame
+            SetColor(113);
+            for (int i = 39; i < 78; i++) { // adjusted loop range
+                for (int j = 13; j < 20; j++) {
+                    gotoxy(i, j);
+                    cout << " ";
                 }
+            }
 
-                for (int i = 13; i < 20; i++) {
-                    gotoxy(38, i); // subtracted 2 from x-coordinate
-                    cout << '|';
+            gotoxy(45, 14); // subtracted 2 from x-coordinate
+            SetColor(113);
+            cout << "Do you really want to quit?";
 
-                    gotoxy(78, i); // subtracted 2 from x-coordinate
-                    cout << '|';
+            int selectedButton = 0; // 0 for "YES", 1 for "NO"
+
+            // Handle button press
+            char ch;
+            bool quitConfirmed = false;
+            while (!quitConfirmed) {
+                // Update button colors based on the selected button
+                gotoxy(48, 18); // subtracted 2 from x-coordinate
+                SetColor(selectedButton == 0 ? 113 : 116);
+                cout << "YES";
+
+                gotoxy(65, 18); // subtracted 2 from x-coordinate
+                SetColor(selectedButton == 1 ? 113 : 116);
+                cout << "NO";
+
+                ch = _getch();
+                if (ch == 'a') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    selectedButton = 0;
                 }
-
-                // Fill color inside the frame
-                SetColor(234);
-                for (int i = 39; i < 78; i++) { // adjusted loop range
-                    for (int j = 13; j < 20; j++) {
-                        gotoxy(i, j);
-                        cout << " ";
-                    }
+                else if (ch == 'd') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    selectedButton = 1;
                 }
-
-                gotoxy(45, 14); // subtracted 2 from x-coordinate
-                SetColor(229);
-                cout << "Do you really want to quit?";
-
-                int selectedButton = 0; // 0 for "YES", 1 for "NO"
-
-                // Handle button press
-                char ch;
-                bool quitConfirmed = false;
-                while (!quitConfirmed) {
-                    // Update button colors based on the selected button
-                    gotoxy(48, 18); // subtracted 2 from x-coordinate
-                    SetColor(selectedButton == 0 ? 225 : 228);
-                    cout << "YES";
-
-                    gotoxy(65, 18); // subtracted 2 from x-coordinate
-                    SetColor(selectedButton == 1 ? 225 : 228);
-                    cout << "NO";
-
-                    ch = _getch();
-                    if (ch == 'a') {
-                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                        selectedButton = 0;
+                else if (ch == '\r') { // Enter key
+                    if (selectedButton == 0) {
+                        quitConfirmed = true;
+                        system("cls");
+                        exit(1);
                     }
-                    else if (ch == 'd') {
-                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                        selectedButton = 1;
-                    }
-                    else if (ch == '\r') { // Enter key
-                        if (selectedButton == 0) {
-                            quitConfirmed = true;
-                            system("cls");
-                            exit(1);
-                        }
-                        else if (selectedButton == 1) {
-                            quitConfirmed = true;
-                            break;
-                        }
-                    }
-                }
-
-                // Clear the frame
-                for (int i = 38; i <= 78; i++) { // adjusted loop range
-                    for (int j = 12; j <= 20; j++) {
-                        gotoxy(i, j);
-                        cout << " ";
+                    else if (selectedButton == 1) {
+                        quitConfirmed = true;
+                        break;
                     }
                 }
             }
+
+            // Clear the frame
+            for (int i = 38; i <= 78; i++) { // adjusted loop range
+                for (int j = 12; j <= 20; j++) {
+                    gotoxy(i, j);
+                    cout << " ";
+                }
             }
+            break;
         }
-    }
+
+        case 4:					//BUTTON ABOUT US
+        {
+            system("cls");
+            setConsoleBackgroundColor(7);
+            printTextUTF8("FileText//About.txt", 29, 4, 113);
+
+            gotoxy(34, 24);
+            SetColor(113);
+            cout << "(*) Press enter to back to MENU" << endl;
+            while (key = _getch()) {
+                if (key == '\r') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    break;
+                }
+            }
+            system("cls");
+            break;
+        }
+        } // end of switch
+    } // end of for loop
     delete[] inf;
+    for (int i = 0; i < 100; ++i) {
+        delete[] snakePic2[i];
+        delete[] snakePic3[i];
+        delete[] menuPic[i];
+    }
+    delete[] snakePic2;
+    delete[] snakePic3;
+    delete[] menuPic;
 }
 
 // ham 3 giay chuan bi
@@ -1408,6 +1361,7 @@ void resetSnake() {
 
     direction = Direction::right;
 }
+
 
 // doc thong tin tu file co chua ten va diem cua nguoi choi
 void readFileHighScore(Info inf[], int& n) {

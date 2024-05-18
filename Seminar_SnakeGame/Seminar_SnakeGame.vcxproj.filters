@@ -96,5 +96,14 @@
     <Text Include="mot.txt">
       <Filter>Source Files\FileText</Filter>
     </Text>
+    <Text Include="FileText\SnakePic2.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\snakePic3.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="FileText\menuPic.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
   </ItemGroup>
 </Project>

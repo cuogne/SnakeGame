@@ -56,6 +56,8 @@ struct Point {
 //====================================== Draw Game Functions ======================================
 void drawBox();
 void drawBackground(int x, int maxX, int y, int maxY, int numColor);
+void drawButton(const std::string& text, bool highlighted, int xPos, int yPos);
+void drawMenu(const std::vector<std::string>& options, int highlightedOption);
 void drawSnake();
 void drawHeadnTail();
 void displayScoreInGame();
@@ -64,9 +66,9 @@ void INTRO(int& key);
 void MoveFirstChar(string& source, string& dest);
 void printTextUTF8(const std::string& filePath, int x, int y, int numColor);
 
+void displayFile(const string& fileName, int x, int y, int numColor);
 void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor);
-void displayImageColor(int** image, int height, int width, int x, int y);
-void displayImageSnake(string fileName);
+void displayImage(int** image, int height, int width, int x, int y);
 
 //====================================== Logic Game Functions ======================================
 void createApple();

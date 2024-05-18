@@ -48,3 +48,30 @@ void resizeConsole(int width, int height)
     MoveWindow(console, r.left, r.top, width, height, TRUE);
 }
 
+void setConsoleBackgroundColor(int backgroundColor) {
+    // Lấy handle tới console output
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    // Lấy thông tin hiện tại của console
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+
+    // Lưu màu chữ hiện tại
+    WORD textColor = consoleInfo.wAttributes & 0x0F;
+
+    // Thiết lập màu nền và giữ nguyên màu chữ
+    WORD attributes = (backgroundColor << 4) | textColor;
+    SetConsoleTextAttribute(hConsole, attributes);
+
+    // Lấy kích thước của console
+    COORD coord = { 0, 0 };
+    DWORD count;
+    DWORD consoleSize = consoleInfo.dwSize.X * consoleInfo.dwSize.Y;
+
+    // Điền màu nền mới cho toàn bộ console
+    FillConsoleOutputAttribute(hConsole, attributes, consoleSize, coord, &count);
+
+    // Di chuyển con trỏ về đầu console
+    SetConsoleCursorPosition(hConsole, coord);
+}
+

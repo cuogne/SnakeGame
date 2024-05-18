@@ -9,3 +9,4 @@ void ShowConsoleCursor(bool showFlag);
 void ShowScrollbar(BOOL Show);
 void FixConsoleWindow();
 void resizeConsole(int width, int height);
+void setConsoleBackgroundColor(int backgroundColor);
