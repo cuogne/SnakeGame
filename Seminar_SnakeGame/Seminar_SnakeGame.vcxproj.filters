@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Sound">
       <UniqueIdentifier>{efa52db1-25a5-460f-bb82-d29b6e2e0587}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SaveGame">
+      <UniqueIdentifier>{4c48d660-fbe1-4e94-9979-b6a33b47238f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FunctionsGame.cpp">
@@ -104,6 +107,9 @@
     </Text>
     <Text Include="FileText\menuPic.txt">
       <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="SaveGame\cuong.txt">
+      <Filter>Source Files\SaveGame</Filter>
     </Text>
   </ItemGroup>
 </Project>

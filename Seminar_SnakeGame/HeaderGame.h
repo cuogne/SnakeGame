@@ -63,6 +63,7 @@ void drawHeadnTail();
 void displayScoreInGame();
 void displayHighScore(Info inf[], int n);
 void INTRO(int& key);
+void NewGameandContinued(int& key);
 void MoveFirstChar(string& source, string& dest);
 void printTextUTF8(const std::string& filePath, int x, int y, int numColor);
 
@@ -71,6 +72,7 @@ void readImageFromFile(int** image, int height, int width, const string& filenam
 void displayImage(int** image, int height, int width, int x, int y);
 
 //====================================== Logic Game Functions ======================================
+
 void createApple();
 void growing();
 bool isBiteItself();
@@ -88,6 +90,7 @@ void quitGame();
 void saveGame();
 void showEndMenu();
 void resetSnake();
+void readSaveGame();
 
 void readFileHighScore(Info inf[], int& n);
 void excuteReadFile();

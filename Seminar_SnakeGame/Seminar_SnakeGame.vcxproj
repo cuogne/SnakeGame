@@ -215,6 +215,7 @@
     <Text Include="FileText\youlose.txt" />
     <Text Include="hai.txt" />
     <Text Include="mot.txt" />
+    <Text Include="SaveGame\cuong.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

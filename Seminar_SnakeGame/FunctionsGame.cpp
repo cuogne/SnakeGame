@@ -17,7 +17,7 @@ Point apple;                            // bien dai dien cho vi tri cua qua tao
 Point prevTail;                         // bien luu vitri cua ran trc khi di chuyen
 int score = 0;                          // bien luu tru diem so
 int speed = 300;                        // bien toc do cua man choi
-char Name[21] = "";                     // bien luu tru ten nguoi choi, ban dau khoi tao rong
+string Name;                  // bien luu tru ten nguoi choi, ban dau khoi tao rong
 int t, n;
 const int LimitPlayers = 1000;          // so luong nguoi choi toi da luu duoc
 bool checkMusic = true;                 // check trang thai nhac nen
@@ -166,6 +166,33 @@ void drawMenu(const std::vector<std::string>& options, int highlightedOption) {
         drawButton(options[i], i == highlightedOption, startX, startY + i * (buttonSpacing + 3));
     }
 
+}
+
+void NewGameandContinued(int& keyPressed) {
+    std::vector<std::string> options = { "NEW GAME", "CONTINUE"};
+    size_t highlightedOption = 0;
+
+    while (true) {
+
+        drawMenu(options, highlightedOption);
+
+        int key = _getch();
+
+        if (key == 'w' || key == 72) {  // Up arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption - 1 + options.size()) % options.size();
+        }
+        else if (key == 's' || key == 80) {  // Down arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption + 1) % options.size();
+        }
+        else if (key == 13) {  // Enter key
+            // Trả về giá trị của phím được nhấn
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            keyPressed = highlightedOption + 1; // Vì chỉ số của options bắt đầu từ 0, nên cần +1 để phù hợp với các trường hợp trong switch case
+            break;
+        }
+    }
 }
 
 // ve mau nen cho background
@@ -395,7 +422,7 @@ void displayFile(const string& fileName, int x, int y, int numColor) {
     }
 }
 
-void readImageFromFile(int **image, int height, int width, const string& filename, int backgroundcolor) {
+void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor) {
     ifstream file(filename);
     if (file.is_open()) {
         std::string line;
@@ -423,7 +450,7 @@ void readImageFromFile(int **image, int height, int width, const string& filenam
     }
 }
 
-void displayImage(int **image, int height, int width, int x, int y) {
+void displayImage(int** image, int height, int width, int x, int y) {
     // In ra hình ảnh pixel có màu
     int bar1 = 177; // mã ANSI
     int bar2 = 219;
@@ -858,44 +885,138 @@ void ready() {
 // Man hinh nhap thong tin nguoi choi
 void inputInfoPlayer() {
     system("cls");
-
-    t = 5; // Assign the selected level to variable t
-    // 40 - 10
-    for (int i = 5; i < 25; i++) {
-        for (int j = 20; j < 100; j++) {
-            gotoxy(j, i);
+    int key = 0;
+    for (;;) {
+        
+        NewGameandContinued(key);
+        switch (key) {
+        case 1:					//BUTTON START
+        {
+            system("cls");
+            t = 5; // Assign the selected level to variable t
+            // 40 - 10
+            for (int i = 5; i < 25; i++) {
+                for (int j = 20; j < 100; j++) {
+                    gotoxy(j, i);
+                    SetColor(116);
+                    cout << " ";
+                }
+            }
+            // Input player's name
+            gotoxy(40, 10);
+            ShowConsoleCursor(TRUE);
             SetColor(116);
-            cout << " ";
+            cout << "Insert your name (Maximum 20 characters): ";
+            SetColor(116);
+            gotoxy(48, 20);
+            cout << "Press enter to continue";
+            cout << endl;
+            cout << endl;
+            cout << endl;
+            for (int i = 50; i < 70; i++) {
+                SetColor(240);
+                gotoxy(i, 15);
+                cout << " ";
+            }
+            gotoxy(50, 15);
+            getline(cin, Name);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            resetSnake(); // Reset snake's state
+
+            speed = (550 - t * 100); // Adjust game speed based on level
+
+            //drawBackground(120, 29, 234); // fill mau cho background
+            SetColor(234);
+
+            //ready();
+            startGame();
+            break;
         }
+        case 2:
+        {
+            // dang thiet ke logic ham nay
+            /*
+            system("cls");
+            for (int i = 5; i < 25; i++) {
+                for (int j = 20; j < 100; j++) {
+                    gotoxy(j, i);
+                    SetColor(116);
+                    cout << " ";
+                }
+            }
+            ifstream filein("FileText//FileNameSaveGame.txt", ios::in);
+            if (!filein.is_open()) {
+                cout << "Khong the mo file !!!" << endl;
+                return;
+            }
+
+            std::vector<std::string> saveFiles;
+            std::string line;
+            int lineNumber = 0;
+            while (std::getline(filein, line)) {
+                saveFiles.push_back(line);
+                lineNumber++;
+            }
+
+            filein.close();
+            system("cls");
+
+            // Tính toán vị trí cần in
+            int printStartPos = (30 - lineNumber) / 2;
+
+            // In danh sách các file ra giữa màn hình
+            for (int i = 0; i < saveFiles.size(); i++) {
+                gotoxy(60 - saveFiles[i].length() / 2, printStartPos + i);
+                cout << saveFiles[i] << endl;  // Thêm dòng này
+            }
+
+            string fileName;
+            gotoxy(50, 25);
+            cout << "Nhap file can choi: "; cin >> fileName;
+
+            string filePath = "SaveGame//" + fileName;
+            ifstream load(filePath.c_str(), ios::in);
+
+            if (load.is_open()) {
+                // Read the first line for name
+                getline(load, Name);
+
+                // Read the second line for score
+                std::string score_str;
+                getline(load, score_str);
+                try {
+                    score = std::stoi(score_str);
+                }
+                catch (std::invalid_argument& e) {
+                    std::cerr << "Invalid score: " << score_str << '\n';
+                    return ;
+                }
+
+                // Read the remaining lines for coordinates
+                std::string line;
+                while (getline(load, line)) {
+                    std::istringstream iss(line);
+                    int x, y;
+                    if (iss >> x >> y) {
+                        snake.push_back({ x, y });
+                    }
+                }
+                load.close();
+            }
+            else {
+                std::cerr << "Unable to open file";
+                return;
+            }
+
+            system("cls");
+            SetColor(234);
+            startGame();
+            */
+            break;
+        }
+        }
+
     }
-    // Input player's name
-    gotoxy(40, 10);
-    ShowConsoleCursor(TRUE);
-    SetColor(116);
-    cout << "Insert your name (Maximum 20 characters): ";
-    SetColor(116);
-    gotoxy(48, 20);
-    cout << "Press enter to continue";
-    cout << endl;
-    cout << endl;
-    cout << endl;
-    for (int i = 50; i < 70; i++) {
-        SetColor(240);
-        gotoxy(i, 15);
-        cout << " ";
-    }
-    gotoxy(50, 15);
-    cin.getline(Name, 20);
-    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-    resetSnake(); // Reset snake's state
-
-    speed = (550 - t * 100); // Adjust game speed based on level
-
-    //drawBackground(120, 29, 234); // fill mau cho background
-    SetColor(234);
-
-    //ready();
-    startGame();
 }
 
 // man hinh pausegame
@@ -976,20 +1097,16 @@ void pauseGame() {
 
 // ham save game (dang trong giai doan phat trien)
 void saveGame() {
-    // 21 - 61
-    // 8 - 16
+    // Draw the frame
     gotoxy(21, 8);
     cout << char(218);
-
     gotoxy(21, 16);
     cout << char(192);
-
     gotoxy(61, 8);
     cout << char(191);
-
     gotoxy(61, 16);
     cout << char(217);
-    // --------------------------
+
     for (int i = 22; i < 61; i++) {
         gotoxy(i, 8);
         cout << char(196);
@@ -1003,7 +1120,8 @@ void saveGame() {
         gotoxy(61, i);
         cout << '|';
     }
-    // Fill màu trong khung
+
+    // Fill color inside the frame
     SetColor(234);
     for (int i = 22; i < 61; i++) {
         for (int j = 9; j < 16; j++) {
@@ -1011,42 +1129,59 @@ void saveGame() {
             cout << " ";
         }
     }
-    gotoxy(28, 12);
+
+    gotoxy(28, 10);
     SetColor(229);
-    cout << "Do you want to save game ?";
+    cout << "Do you want to save game?";
 
+    int selectedButton = 0; // 0 for "YES", 1 for "NO"
+
+    // Handle button press
     char ch;
-    bool enterPressed = false; // bien ktra xem phim enter da duoc nhan chua
-    while (!enterPressed) {
+    bool quitConfirmed = false;
+    while (!quitConfirmed) {
+        // Update button colors based on the selected button
+        gotoxy(30, 14);
+        SetColor(selectedButton == 0 ? 225 : 228);
+        cout << "YES";
+
+        gotoxy(50, 14);
+        SetColor(selectedButton == 1 ? 225 : 228);
+        cout << "NO";
+
         ch = _getch();
-        if (ch != '\r') {
+        if (ch == 'a') {
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            selectedButton = 0;
         }
-        else if (ch == '\r') {
-            enterPressed = true;
-            isPaused = false;
-
-            // --------------------------
-            for (int i = 21; i < 61; i++) {
-                gotoxy(i, 8);
-                cout << " ";
-                gotoxy(i, 16);
-                cout << " ";
+        else if (ch == 'd') {
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            selectedButton = 1;
+        }
+        else if (ch == '\r') { // Enter key
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            if (selectedButton == 0) {
+                quitConfirmed = true;
+                readSaveGame();
             }
-
-            for (int i = 8; i < 17; i++) {
-                gotoxy(21, i);
-                cout << ' ';
-                gotoxy(61, i);
-                cout << ' ';
+            else if (selectedButton == 1) {
+                quitConfirmed = true;
+                break;
             }
-            gotoxy(28, 12);
-            cout << "                                 ";
-
-            SetColor(225);
-            gotoxy(apple.x, apple.y);
-            cout << APPLE;
         }
     }
+
+    // Clear the frame
+    for (int i = 21; i <= 61; i++) {
+        for (int j = 8; j <= 16; j++) {
+            gotoxy(i, j);
+            cout << " ";
+        }
+    }
+
+    SetColor(225);
+    gotoxy(apple.x, apple.y);
+    cout << APPLE;
 }
 
 // ham quit game 
@@ -1361,6 +1496,62 @@ void resetSnake() {
     direction = Direction::right;
 }
 
+// doc va luu file
+void readSaveGame() {
+    system("cls");
+    string file;
+    
+    for (int i = 5; i < 25; i++) {
+        for (int j = 20; j < 100; j++) {
+            gotoxy(j, i);
+            SetColor(116);
+            cout << " ";
+        }
+    }
+
+    gotoxy(40, 17);
+    cout << "Luu y: Ten file nhap vao khong co khoang trang !!!";
+
+    gotoxy(40, 10);
+    ShowConsoleCursor(TRUE);
+    SetColor(116);
+    cout << "Nhap ten file can luu: "; cin >> file;
+    SetColor(116);
+
+    string filePath = "SaveGame//" + file + ".txt";
+
+    ofstream outputFile(filePath.c_str(), ios::app);
+    ofstream fileName("FileText//FileNameSaveGame.txt", ios::app);
+
+    if (!outputFile) {
+        cout << "khong the mo file" << endl;
+        return;
+    }
+    outputFile << Name << endl;
+    outputFile << score << endl;
+
+    // Lưu tọa độ của con rắn
+    for (const auto& point : snake) {
+        outputFile << point.x << " " << point.y << endl;
+    }
+
+    fileName << file + ".txt";
+    cout << endl;
+    cout << endl;
+    cout << endl;
+
+    outputFile.close();
+    fileName.close();
+    // In ra thông báo
+    gotoxy(30, 20);
+    cout << "Da luu file thanh cong. An phim enter de tiep tuc." << endl;
+
+    // Chờ người dùng nhấn enter
+    cin.ignore();  // ignore the newline character left in the buffer by the previous input
+    cin.get();  // wait for the user to press enter
+
+    showStartMenu();
+}
 
 // doc thong tin tu file co chua ten va diem cua nguoi choi
 void readFileHighScore(Info inf[], int& n) {
