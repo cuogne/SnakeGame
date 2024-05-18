@@ -109,7 +109,7 @@ void drawBox() {
 }
 
 void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
-    const int buttonWidth = 30;
+    const int buttonWidth = 26;
     const int buttonHeight = 3;
     const unsigned char horizontalLineTop = 223; //viền trên
     const unsigned char horizontalLineBottom = 220; // viền dưới 
@@ -151,14 +151,14 @@ void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
 }
 
 void drawMenu(const std::vector<std::string>& options, int highlightedOption) {
-    const int startX = 45; // Đặt vị trí x bắt đầu của các nút button
+    const int startX = 47; // Đặt vị trí x bắt đầu của các nút button
     const int startY = 3; // Đặt vị trí y bắt đầu của menu
     const int buttonSpacing = 1; // Khoảng cách giữa các nút button
 
     // Xóa các nút button đã vẽ trước đó
     for (int i = 0; i < options.size(); ++i) {
         gotoxy(startX, startY + i * (buttonSpacing + 3) + 8); // Di chuyển con trỏ in đến vị trí của nút button cũ
-        cout << std::string(30, ' '); // Xóa nút button bằng cách in một chuỗi rỗng có độ dài bằng kích thước của nút button
+        cout << std::string(26, ' '); // Xóa nút button bằng cách in một chuỗi rỗng có độ dài bằng kích thước của nút button
     }
 
     // Vẽ các nút button mới
@@ -349,7 +349,7 @@ void MoveFirstChar(string& source, string& dest) {
 // button new (dang trong giai doan nghien cuu)
 void INTRO(int& keyPressed) {
     std::vector<std::string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
-    int highlightedOption = 0;
+    size_t highlightedOption = 0;
 
     while (true) {
 
@@ -609,16 +609,14 @@ void showStartMenu() {
     readImageFromFile(snakePic3, 21, 21, "FileText//SnakePic3.txt", 15);
 
     system("cls");
-
+    int lastKey = 0;
     for (;;) {
         setConsoleBackgroundColor(7);
         printTextUTF8("FileText//logo.txt", 20, 1, 113);
         displayImage(snakePic2, 21, 21, 2, 9);
         displayImage(snakePic3, 21, 21, 76, 9);
-
-        int key = 0;
+        int key = lastKey;
         INTRO(key);
-
         /*if (key == '\r') {*/
         switch (key) {
         case 1:					//BUTTON START
@@ -817,6 +815,7 @@ void showStartMenu() {
             break;
         }
         } // end of switch
+        lastKey = key;
     } // end of for loop
     delete[] inf;
     for (int i = 0; i < 100; ++i) {
