@@ -10,7 +10,7 @@ int main() {
     system("cls");
 
     showStartMenu();
-
+    
     //printTextUTF8("check.txt", 20, 3, 233);
     // ----------------------------------------------------------------------
     //int key = 0;

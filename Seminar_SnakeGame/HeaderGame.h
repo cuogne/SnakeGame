@@ -55,6 +55,7 @@ struct Point {
 
 //====================================== Draw Game Functions ======================================
 void drawBox();
+void drawBackground(int x, int maxX, int y, int maxY, int numColor);
 void drawSnake();
 void drawHeadnTail();
 void displayScoreInGame();
@@ -77,6 +78,7 @@ void move();
 
 //====================================== Menu Game Play Functions ======================================
 void startGame();
+void ready();
 void showStartMenu();
 void inputInfoPlayer();
 void pauseGame();

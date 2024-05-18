@@ -193,11 +193,13 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="Sound\click1.wav" />
+    <Media Include="Sound\gameover.wav" />
     <Media Include="Sound\pop.wav" />
     <Media Include="Sound\press.wav" />
     <Media Include="Sound\soundtrack.wav" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ba.txt" />
     <Text Include="FileText\about.txt" />
     <Text Include="FileText\guide.txt" />
     <Text Include="FileText\highscore.txt" />
@@ -208,6 +210,8 @@
     <Text Include="FileText\setting.txt" />
     <Text Include="FileText\SnakePic.txt" />
     <Text Include="FileText\youlose.txt" />
+    <Text Include="hai.txt" />
+    <Text Include="mot.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

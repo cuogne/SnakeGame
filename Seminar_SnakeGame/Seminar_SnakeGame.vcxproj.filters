@@ -52,6 +52,9 @@
     <Media Include="Sound\press.wav">
       <Filter>Source Files\Sound</Filter>
     </Media>
+    <Media Include="Sound\gameover.wav">
+      <Filter>Source Files\Sound</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <Text Include="FileText\about.txt">
@@ -82,6 +85,15 @@
       <Filter>Source Files\FileText</Filter>
     </Text>
     <Text Include="FileText\youlose.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="ba.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="hai.txt">
+      <Filter>Source Files\FileText</Filter>
+    </Text>
+    <Text Include="mot.txt">
       <Filter>Source Files\FileText</Filter>
     </Text>
   </ItemGroup>

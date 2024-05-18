@@ -109,10 +109,10 @@ void drawBox() {
 }
 
 // ve mau nen cho background
-void drawBackground(int width, int height, int x) {
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
-            SetColor(x);
+void drawBackground(int x, int maxX, int y, int maxY, int numColor) {
+    for (int i = x; i < maxX; i++) {
+        for (int j = y; j < maxY; j++) {
+            SetColor(numColor);
             cout << " ";
         }
         cout << endl;
@@ -163,93 +163,92 @@ void displayHighScore(Info inf[], int n) {
     //displayFileDrawASCII("FileText//leaderboard.txt",0,1,234);
     //SetColor(234);
 
-    printTextUTF8("FileText//leaderboard.txt", 19, 1, 234);
+    printTextUTF8("FileText//leaderboard.txt", 16, 1, 234);
     int i;
     quickSort(inf, 0, n - 1); // sap xep danh sach
 
     // draw box highscore
     SetColor(228);
-    gotoxy(40, 10);
+    gotoxy(37, 10); // subtracted 1 from x-coordinate
     cout << "                LEADERBOARD" << endl;
-    gotoxy(27, 12);
+    gotoxy(24, 12); // subtracted 1 from x-coordinate
     cout << "--------------------------------------------------------------------------" << endl;
-    gotoxy(27, 13);
+    gotoxy(24, 13); // subtracted 1 from x-coordinate
     cout << "| No. |            Name            | Score |     Date     |     Time     |" << endl;
-    gotoxy(27, 14);
+    gotoxy(24, 14); // subtracted 1 from x-coordinate
     cout << "--------------------------------------------------------------------------" << endl;
 
     for (i = 0; i < min(10, n); i++) {
-        gotoxy(30, 15 + i);
+        gotoxy(27, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(237);
             cout << i + 1;
         }
 
-        gotoxy(27, 15 + i);
+        gotoxy(24, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(228);
             cout << "|";
         }
 
-        gotoxy(36, 15 + i);
+        gotoxy(33, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(237);
             cout << inf[i].name;
         }
 
-        gotoxy(33, 15 + i);
+        gotoxy(30, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(228);
             cout << "|";
         }
-        gotoxy(65, 15 + i);
+        gotoxy(62, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(237);
             cout << inf[i].diem;
         }
-        gotoxy(62, 15 + i);
+        gotoxy(59, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(228);
             cout << "|";
         }
 
-        gotoxy(70, 15 + i);
+        gotoxy(67, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(228);
             cout << "|";
         }
 
-        gotoxy(73, 15 + i);
+        gotoxy(70, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(237);
-
             cout << inf[i].day;
         }
 
-        gotoxy(85, 15 + i);
+        gotoxy(82, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(228);
             cout << "|";
         }
 
-        gotoxy(89, 15 + i);
+        gotoxy(86, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(237);
             cout << inf[i].time;
         }
-        gotoxy(100, 15 + i);
+        gotoxy(97, 15 + i); // subtracted 1 from x-coordinate
         {
             SetColor(228);
             cout << "|";
         }
     }
 
-    gotoxy(27, 15 + i);
+    gotoxy(24, 15 + i); // subtracted 1 from x-coordinate
     {
         SetColor(228);
         cout << "--------------------------------------------------------------------------" << endl;
     }
-    gotoxy(47, 16 + i);
+    gotoxy(41, 16 + i); // subtracted 1 from x-coordinate
     {
         cout << "(*) Press enter to back to MENU" << endl;
     }
@@ -576,7 +575,7 @@ void showStartMenu() {
         PlaySound(TEXT("Sound//soundtrack.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
     }
 
-    drawBackground(29, 120, 234); // fill mau cho background
+    drawBackground(0,29,0,120,234); // fill mau cho background
 
     // meo hieu sao bi loi dong cuoi nen phai tu fill ngoai
     for (int i = 0; i < 120; i++) {
@@ -788,16 +787,16 @@ void showStartMenu() {
                 // them giao dien exit game ;-;
                 //40 - 80
                 //12 - 20
-                gotoxy(40, 12);
+                gotoxy(38, 12); // subtracted 2 from x-coordinate
                 cout << char(218);
-                gotoxy(40, 20);
+                gotoxy(38, 20); // subtracted 2 from x-coordinate
                 cout << char(192);
-                gotoxy(80, 12);
+                gotoxy(78, 12); // subtracted 2 from x-coordinate
                 cout << char(191);
-                gotoxy(80, 20);
+                gotoxy(78, 20); // subtracted 2 from x-coordinate
                 cout << char(217);
 
-                for (int i = 41; i < 80; i++) {
+                for (int i = 39; i < 78; i++) { // adjusted loop range
                     gotoxy(i, 12);
                     cout << char(196);
 
@@ -806,23 +805,23 @@ void showStartMenu() {
                 }
 
                 for (int i = 13; i < 20; i++) {
-                    gotoxy(40, i);
+                    gotoxy(38, i); // subtracted 2 from x-coordinate
                     cout << '|';
 
-                    gotoxy(80, i);
+                    gotoxy(78, i); // subtracted 2 from x-coordinate
                     cout << '|';
                 }
 
                 // Fill color inside the frame
                 SetColor(234);
-                for (int i = 41; i < 80; i++) {
+                for (int i = 39; i < 78; i++) { // adjusted loop range
                     for (int j = 13; j < 20; j++) {
                         gotoxy(i, j);
                         cout << " ";
                     }
                 }
 
-                gotoxy(47, 14);
+                gotoxy(45, 14); // subtracted 2 from x-coordinate
                 SetColor(229);
                 cout << "Do you really want to quit?";
 
@@ -833,11 +832,11 @@ void showStartMenu() {
                 bool quitConfirmed = false;
                 while (!quitConfirmed) {
                     // Update button colors based on the selected button
-                    gotoxy(50, 18);
+                    gotoxy(48, 18); // subtracted 2 from x-coordinate
                     SetColor(selectedButton == 0 ? 225 : 228);
                     cout << "YES";
 
-                    gotoxy(70, 18);
+                    gotoxy(65, 18); // subtracted 2 from x-coordinate
                     SetColor(selectedButton == 1 ? 225 : 228);
                     cout << "NO";
 
@@ -853,6 +852,7 @@ void showStartMenu() {
                     else if (ch == '\r') { // Enter key
                         if (selectedButton == 0) {
                             quitConfirmed = true;
+                            system("cls");
                             exit(1);
                         }
                         else if (selectedButton == 1) {
@@ -863,7 +863,7 @@ void showStartMenu() {
                 }
 
                 // Clear the frame
-                for (int i = 40; i <= 80; i++) {
+                for (int i = 38; i <= 78; i++) { // adjusted loop range
                     for (int j = 12; j <= 20; j++) {
                         gotoxy(i, j);
                         cout << " ";
@@ -874,6 +874,33 @@ void showStartMenu() {
         }
     }
     delete[] inf;
+}
+
+// ham 3 giay chuan bi
+void ready() {
+    //system("cls");
+
+    printTextUTF8("FileText//ba.txt", 37, 10, 225);
+    Sleep(1000);
+    printTextUTF8("FileText//hai.txt", 37, 10, 225);
+    Sleep(1000);
+    for (int i = 37; i < 47; i++) {
+        for (int j = 10; j < 18; j++) {
+            gotoxy(i, j);
+            SetColor(234);
+            cout << " ";
+        }
+    }
+    printTextUTF8("FileText//mot.txt", 37, 10, 225);
+    Sleep(1000);
+    for (int i = 37; i < 47; i++) {
+        for (int j = 10; j < 18; j++) {
+            gotoxy(i, j);
+            SetColor(234);
+            cout << " ";
+        }
+    }
+    //startGame(); // Start the game
 }
 
 // Man hinh nhap thong tin nguoi choi
@@ -914,7 +941,9 @@ void inputInfoPlayer() {
 
     //drawBackground(120, 29, 234); // fill mau cho background
     SetColor(234);
-    startGame(); // Start the game
+
+    //ready();
+    startGame();
 }
 
 // man hinh pausegame
@@ -1103,7 +1132,7 @@ void quitGame() {
         }
     }
 
-    gotoxy(29, 10);
+    gotoxy(28, 10);
     SetColor(229);
     cout << "Do you really want to quit?";
 
@@ -1132,6 +1161,7 @@ void quitGame() {
             selectedButton = 1;
         }
         else if (ch == '\r') { // Enter key
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             if (selectedButton == 0) {
                 quitConfirmed = true;
                 showEndMenu();
@@ -1160,12 +1190,19 @@ void quitGame() {
 void startGame() {
     system("cls"); // clear man hinh
 
+    bool checkReady = false;
     ShowConsoleCursor(false); // tat con tro nhap
 
     drawBox();      // goi ham ve board game
-    drawSnake();    // ve con ran
-    createApple();  // tao random qua tao
     displayScoreInGame(); // hien thi diem
+
+    while (checkReady == false) {
+        ready();
+        checkReady = true;
+    }
+
+    createApple();  // tao random qua tao
+    drawSnake();    // ve con ran
 
     while (true) {
         // ham check phim an an tu ban phim
@@ -1207,6 +1244,7 @@ void startGame() {
         }
 
         if (isBiteItself() || isHitWall()) { // neu con ran can vao than minh hoac dung vao tuong
+            PlaySound(TEXT("Sound//gameover.wav"), NULL, SND_ASYNC);
             Sleep(1000);
             showEndMenu(); // hien thi man hinh endgame
             break;
@@ -1218,9 +1256,9 @@ void startGame() {
 // Hien thi menu khi thua
 void showEndMenu() {
     system("cls");
-    excuteReadFile(); // luu diem (tat se kh luu vao file nua)
+    //excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
-    printTextUTF8("FileText//youlose.txt", 28, 1, 234);
+    printTextUTF8("FileText//youlose.txt", 28, 1, 228);
 
     SetColor(225);
     // -- ve 4 goc cua board game
