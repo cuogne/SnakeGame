@@ -1,4 +1,5 @@
 ﻿#include "SystemGame.h"
+#include <iostream>
 
 //====================================== System Game Functions ======================================
 
@@ -37,4 +38,12 @@ void FixConsoleWindow()
     LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
     style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
     SetWindowLong(consoleWindow, GWL_STYLE, style);
+}
+
+void resizeConsole(int width, int height)
+{
+    HWND console = GetConsoleWindow();
+    RECT r;
+    GetWindowRect(console, &r);
+    MoveWindow(console, r.left, r.top, width, height, TRUE);
 }

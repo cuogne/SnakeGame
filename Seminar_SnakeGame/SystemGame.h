@@ -8,6 +8,4 @@ void gotoxy(int x, int y);
 void ShowConsoleCursor(bool showFlag);
 void ShowScrollbar(BOOL Show);
 void FixConsoleWindow();
-//BOOL WINAPI SetConsoleTitleW(
-//     LPCTSTR lpConsoleTitle
-//);
+void resizeConsole(int width, int height);

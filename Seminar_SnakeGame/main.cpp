@@ -1,6 +1,12 @@
 ﻿#include "HeaderGame.h"
 #include "SystemGame.h"
+
 int main() {
+    resizeConsole(120, 30); // fix kich thuoc cua so
+    SetConsoleTitleW(L"Snake Game"); // set tieu de console
+    FixConsoleWindow(); // fix phong to cua so
+    ShowScrollbar(FALSE); // tat thanh cuon
+
     displayImageSnake("FileText//SnakePic.txt");
     system("cls");
 
@@ -11,6 +17,7 @@ int main() {
     //int key = 0;
     //INTRO(key);
 
+    // bang mau
 	/*
 	HANDLE hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	int count = 1;
