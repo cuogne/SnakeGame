@@ -18,7 +18,7 @@ Point prevTail;                         // bien luu vitri cua ran trc khi di chu
 int score = 0;                          // bien luu tru diem so
 int speed = 300;                        // bien toc do cua man choi
 char Name[21] = "";                     // bien luu tru ten nguoi choi, ban dau khoi tao rong
-int t,n;
+int t, n;
 const int LimitPlayers = 1000;          // so luong nguoi choi toi da luu duoc
 bool checkMusic = true;                 // check trang thai nhac nen
 bool isPaused = false;                  // check trang thai pause game
@@ -137,7 +137,7 @@ void drawHeadnTail() {
 }
 
 // In cac thong tin ben canh khung board game
-void displayScoreInGame(){
+void displayScoreInGame() {
     SetColor(226);
     gotoxy(WIDTH + 7, 3);
     cout << "Speed: ";
@@ -591,7 +591,7 @@ void showStartMenu() {
 
     for (;;) {
         //displayFileDrawASCII("FileText//logo.txt", 10, 2, 233);
-        printTextUTF8("FileText//logo.txt",18,2,233);
+        printTextUTF8("FileText//logo.txt", 18, 2, 233);
 
         ShowConsoleCursor(FALSE);
         ShowScrollbar(0);
@@ -624,13 +624,13 @@ void showStartMenu() {
 
         if (key == 72 || key == 'w' && (counter >= 2 && counter <= 6)) {
             counter--;
-            PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             if (counter < 1) {
                 counter = 6; // Quay lại dòng EXIT
             }
         }
         if (key == 80 || key == 's' && (counter >= 1 && counter <= 5)) {
-            PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             counter++;
             if (counter > 6) {
                 counter = 1; // Quay lại dòng START
@@ -662,7 +662,7 @@ void showStartMenu() {
         }
         }
         if (key == '\r') {
-            PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             switch (counter) {
             case 1://BUTTON START
             {
@@ -679,7 +679,7 @@ void showStartMenu() {
                 cout << "(*) Press enter to back to MENU" << endl;
                 while (key = _getch()) {
                     if (key == '\r') {
-                        PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         break;
                     }
                 }
@@ -694,7 +694,7 @@ void showStartMenu() {
                 displayHighScore(inf, n);
                 while (key = _getch()) {
                     if (key == '\r') {
-                        PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         break;
                     }
                 }
@@ -731,7 +731,7 @@ void showStartMenu() {
                 cout << "(*) Press enter to back to MENU" << endl;
                 while (key = _getch()) {
                     if (key == '\r') {
-                        PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         system("cls");
                         break;
                     }
@@ -776,7 +776,7 @@ void showStartMenu() {
                 cout << "(*) Press enter to back to MENU" << endl;
                 while (key = _getch()) {
                     if (key == '\r') {
-                        PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         break;
                     }
                 }
@@ -843,11 +843,11 @@ void showStartMenu() {
 
                     ch = _getch();
                     if (ch == 'a') {
-                        PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         selectedButton = 0;
                     }
                     else if (ch == 'd') {
-                        PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         selectedButton = 1;
                     }
                     else if (ch == '\r') { // Enter key
@@ -907,11 +907,11 @@ void inputInfoPlayer() {
     }
     gotoxy(50, 15);
     cin.getline(Name, 20);
-    PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
     resetSnake(); // Reset snake's state
 
     speed = (550 - t * 100); // Adjust game speed based on level
-   
+
     //drawBackground(120, 29, 234); // fill mau cho background
     SetColor(234);
     startGame(); // Start the game
@@ -1124,11 +1124,11 @@ void quitGame() {
 
         ch = _getch();
         if (ch == 'a') {
-            PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             selectedButton = 0;
         }
         else if (ch == 'd') {
-            PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             selectedButton = 1;
         }
         else if (ch == '\r') { // Enter key
@@ -1291,14 +1291,14 @@ void showEndMenu() {
 
         // Xử lý các phím mũi tên lên và xuống để di chuyển lựa chọn
         if ((key == 72 || key == 'w') && (counter >= 2 && counter <= 3)) {
-            PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             counter--;
             if (counter < 1) {
                 counter = 3;
             }
         }
         if ((key == 80 || key == 's') && (counter >= 1 && counter <= 2)) {
-            PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             counter++;
             if (counter > 3) {
                 counter = 1;
@@ -1326,19 +1326,19 @@ void showEndMenu() {
         if (key == '\r') {
             switch (counter) {
             case 1: {
-                PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                 resetSnake();
                 startGame();
                 break;
             }
             case 2: {
-                PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                 system("cls");
                 showStartMenu();
                 break;
             }
             case 3: {
-                PlaySound(TEXT("Sound//press.wav"), NULL, SND_ASYNC);
+                PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                 exit(0);
                 break;
             }
@@ -1432,7 +1432,7 @@ void excuteReadFile() {
     }
     //realTime(date, thoigian);
 
-    outputFile << Name << "-" << score << "-" << date <<"-"<< time << endl;
+    outputFile << Name << "-" << score << "-" << date << "-" << time << endl;
     outputFile.close();
 
     readFileHighScore(inf, n);

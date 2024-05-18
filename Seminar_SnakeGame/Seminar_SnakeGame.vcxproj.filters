@@ -49,6 +49,9 @@
     <Media Include="Sound\click1.wav">
       <Filter>Source Files\Sound</Filter>
     </Media>
+    <Media Include="Sound\press.wav">
+      <Filter>Source Files\Sound</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <Text Include="FileText\about.txt">

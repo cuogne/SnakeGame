@@ -194,6 +194,7 @@
   <ItemGroup>
     <Media Include="Sound\click1.wav" />
     <Media Include="Sound\pop.wav" />
+    <Media Include="Sound\press.wav" />
     <Media Include="Sound\soundtrack.wav" />
   </ItemGroup>
   <ItemGroup>

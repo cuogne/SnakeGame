@@ -47,3 +47,4 @@ void resizeConsole(int width, int height)
     GetWindowRect(console, &r);
     MoveWindow(console, r.left, r.top, width, height, TRUE);
 }
+

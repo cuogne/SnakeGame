@@ -63,7 +63,6 @@ void INTRO(int& key);
 void MoveFirstChar(string& source, string& dest);
 void printTextUTF8(const std::string& filePath, int x, int y, int numColor);
 
-void displayFileDrawASCII(const string& fileName, int x, int y, int numColor);
 void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor);
 void displayImageColor(int** image, int height, int width, int x, int y);
 void displayImageSnake(string fileName);
@@ -81,6 +80,8 @@ void startGame();
 void showStartMenu();
 void inputInfoPlayer();
 void pauseGame();
+void quitGame();
+void saveGame();
 void showEndMenu();
 void resetSnake();
 
