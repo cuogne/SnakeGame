@@ -1256,7 +1256,7 @@ void startGame() {
 // Hien thi menu khi thua
 void showEndMenu() {
     system("cls");
-    //excuteReadFile(); // luu diem (tat se kh luu vao file nua)
+    excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     printTextUTF8("FileText//youlose.txt", 28, 1, 228);
 
