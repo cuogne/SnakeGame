@@ -25,6 +25,14 @@ bool isPaused = false;                  // check trang thai pause game
 char date[20];
 char thoigian[20];
 
+const unsigned char horizontalLineTop = 223; //viền trên
+const unsigned char horizontalLineBottom = 220; // viền dưới 
+const unsigned char verticalLine = 219; // viền trái, phải 
+const unsigned char topLeftCorner = 219; // góc trái trên
+const unsigned char topRightCorner = 219;
+const unsigned char bottomLeftCorner = 219;
+const unsigned char bottomRightCorner = 219;
+
 vector<Point> snake = {
     Point{WIDTH / 2 + 3, HEIGHT / 2},   // (48,15)
     Point{WIDTH / 2 + 2, HEIGHT / 2},   // (47,15)
@@ -40,38 +48,27 @@ vector<Point> snake = {
 // ve board game
 void drawBox() {
     SetColor(228);
-    // -- ve 4 goc cua board game
+
     gotoxy(1, 0);
-    cout << char(218);
-    //cout << " ";
+    for (int i = 1; i < 80; i++) {
 
-    gotoxy(1, HEIGHT);
-    cout << char(192);
-    //cout << " ";
-
-    gotoxy(WIDTH, 0);
-    cout << char(191);
-    //cout << " ";
-
-    gotoxy(WIDTH, HEIGHT);
-    cout << char(217);
-    //cout << " ";
-    // --------------------------
-
-    for (int i = 2; i < WIDTH; i++) {
-        gotoxy(i, 0);
-        cout << char(196);
-        //cout << " ";
-        gotoxy(i, HEIGHT);
-        cout << char(196);
-        //cout << " ";
+        if (i == 1 || i == 80) cout << topLeftCorner;
+        else cout << horizontalLineTop;
     }
+    cout << topRightCorner;
 
-    for (int i = 1; i < HEIGHT; i++) {
+    gotoxy(1, 28);
+    for (int i = 1; i < 80; i++) {
+        if (i == 1 || i == 80) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    for (int i = 1; i < 28; i++) {
         gotoxy(1, i);
-        cout << "|";
-        gotoxy(WIDTH, i);
-        cout << "|";
+        cout << verticalLine;
+        gotoxy(80, i);
+        cout << verticalLine;
     }
 
     gotoxy(16, 29);
@@ -80,44 +77,39 @@ void drawBox() {
 
     // -----------------------------------------------------
     gotoxy(82, 0);
-    cout << char(218);
+    for (int i = 82; i < 118; i++) {
 
-    gotoxy(82, 28);
-    cout << char(192);
-
-    gotoxy(118, 0);
-    cout << char(191);
-
-    gotoxy(118, 28);
-    cout << char(217);
-
-    for (int i = 83; i < 118; i++) {
-        gotoxy(i, 0);
-        cout << char(196);
-        gotoxy(i, 28);
-        cout << char(196);
-        gotoxy(i, 12);
-        cout << '_';
+        if (i == 82 || i == 118) cout << topLeftCorner;
+        else cout << horizontalLineTop;
     }
+    cout << topRightCorner;
 
-    for (int i = 1; i < 28; i++) {
+    
+    gotoxy(82, 28);
+    for (int i = 82; i < 118; i++) {
+        if (i == 82 || i == 118) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    gotoxy(82, 12);
+    for (int i = 82; i < 118; i++) {
+
+        cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    for (int i = 0; i < 28; i++) {
         gotoxy(82, i);
-        cout << '|';
+        cout << verticalLine;
         gotoxy(118, i);
-        cout << '|';
+        cout << verticalLine;
     }
 }
 
 void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
     const int buttonWidth = 26;
     const int buttonHeight = 3;
-    const unsigned char horizontalLineTop = 223; //viền trên
-    const unsigned char horizontalLineBottom = 220; // viền dưới 
-    const unsigned char verticalLine = 219; // viền trái, phải 
-    const unsigned char topLeftCorner = 219; // góc trái trên
-    const unsigned char topRightCorner = 219;
-    const unsigned char bottomLeftCorner = 219;
-    const unsigned char bottomRightCorner = 219;
 
     int borderColor = 8; // Màu đỏ cho khung viền
     // Vẽ khung viền của nút button
@@ -278,13 +270,6 @@ void displayHighScore(Info inf[], int n) {
         gotoxy(37, 25); cout << " NO DATA" << endl;
         return;
     }
-    const unsigned char horizontalLineTop = 223; //viền trên
-    const unsigned char horizontalLineBottom = 220; // viền dưới 
-    const unsigned char verticalLine = 219; // viền trái, phải 
-    const unsigned char topLeftCorner = 219; // góc trái trên
-    const unsigned char topRightCorner = 219;
-    const unsigned char bottomLeftCorner = 219;
-    const unsigned char bottomRightCorner = 219;
     const int TABLEWIDTH = 100;
     const int height_1name = 1;
 
@@ -517,7 +502,6 @@ void displayImage(int** image, int height, int width, int x, int y) {
     }
 }
 
-
 //====================================== Logic Game Functions ======================================
 
 // random vi tri cua qua tao trong board game
@@ -628,10 +612,6 @@ void showStartMenu() {
     for (int i = 0; i < 100; ++i)
         snakePic3[i] = new int[100];
 
-    int** menuPic = new int* [100];
-    for (int i = 0; i < 100; ++i)
-        menuPic[i] = new int[100];
-
     readImageFromFile(snakePic2, 21, 21, "FileText//SnakePic2.txt", 15);
     readImageFromFile(snakePic3, 21, 21, "FileText//SnakePic3.txt", 15);
 
@@ -735,36 +715,31 @@ void showStartMenu() {
 
         case 5:					//BUTTON EXIT
         {
-            // them giao dien exit game ;-;
-                //40 - 80
-                //12 - 20
-            gotoxy(38, 12); // subtracted 2 from x-coordinate
-            cout << char(218);
-            gotoxy(38, 20); // subtracted 2 from x-coordinate
-            cout << char(192);
-            gotoxy(78, 12); // subtracted 2 from x-coordinate
-            cout << char(191);
-            gotoxy(78, 20); // subtracted 2 from x-coordinate
-            cout << char(217);
+            SetColor(228);
+            gotoxy(38, 12);
+            for (int i = 38; i < 78; i++) {
 
-            for (int i = 39; i < 78; i++) { // adjusted loop range
-                gotoxy(i, 12);
-                cout << char(196);
-
-                gotoxy(i, 20);
-                cout << char(196);
+                if (i == 38 || i == 78) cout << topLeftCorner;
+                else cout << horizontalLineTop;
             }
+            cout << topRightCorner;
 
-            for (int i = 13; i < 20; i++) {
-                gotoxy(38, i); // subtracted 2 from x-coordinate
-                cout << '|';
+            gotoxy(38, 20);
+            for (int i = 38; i < 78; i++) {
+                if (i == 38 || i == 78) cout << topLeftCorner;
+                else cout << horizontalLineBottom;
+            }
+            cout << bottomRightCorner;
 
-                gotoxy(78, i); // subtracted 2 from x-coordinate
-                cout << '|';
+            for (int i = 12; i < 20; i++) {
+                gotoxy(38, i);
+                cout << verticalLine;
+                gotoxy(78, i);
+                cout << verticalLine;
             }
 
             // Fill color inside the frame
-            SetColor(113);
+            SetColor(238);
             for (int i = 39; i < 78; i++) { // adjusted loop range
                 for (int j = 13; j < 20; j++) {
                     gotoxy(i, j);
@@ -773,7 +748,7 @@ void showStartMenu() {
             }
 
             gotoxy(45, 14); // subtracted 2 from x-coordinate
-            SetColor(113);
+            SetColor(228);
             cout << "Do you really want to quit?";
 
             int selectedButton = 0; // 0 for "YES", 1 for "NO"
@@ -784,11 +759,11 @@ void showStartMenu() {
             while (!quitConfirmed) {
                 // Update button colors based on the selected button
                 gotoxy(48, 18); // subtracted 2 from x-coordinate
-                SetColor(selectedButton == 0 ? 113 : 116);
+                SetColor(selectedButton == 0 ? 225 : 228);
                 cout << "YES";
 
                 gotoxy(65, 18); // subtracted 2 from x-coordinate
-                SetColor(selectedButton == 1 ? 113 : 116);
+                SetColor(selectedButton == 1 ? 225 : 228);
                 cout << "NO";
 
                 ch = _getch();
@@ -847,11 +822,9 @@ void showStartMenu() {
     for (int i = 0; i < 100; ++i) {
         delete[] snakePic2[i];
         delete[] snakePic3[i];
-        delete[] menuPic[i];
     }
     delete[] snakePic2;
     delete[] snakePic3;
-    delete[] menuPic;
 }
 
 // ham 3 giay chuan bi
@@ -927,14 +900,25 @@ void inputInfoPlayer() {
             //drawBackground(120, 29, 234); // fill mau cho background
             SetColor(234);
 
+            system("cls");
+            setConsoleBackgroundColor(7);
+            printTextUTF8("FileText//guide.txt", 5, 1, 113);
+            char ch = _getch();
+            if (ch == '\r') {
+                setConsoleBackgroundColor(14);
+                startGame();
+            }
             //ready();
-            startGame();
             break;
         }
         case 2:
         {
             
             system("cls");
+            showStartMenu();
+
+            // dang phat trien phan save game (neu kip ;-;)
+            /*
             for (int i = 5; i < 25; i++) {
                 for (int j = 20; j < 100; j++) {
                     gotoxy(j, i);
@@ -1009,7 +993,7 @@ void inputInfoPlayer() {
             system("cls");
             SetColor(234);
             startGame();
-            
+            */
             break;
         }
         }
@@ -1021,30 +1005,27 @@ void inputInfoPlayer() {
 void pauseGame() {
     // 21 - 61
     // 8 - 16
+    SetColor(228);
     gotoxy(21, 8);
-    cout << char(218);
+    for (int i = 21; i < 61; i++) {
+
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineTop;
+    }
+    cout << topRightCorner;
 
     gotoxy(21, 16);
-    cout << char(192);
-
-    gotoxy(61, 8);
-    cout << char(191);
-
-    gotoxy(61, 16);
-    cout << char(217);
-    // --------------------------
-    for (int i = 22; i < 61; i++) {
-        gotoxy(i, 8);
-        cout << char(196);
-        gotoxy(i, 16);
-        cout << char(196);
+    for (int i = 21; i < 61; i++) {
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
     }
+    cout << bottomRightCorner;
 
-    for (int i = 9; i < 16; i++) {
+    for (int i = 8; i < 16; i++) {
         gotoxy(21, i);
-        cout << '|';
+        cout << verticalLine;
         gotoxy(61, i);
-        cout << '|';
+        cout << verticalLine;
     }
     // Fill màu trong khung
     SetColor(234);
@@ -1185,27 +1166,27 @@ void saveGame() {
 // ham quit game 
 void quitGame() {
     // Draw the frame
+    SetColor(228);
     gotoxy(21, 8);
-    cout << char(218);
-    gotoxy(21, 16);
-    cout << char(192);
-    gotoxy(61, 8);
-    cout << char(191);
-    gotoxy(61, 16);
-    cout << char(217);
+    for (int i = 21; i < 61; i++) {
 
-    for (int i = 22; i < 61; i++) {
-        gotoxy(i, 8);
-        cout << char(196);
-        gotoxy(i, 16);
-        cout << char(196);
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineTop;
     }
+    cout << topRightCorner;
 
-    for (int i = 9; i < 16; i++) {
+    gotoxy(21, 16);
+    for (int i = 21; i < 61; i++) {
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    for (int i = 8; i < 16; i++) {
         gotoxy(21, i);
-        cout << '|';
+        cout << verticalLine;
         gotoxy(61, i);
-        cout << '|';
+        cout << verticalLine;
     }
 
     // Fill color inside the frame
@@ -1307,7 +1288,7 @@ void startGame() {
                 pauseGame();
             }
             else if (ch == 'g') {
-                saveGame();
+                //saveGame(); dang thuc hien
             }
             else if (ch == 'q') // Quit game
             {
@@ -1345,44 +1326,37 @@ void showEndMenu() {
 
     setConsoleBackgroundColor(7);
 
-    printTextUTF8("FileText//youlose.txt", 28, 1, 113);
-
+    printTextUTF8("FileText//youlose.txt", 28, 1, 116);
     SetColor(113);
-    // -- ve 4 goc cua board game
-    // 39 81 - 7 20
-    gotoxy(39, 10);
-    cout << char(218);
+    gotoxy(39, 11);
+    for (int i = 39; i < 81; i++) {
+
+        if (i == 39 || i == 81) cout << topLeftCorner;
+        else cout << horizontalLineTop;
+    }
+    cout << topRightCorner;
 
     gotoxy(39, 28);
-    cout << char(192);
-
-    gotoxy(81, 10);
-    cout << char(191);
-
-    gotoxy(81, 28);
-    cout << char(217);
-    // --------------------------
-    for (int i = 40; i < 81; i++) {
-        gotoxy(i, 10);
-        cout << char(196);
-        gotoxy(i, 28);
-        cout << char(196);
+    for (int i = 39; i < 81; i++) {
+        if (i == 39 || i == 81) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
     }
-
-    for (int i = 11; i < 28; i++) {
+    cout << bottomRightCorner;
+    
+    for (int i = 12; i < 28; i++) {
         gotoxy(39, i);
-        cout << '|';
+        cout << verticalLine;
         gotoxy(81, i);
-        cout << '|';
+        cout << verticalLine;
     }
 
-    gotoxy(48, 13);
+    gotoxy(48, 14);
     SetColor(112);
     cout << "Your Name : ";
     SetColor(113);
     cout << Name << endl;
 
-    gotoxy(48, 16);
+    gotoxy(48, 17);
     SetColor(112);
     cout << "Your Score: ";
     SetColor(113);

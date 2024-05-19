@@ -7,7 +7,8 @@
 		╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
                                                                                        		
 		
-		
+
+
 		                1.Use the arrow keys a,w,d,s on your keyboard to direct the 
 		                snake around the screen and eat the food. 
 
@@ -18,3 +19,7 @@
 		                stage. There are five stages.
 
 		                4.Be careful not to direct the snake into its own tail!
+
+			
+			
+					(*) Press enter to play game
