@@ -272,97 +272,72 @@ void displayScoreInGame() {
 // hien thi bang rankscore
 void displayHighScore(Info inf[], int n) {
     system("cls");
-    //displayFileDrawASCII("FileText//leaderboard.txt",0,1,234);
-    //SetColor(234);
     setConsoleBackgroundColor(7);
-    printTextUTF8("FileText//leaderboard.txt", 16, 1, 113);
-    int i;
-    quickSort(inf, 0, n - 1); // sap xep danh sach
-
-    // draw box highscore
-    SetColor(112);
-    gotoxy(37, 10); // subtracted 1 from x-coordinate
-    cout << "                LEADERBOARD" << endl;
-    gotoxy(24, 12); // subtracted 1 from x-coordinate
-    cout << "--------------------------------------------------------------------------" << endl;
-    gotoxy(24, 13); // subtracted 1 from x-coordinate
-    cout << "| No. |            Name            | Score |     Date     |     Time     |" << endl;
-    gotoxy(24, 14); // subtracted 1 from x-coordinate
-    cout << "--------------------------------------------------------------------------" << endl;
-
-    for (i = 0; i < min(10, n); i++) {
-        gotoxy(27, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(113);
-            cout << i + 1;
-        }
-
-        gotoxy(24, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(112);
-            cout << "|";
-        }
-
-        gotoxy(33, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(113);
-            cout << inf[i].name;
-        }
-
-        gotoxy(30, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(112);
-            cout << "|";
-        }
-        gotoxy(62, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(113);
-            cout << inf[i].diem;
-        }
-        gotoxy(59, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(112);
-            cout << "|";
-        }
-
-        gotoxy(67, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(112);
-            cout << "|";
-        }
-
-        gotoxy(70, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(113);
-            cout << inf[i].day;
-        }
-
-        gotoxy(82, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(112);
-            cout << "|";
-        }
-
-        gotoxy(86, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(113);
-            cout << inf[i].time;
-        }
-        gotoxy(97, 15 + i); // subtracted 1 from x-coordinate
-        {
-            SetColor(112);
-            cout << "|";
-        }
+    printTextUTF8("FileText//leaderboard.txt", 14, 0, 113);
+    if (n == 1) {
+        gotoxy(37, 25); cout << " NO DATA" << endl;
+        return;
     }
+    const unsigned char horizontalLineTop = 223; //viền trên
+    const unsigned char horizontalLineBottom = 220; // viền dưới 
+    const unsigned char verticalLine = 219; // viền trái, phải 
+    const unsigned char topLeftCorner = 219; // góc trái trên
+    const unsigned char topRightCorner = 219;
+    const unsigned char bottomLeftCorner = 219;
+    const unsigned char bottomRightCorner = 219;
+    const int TABLEWIDTH = 100;
+    const int height_1name = 1;
 
-    gotoxy(24, 15 + i); // subtracted 1 from x-coordinate
-    {
-        SetColor(112);
-        cout << "--------------------------------------------------------------------------" << endl;
+    int table_height = (n - 1) * height_1name;
+    const int borderColor = 4;
+    SetColor(borderColor);
+
+    // Similar to the original function, sort the players
+    quickSort(inf, 0, n - 1);
+
+    SetColor(120);
+    gotoxy(4, 7);
+    cout << setw(4) << ' ';
+    cout << topLeftCorner;
+    for (int i = 0; i < TABLEWIDTH; i++) {
+
+        if (i == 3 || i == 28 || i == 54 || i == 79) cout << topLeftCorner;
+        else cout << horizontalLineTop;
     }
-    gotoxy(41, 16 + i); // subtracted 1 from x-coordinate
-    {
-        cout << "(*) Press enter to back to MENU" << endl;
+    cout << topRightCorner;
+    cout << endl << setw(8) << ' ';
+    cout << verticalLine << "NO." << verticalLine << setw(10) << ' ' << "NAME" << setw(10) << ' ' << verticalLine << setw(10) << ' ' << "SCORE" << setw(10) << ' ' << verticalLine << setw(10) << ' ' << "DATE" << setw(10) << ' ' << verticalLine << setw(8) << ' ' << "TIME" << setw(8) << ' ' << verticalLine;
+    for (int i = 0; i < min(10, n); ++i) {
+        cout << endl << setw(8) << ' ';
+        cout << topLeftCorner;
+        for (int i = 0; i < TABLEWIDTH; i++) {
+
+            if (i == 3 || i == 28 || i == 54 || i == 79) cout << topLeftCorner;
+            else cout << horizontalLineTop;
+        }
+        cout << topRightCorner;
+        cout << endl << setw(8) << ' ';
+        cout << verticalLine << setw(3) << ' ' << verticalLine << setw(24) << ' ' << verticalLine << setw(25) << ' ' << verticalLine << setw(24) << ' ' << verticalLine << setw(20) << ' ' << verticalLine;
+    }
+    cout << setw(8) << endl << ' ';
+    cout << bottomLeftCorner;
+    for (int i = 0; i < TABLEWIDTH; i++) {
+
+        if (i == 3 || i == 28 || i == 54 || i == 79) cout << bottomLeftCorner;
+        else cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    SetColor(113);
+    int tpy = 10;
+    for (int i = 0; i < min(10, n); i++) {
+        int tpx = 10;
+        gotoxy(tpx, tpy); cout << i + 1;
+        gotoxy(tpx + 7, tpy); cout << inf[i].name;
+        gotoxy(tpx + 39, tpy); cout << inf[i].diem;
+        gotoxy(tpx + 61, tpy); cout << inf[i].day;
+        gotoxy(tpx + 85, tpy); cout << inf[i].time;
+        tpy += 2;
     }
 }
 
@@ -958,6 +933,7 @@ void inputInfoPlayer() {
         }
         case 2:
         {
+            
             system("cls");
             for (int i = 5; i < 25; i++) {
                 for (int j = 20; j < 100; j++) {
@@ -1033,6 +1009,7 @@ void inputInfoPlayer() {
             system("cls");
             SetColor(234);
             startGame();
+            
             break;
         }
         }
@@ -1364,7 +1341,7 @@ void startGame() {
 // Hien thi menu khi thua
 void showEndMenu() {
     system("cls");
-    //excuteReadFile(); // luu diem (tat se kh luu vao file nua)
+    excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     setConsoleBackgroundColor(7);
 
