@@ -1,9 +1,11 @@
 ﻿  FunctionsGame.cpp
 C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(147,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(177,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(192,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(383,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(398,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(967,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(988,47): warning C4101: 'e': unreferenced local variable
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(175,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(190,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(202,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(217,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(408,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(423,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(991,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(1012,47): warning C4101: 'e': unreferenced local variable
   Seminar_SnakeGame.vcxproj -> C:\code\Seminar_SnakeGame\ARM64\Debug\Seminar_SnakeGame.exe

@@ -150,9 +150,7 @@ void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
     cout << text;
 }
 
-void drawMenu(const std::vector<std::string>& options, int highlightedOption) {
-    const int startX = 47; // Đặt vị trí x bắt đầu của các nút button
-    const int startY = 3; // Đặt vị trí y bắt đầu của menu
+void drawMenu(const std::vector<std::string>& options, int highlightedOption, const int startX, const int startY) {
     const int buttonSpacing = 1; // Khoảng cách giữa các nút button
 
     // Xóa các nút button đã vẽ trước đó
@@ -174,7 +172,34 @@ void NewGameandContinued(int& keyPressed) {
 
     while (true) {
 
-        drawMenu(options, highlightedOption);
+        drawMenu(options, highlightedOption,47,3);
+
+        int key = _getch();
+
+        if (key == 'w' || key == 72) {  // Up arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption - 1 + options.size()) % options.size();
+        }
+        else if (key == 's' || key == 80) {  // Down arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption + 1) % options.size();
+        }
+        else if (key == 13) {  // Enter key
+            // Trả về giá trị của phím được nhấn
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            keyPressed = highlightedOption + 1; // Vì chỉ số của options bắt đầu từ 0, nên cần +1 để phù hợp với các trường hợp trong switch case
+            break;
+        }
+    }
+}
+
+void RestartandBackMenu(int& keyPressed) {
+    std::vector<std::string> options = { "RESTART GAME", "BACK MENU" };
+    size_t highlightedOption = 0;
+
+    while (true) {
+
+        drawMenu(options, highlightedOption,47,12);
 
         int key = _getch();
 
@@ -380,7 +405,7 @@ void INTRO(int& keyPressed) {
 
     while (true) {
 
-        drawMenu(options, highlightedOption);
+        drawMenu(options, highlightedOption,47,3);
 
         int key = _getch();
 
@@ -636,13 +661,13 @@ void showStartMenu() {
     readImageFromFile(snakePic3, 21, 21, "FileText//SnakePic3.txt", 15);
 
     system("cls");
-    int lastKey = 0;
+
     for (;;) {
         setConsoleBackgroundColor(7);
         printTextUTF8("FileText//logo.txt", 20, 1, 113);
         displayImage(snakePic2, 21, 21, 2, 9);
         displayImage(snakePic3, 21, 21, 76, 9);
-        int key = lastKey;
+        int key = 0;
         INTRO(key);
         /*if (key == '\r') {*/
         switch (key) {
@@ -842,7 +867,6 @@ void showStartMenu() {
             break;
         }
         } // end of switch
-        lastKey = key;
     } // end of for loop
     delete[] inf;
     for (int i = 0; i < 100; ++i) {
@@ -934,8 +958,6 @@ void inputInfoPlayer() {
         }
         case 2:
         {
-            // dang thiet ke logic ham nay
-            /*
             system("cls");
             for (int i = 5; i < 25; i++) {
                 for (int j = 20; j < 100; j++) {
@@ -1011,7 +1033,6 @@ void inputInfoPlayer() {
             system("cls");
             SetColor(234);
             startGame();
-            */
             break;
         }
         }
@@ -1343,130 +1364,70 @@ void startGame() {
 // Hien thi menu khi thua
 void showEndMenu() {
     system("cls");
-    excuteReadFile(); // luu diem (tat se kh luu vao file nua)
+    //excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
-    printTextUTF8("FileText//youlose.txt", 28, 1, 228);
+    setConsoleBackgroundColor(7);
 
-    SetColor(225);
+    printTextUTF8("FileText//youlose.txt", 28, 1, 113);
+
+    SetColor(113);
     // -- ve 4 goc cua board game
     // 39 81 - 7 20
     gotoxy(39, 10);
     cout << char(218);
 
-    gotoxy(39, 25);
+    gotoxy(39, 28);
     cout << char(192);
 
     gotoxy(81, 10);
     cout << char(191);
 
-    gotoxy(81, 25);
+    gotoxy(81, 28);
     cout << char(217);
     // --------------------------
     for (int i = 40; i < 81; i++) {
         gotoxy(i, 10);
         cout << char(196);
-        gotoxy(i, 25);
+        gotoxy(i, 28);
         cout << char(196);
     }
 
-    for (int i = 11; i < 25; i++) {
+    for (int i = 11; i < 28; i++) {
         gotoxy(39, i);
         cout << '|';
         gotoxy(81, i);
         cout << '|';
     }
 
-    int Set[] = { 234,228,228,228 }; // Màu sắc của các lựa chọn
-    int counter = 1; // Lựa chọn hiện tại
-    char key;
+    gotoxy(48, 13);
+    SetColor(112);
+    cout << "Your Name : ";
+    SetColor(113);
+    cout << Name << endl;
 
-    while (true) {
-        //system("cls");
-        ShowConsoleCursor(FALSE);
-        ShowScrollbar(0);
-        {
-            gotoxy(48, 13);
-            SetColor(234);
-            cout << "Your Name : ";
-            SetColor(237);
-            cout << Name << endl;
-        }
-        {
-            gotoxy(48, 15);
-            SetColor(234);
-            cout << "Your Score: ";
-            SetColor(237);
-            cout << score << endl;
-        }
+    gotoxy(48, 16);
+    SetColor(112);
+    cout << "Your Score: ";
+    SetColor(113);
+    cout << score << endl;
 
-        // Hiển thị các lựa chọn
-        gotoxy(54, 18);
-        SetColor(Set[0]);
-        cout << "RESTART GAME";
+    int key = 0;
+    for (;;) {
 
-        gotoxy(55, 20);
-        SetColor(Set[1]);
-        cout << "MENU GAME";
-
-        gotoxy(55, 22);
-        SetColor(Set[2]);
-        cout << "QUIT GAME";
-
-        key = _getch();
-
-        // Xử lý các phím mũi tên lên và xuống để di chuyển lựa chọn
-        if ((key == 72 || key == 'w') && (counter >= 2 && counter <= 3)) {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            counter--;
-            if (counter < 1) {
-                counter = 3;
-            }
-        }
-        if ((key == 80 || key == 's') && (counter >= 1 && counter <= 2)) {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            counter++;
-            if (counter > 3) {
-                counter = 1;
-            }
-        }
-
-        // Đặt màu cho các lựa chọn
-        for (int j = 0; j < 3; j++) {
-            Set[j] = 228;
-        }
-
-        switch (counter) {
-        case 1: {
-            Set[0] = 234; break;
-        }
-        case 2: {
-            Set[1] = 234; break;
-        }
-        case 3: {
-            Set[2] = 234; break;
-        }
-        }
-
-        // Xử lý khi người dùng nhấn Enter
-        if (key == '\r') {
-            switch (counter) {
-            case 1: {
-                PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+        RestartandBackMenu(key);
+        switch (key) {
+            case 1:					//BUTTON START
+            {
                 resetSnake();
+                setConsoleBackgroundColor(14);
                 startGame();
                 break;
             }
-            case 2: {
-                PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            case 2:
+            {
                 system("cls");
                 showStartMenu();
                 break;
-            }
-            case 3: {
-                PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                exit(0);
-                break;
-            }
             }
         }
     }

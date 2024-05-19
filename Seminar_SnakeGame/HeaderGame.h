@@ -57,13 +57,14 @@ struct Point {
 void drawBox();
 void drawBackground(int x, int maxX, int y, int maxY, int numColor);
 void drawButton(const std::string& text, bool highlighted, int xPos, int yPos);
-void drawMenu(const std::vector<std::string>& options, int highlightedOption);
+void drawMenu(const std::vector<std::string>& options, int highlightedOption, const int startX, const int startY);
 void drawSnake();
 void drawHeadnTail();
 void displayScoreInGame();
 void displayHighScore(Info inf[], int n);
 void INTRO(int& key);
 void NewGameandContinued(int& key);
+void RestartandBackMenu(int& keyPressed);
 void MoveFirstChar(string& source, string& dest);
 void printTextUTF8(const std::string& filePath, int x, int y, int numColor);
 
