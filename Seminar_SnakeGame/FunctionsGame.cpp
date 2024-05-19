@@ -830,6 +830,7 @@ void showStartMenu() {
 // ham 3 giay chuan bi
 void ready() {
     //system("cls");
+    PlaySound(TEXT("Sound//3-2-1.wav"), NULL, SND_ASYNC);
 
     printTextUTF8("FileText//ba.txt", 37, 10, 225);
     Sleep(1000);
@@ -905,6 +906,7 @@ void inputInfoPlayer() {
             printTextUTF8("FileText//guide.txt", 5, 1, 113);
             char ch = _getch();
             if (ch == '\r') {
+                //PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                 setConsoleBackgroundColor(14);
                 startGame();
             }
@@ -1322,6 +1324,7 @@ void startGame() {
 // Hien thi menu khi thua
 void showEndMenu() {
     system("cls");
+    PlaySound(TEXT("Sound//lose.wav"), NULL, SND_ASYNC);
     excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     setConsoleBackgroundColor(7);
