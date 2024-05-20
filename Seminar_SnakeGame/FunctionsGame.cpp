@@ -881,8 +881,11 @@ void inputInfoPlayer() {
                 gotoxy(i, 15);
                 cout << " ";
             }
-            gotoxy(50, 15);
-            getline(cin, Name);
+            do {
+                gotoxy(50, 15);
+                getline(cin, Name);
+            } while (Name.empty()); // nhap den khi nao chuoi khong rong
+
             PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
 
             MSSV = "23120223231202242312022523120250";
@@ -980,7 +983,7 @@ void inputInfoPlayer() {
 
             system("cls");
             SetColor(234);
-            resetSnake(CurrentSnake,score,MSSV);
+            resetSnake(CurrentSnake, score, MSSV);
             startGame();
 
             break;
