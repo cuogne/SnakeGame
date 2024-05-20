@@ -96,9 +96,6 @@
     <Text Include="hai.txt">
       <Filter>Source Files\FileText</Filter>
     </Text>
-    <Text Include="mot.txt">
-      <Filter>Source Files\FileText</Filter>
-    </Text>
     <Text Include="FileText\SnakePic2.txt">
       <Filter>Source Files\FileText</Filter>
     </Text>
@@ -110,6 +107,9 @@
     </Text>
     <Text Include="SaveGame\cuong.txt">
       <Filter>Source Files\SaveGame</Filter>
+    </Text>
+    <Text Include="FileText\mot.txt">
+      <Filter>Source Files\FileText</Filter>
     </Text>
   </ItemGroup>
 </Project>

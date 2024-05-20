@@ -18,7 +18,7 @@ Point prevTail;                         // bien luu vitri cua ran trc khi di chu
 int score = 0;                          // bien luu tru diem so
 int speed = 300;                        // bien toc do cua man choi
 string Name;                  // bien luu tru ten nguoi choi, ban dau khoi tao rong
-int t, n;
+int n;
 const int LimitPlayers = 1000;          // so luong nguoi choi toi da luu duoc
 bool checkMusic = true;                 // check trang thai nhac nen
 bool isPaused = false;                  // check trang thai pause game
@@ -246,7 +246,7 @@ void displayScoreInGame() {
     gotoxy(WIDTH + 7, 3);
     cout << "Speed: ";
     SetColor(237);
-    cout << t;
+    cout << speed/10;
 
     SetColor(226);
     gotoxy(WIDTH + 7, 6);
@@ -866,7 +866,6 @@ void inputInfoPlayer() {
         case 1:					//BUTTON START
         {
             system("cls");
-            t = 5; // Assign the selected level to variable t
             // 40 - 10
             for (int i = 5; i < 25; i++) {
                 for (int j = 20; j < 100; j++) {
@@ -896,8 +895,6 @@ void inputInfoPlayer() {
             PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             resetSnake(); // Reset snake's state
 
-            speed = (550 - t * 100); // Adjust game speed based on level
-
             //drawBackground(120, 29, 234); // fill mau cho background
             SetColor(234);
 
@@ -916,11 +913,11 @@ void inputInfoPlayer() {
         case 2:
         {
             
-            system("cls");
-            showStartMenu();
+            //system("cls");
+            //showStartMenu();
 
             // dang phat trien phan save game (neu kip ;-;)
-            /*
+            
             for (int i = 5; i < 25; i++) {
                 for (int j = 20; j < 100; j++) {
                     gotoxy(j, i);
@@ -977,14 +974,8 @@ void inputInfoPlayer() {
                 }
 
                 // Read the remaining lines for coordinates
-                std::string line;
-                while (getline(load, line)) {
-                    std::istringstream iss(line);
-                    int x, y;
-                    if (iss >> x >> y) {
-                        snake.push_back({ x, y });
-                    }
-                }
+                getline(load, CurrentSnake);
+                
                 load.close();
             }
             else {
@@ -995,7 +986,7 @@ void inputInfoPlayer() {
             system("cls");
             SetColor(234);
             startGame();
-            */
+            
             break;
         }
         }
@@ -1079,27 +1070,27 @@ void pauseGame() {
 // ham save game (dang trong giai doan phat trien)
 void saveGame() {
     // Draw the frame
+    SetColor(228);
     gotoxy(21, 8);
-    cout << char(218);
-    gotoxy(21, 16);
-    cout << char(192);
-    gotoxy(61, 8);
-    cout << char(191);
-    gotoxy(61, 16);
-    cout << char(217);
+    for (int i = 21; i < 61; i++) {
 
-    for (int i = 22; i < 61; i++) {
-        gotoxy(i, 8);
-        cout << char(196);
-        gotoxy(i, 16);
-        cout << char(196);
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineTop;
     }
+    cout << topRightCorner;
 
-    for (int i = 9; i < 16; i++) {
+    gotoxy(21, 16);
+    for (int i = 21; i < 61; i++) {
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    for (int i = 8; i < 16; i++) {
         gotoxy(21, i);
-        cout << '|';
+        cout << verticalLine;
         gotoxy(61, i);
-        cout << '|';
+        cout << verticalLine;
     }
 
     // Fill color inside the frame
@@ -1258,6 +1249,8 @@ void quitGame() {
 void startGame() {
     system("cls"); // clear man hinh
 
+    speed = 50; // Adjust game speed based on level
+
     bool checkReady = false;
     ShowConsoleCursor(false); // tat con tro nhap
 
@@ -1290,7 +1283,7 @@ void startGame() {
                 pauseGame();
             }
             else if (ch == 'g') {
-                //saveGame(); dang thuc hien
+                saveGame(); //dang thuc hien
             }
             else if (ch == 'q') // Quit game
             {
@@ -1325,7 +1318,7 @@ void startGame() {
 void showEndMenu() {
     system("cls");
     PlaySound(TEXT("Sound//lose.wav"), NULL, SND_ASYNC);
-    excuteReadFile(); // luu diem (tat se kh luu vao file nua)
+    //excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     setConsoleBackgroundColor(7);
 
@@ -1414,8 +1407,10 @@ void resetSnake() {
 // doc va luu file
 void readSaveGame() {
     system("cls");
+
     string file;
-    
+
+    // 40 - 10
     for (int i = 5; i < 25; i++) {
         for (int j = 20; j < 100; j++) {
             gotoxy(j, i);
@@ -1423,19 +1418,38 @@ void readSaveGame() {
             cout << " ";
         }
     }
+    gotoxy(30, 20);
+    cout << "Luu y: Ten file nhap vao khong co khoang trang !!!" << endl;
+    gotoxy(30, 21);
+    cout << "Chi can nhap ten file, khong can nhap dinh dang file" << endl;
 
-    gotoxy(40, 17);
-    cout << "Luu y: Ten file nhap vao khong co khoang trang !!!";
-
-    gotoxy(40, 10);
+    // Input player's name
+    gotoxy(50, 10);
     ShowConsoleCursor(TRUE);
     SetColor(116);
-    cout << "Nhap ten file can luu: "; cin >> file;
+    cout << "Nhap ten file de luu: " << endl;
     SetColor(116);
+    for (int i = 50; i < 70; i++) {
+        SetColor(240);
+        gotoxy(i, 12);
+        cout << " ";
+    }
+    gotoxy(50, 12);
 
-    string filePath = "SaveGame//" + file + ".txt";
+    string filePath;
+    ifstream checkFile;
+    do {
+        cin >> file;
+        filePath = "SaveGame//" + file + ".txt";
+        checkFile.open(filePath.c_str());
+        if (checkFile.good()) {
+            // File already exists, ask for a different name
+            cout << "File da ton tai. Vui long nhap ten file khac." << endl;
+        }
+        checkFile.close();
+    } while (checkFile.good());
 
-    ofstream outputFile(filePath.c_str(), ios::app);
+    ofstream outputFile(filePath.c_str(), ios::out);
     ofstream fileName("FileText//FileNameSaveGame.txt", ios::app);
 
     if (!outputFile) {
@@ -1446,19 +1460,22 @@ void readSaveGame() {
     outputFile << score << endl;
 
     // Lưu tọa độ của con rắn
+    /*
     for (const auto& point : snake) {
         outputFile << point.x << " " << point.y << endl;
     }
+    */
+    outputFile << CurrentSnake << endl;
 
-    fileName << file + ".txt";
-    cout << endl;
-    cout << endl;
-    cout << endl;
+    fileName << file + ".txt" << endl;
 
     outputFile.close();
     fileName.close();
     // In ra thông báo
-    gotoxy(30, 20);
+    // 
+    //drawBackground(120, 29, 234); // fill mau cho background
+    SetColor(234);
+    gotoxy(30, 15);
     cout << "Da luu file thanh cong. An phim enter de tiep tuc." << endl;
 
     // Chờ người dùng nhấn enter

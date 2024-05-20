@@ -207,6 +207,7 @@
     <Text Include="FileText\logo.txt" />
     <Text Include="FileText\logosnake.txt" />
     <Text Include="FileText\menuPic.txt" />
+    <Text Include="FileText\mot.txt" />
     <Text Include="FileText\ready.txt" />
     <Text Include="FileText\setting.txt" />
     <Text Include="FileText\SnakePic.txt" />
@@ -214,7 +215,6 @@
     <Text Include="FileText\snakePic3.txt" />
     <Text Include="FileText\youlose.txt" />
     <Text Include="hai.txt" />
-    <Text Include="mot.txt" />
     <Text Include="SaveGame\cuong.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
