@@ -17,7 +17,7 @@ Point apple;                            // bien dai dien cho vi tri cua qua tao
 Point prevTail;                         // bien luu vitri cua ran trc khi di chuyen
 int score = 0;                          // bien luu tru diem so
 int speed = 300;                        // bien toc do cua man choi
-string Name;                  // bien luu tru ten nguoi choi, ban dau khoi tao rong
+string Name;                            // bien luu tru ten nguoi choi, ban dau khoi tao rong
 int n;
 const int LimitPlayers = 1000;          // so luong nguoi choi toi da luu duoc
 bool checkMusic = true;                 // check trang thai nhac nen
@@ -33,16 +33,7 @@ const unsigned char topRightCorner = 219;
 const unsigned char bottomLeftCorner = 219;
 const unsigned char bottomRightCorner = 219;
 
-vector<Point> snake = {
-    Point{WIDTH / 2 + 3, HEIGHT / 2},   // (48,15)
-    Point{WIDTH / 2 + 2, HEIGHT / 2},   // (47,15)
-    Point{WIDTH / 2 + 1, HEIGHT / 2},   // (46,15)
-    Point{WIDTH / 2 + 0, HEIGHT / 2},   // (45,15)
-    Point{WIDTH / 2 - 1, HEIGHT / 2},   // (44,15)
-    Point{WIDTH / 2 - 2, HEIGHT / 2},   // (43,15)
-    Point{WIDTH / 2 - 3, HEIGHT / 2},   // (42,15)
-    Point{WIDTH / 2 - 4, HEIGHT / 2},   // (41,15)  
-};
+vector<Point> snake;
 
 //====================================== Draw Game Functions ======================================
 // ve board game
@@ -84,7 +75,7 @@ void drawBox() {
     }
     cout << topRightCorner;
 
-    
+
     gotoxy(82, 28);
     for (int i = 82; i < 118; i++) {
         if (i == 82 || i == 118) cout << topLeftCorner;
@@ -159,12 +150,12 @@ void drawMenu(const std::vector<std::string>& options, int highlightedOption, co
 }
 
 void NewGameandContinued(int& keyPressed) {
-    std::vector<std::string> options = { "NEW GAME", "CONTINUE"};
+    std::vector<std::string> options = { "NEW GAME", "CONTINUE" };
     size_t highlightedOption = 0;
 
     while (true) {
 
-        drawMenu(options, highlightedOption,47,3);
+        drawMenu(options, highlightedOption, 47, 3);
 
         int key = _getch();
 
@@ -191,7 +182,7 @@ void RestartandBackMenu(int& keyPressed) {
 
     while (true) {
 
-        drawMenu(options, highlightedOption,47,12);
+        drawMenu(options, highlightedOption, 47, 12);
 
         int key = _getch();
 
@@ -246,7 +237,7 @@ void displayScoreInGame() {
     gotoxy(WIDTH + 7, 3);
     cout << "Speed: ";
     SetColor(237);
-    cout << speed/10;
+    cout << speed / 10;
 
     SetColor(226);
     gotoxy(WIDTH + 7, 6);
@@ -359,13 +350,13 @@ void MoveFirstChar(string& source, string& dest) {
 }
 
 // button new (dang trong giai doan nghien cuu)
-void INTRO(int& keyPressed) {
+void MENU(int& keyPressed) {
     std::vector<std::string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
     size_t highlightedOption = 0;
 
     while (true) {
 
-        drawMenu(options, highlightedOption,47,3);
+        drawMenu(options, highlightedOption, 47, 3);
 
         int key = _getch();
 
@@ -623,7 +614,7 @@ void showStartMenu() {
         displayImage(snakePic2, 21, 21, 2, 9);
         displayImage(snakePic3, 21, 21, 76, 9);
         int key = 0;
-        INTRO(key);
+        MENU(key);
         /*if (key == '\r') {*/
         switch (key) {
         case 1:					//BUTTON START
@@ -860,7 +851,7 @@ void inputInfoPlayer() {
     system("cls");
     int key = 0;
     for (;;) {
-        
+
         NewGameandContinued(key);
         switch (key) {
         case 1:					//BUTTON START
@@ -893,7 +884,11 @@ void inputInfoPlayer() {
             gotoxy(50, 15);
             getline(cin, Name);
             PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            resetSnake(); // Reset snake's state
+
+            MSSV = "23120223231202242312022523120250";
+            CurrentSnake = "71202132";
+
+            resetSnake(CurrentSnake, 0, MSSV); // Reset snake's state
 
             //drawBackground(120, 29, 234); // fill mau cho background
             SetColor(234);
@@ -912,12 +907,12 @@ void inputInfoPlayer() {
         }
         case 2:
         {
-            
+
             //system("cls");
             //showStartMenu();
 
             // dang phat trien phan save game (neu kip ;-;)
-            
+
             for (int i = 5; i < 25; i++) {
                 for (int j = 20; j < 100; j++) {
                     gotoxy(j, i);
@@ -950,7 +945,6 @@ void inputInfoPlayer() {
                 gotoxy(60 - saveFiles[i].length() / 2, printStartPos + i);
                 cout << saveFiles[i] << endl;  // Thêm dòng này
             }
-
             string fileName;
             gotoxy(50, 25);
             cout << "Nhap file can choi: "; cin >> fileName;
@@ -970,12 +964,13 @@ void inputInfoPlayer() {
                 }
                 catch (std::invalid_argument& e) {
                     std::cerr << "Invalid score: " << score_str << '\n';
-                    return ;
+                    return;
                 }
 
                 // Read the remaining lines for coordinates
                 getline(load, CurrentSnake);
-                
+                getline(load, MSSV);
+
                 load.close();
             }
             else {
@@ -985,8 +980,9 @@ void inputInfoPlayer() {
 
             system("cls");
             SetColor(234);
+            resetSnake(CurrentSnake,score,MSSV);
             startGame();
-            
+
             break;
         }
         }
@@ -1338,7 +1334,7 @@ void showEndMenu() {
         else cout << horizontalLineBottom;
     }
     cout << bottomRightCorner;
-    
+
     for (int i = 12; i < 28; i++) {
         gotoxy(39, i);
         cout << verticalLine;
@@ -1363,44 +1359,41 @@ void showEndMenu() {
 
         RestartandBackMenu(key);
         switch (key) {
-            case 1:					//BUTTON START
-            {
-                resetSnake();
-                setConsoleBackgroundColor(14);
-                startGame();
-                break;
-            }
-            case 2:
-            {
-                system("cls");
-                showStartMenu();
-                break;
-            }
+        case 1:					//BUTTON START
+        {
+            MSSV = "23120223231202242312022523120250";
+            CurrentSnake = "71202132";
+            resetSnake(CurrentSnake, 0, MSSV);
+            setConsoleBackgroundColor(14);
+            startGame();
+            break;
+        }
+        case 2:
+        {
+            system("cls");
+            showStartMenu();
+            break;
+        }
         }
     }
 }
 
 // ham reset vi tri con ran khi choi lai
-void resetSnake() {
+void resetSnake(string temp, int diem, string idsv) {
     snake.clear();
-    // khoi tao lai con ran nhu ban dau
-    snake = {
-        Point{WIDTH / 2 + 3, HEIGHT / 2},   // (48,15)
-        Point{WIDTH / 2 + 2, HEIGHT / 2},   // (47,15)
-        Point{WIDTH / 2 + 1, HEIGHT / 2},   // (46,15)
-        Point{WIDTH / 2 + 0, HEIGHT / 2},   // (45,15)
-        Point{WIDTH / 2 - 1, HEIGHT / 2},   // (44,15)
-        Point{WIDTH / 2 - 2, HEIGHT / 2},   // (43,15)
-        Point{WIDTH / 2 - 3, HEIGHT / 2},   // (42,15)
-        Point{WIDTH / 2 - 4, HEIGHT / 2},   // (41,15)  
-    };
+    CurrentSnake = temp;
+    // Xác định chiều dài của con rắn dựa trên CurrentSnake
+    int length = CurrentSnake.size();
 
-    // Reset cac variable khac
-    MSSV = "23120223231202242312022523120250";
-    CurrentSnake = "71202132";
+    // Khởi tạo lại con rắn dựa trên chiều dài của CurrentSnake
+    for (int i = 0; i < length; ++i) {
+        snake.push_back(Point{ WIDTH / 2 + 3 - i, HEIGHT / 2 }); // Khởi tạo con rắn theo chiều ngang từ (WIDTH / 2 + 3, HEIGHT / 2) giảm dần
+    }
+
+    // Reset các biến khác
+    MSSV = idsv;
     fullMSSV = "2312021723120223231202242312022523120250";
-    score = 0;
-
+    score = diem;
     direction = Direction::right;
 }
 
@@ -1466,6 +1459,7 @@ void readSaveGame() {
     }
     */
     outputFile << CurrentSnake << endl;
+    outputFile << MSSV << endl;
 
     fileName << file + ".txt" << endl;
 

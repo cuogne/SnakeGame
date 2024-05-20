@@ -62,7 +62,7 @@ void drawSnake();
 void drawHeadnTail();
 void displayScoreInGame();
 void displayHighScore(Info inf[], int n);
-void INTRO(int& key);
+void MENU(int& key);
 void NewGameandContinued(int& key);
 void RestartandBackMenu(int& keyPressed);
 void MoveFirstChar(string& source, string& dest);
@@ -90,7 +90,7 @@ void pauseGame();
 void quitGame();
 void saveGame();
 void showEndMenu();
-void resetSnake();
+void resetSnake(string temp, int score, string idsv);
 void readSaveGame();
 
 void readFileHighScore(Info inf[], int& n);
