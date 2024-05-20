@@ -12,7 +12,6 @@ int main() {
     int** snakePic = new int* [100];
     for (int i = 0; i < 100; ++i)
         snakePic[i] = new int[100];
-
     
     readImageFromFile(snakePic, 21, 21, "FileText//SnakePic.txt", 15);
     displayImage(snakePic, 21, 21, 38, 5);

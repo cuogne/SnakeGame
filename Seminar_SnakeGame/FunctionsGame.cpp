@@ -62,11 +62,8 @@ void drawBox() {
         cout << verticalLine;
     }
 
-    gotoxy(16, 29);
-    SetColor(233);
-    cout << "Press <P> to pause game - Press <Q> to end game";
-
     // -----------------------------------------------------
+    SetColor(225);
     gotoxy(82, 0);
     for (int i = 82; i < 118; i++) {
 
@@ -133,13 +130,13 @@ void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
     cout << text;
 }
 
-void drawMenu(const std::vector<std::string>& options, int highlightedOption, const int startX, const int startY) {
+void drawMenu(const vector<string>& options, int highlightedOption, const int startX, const int startY) {
     const int buttonSpacing = 1; // Khoảng cách giữa các nút button
 
     // Xóa các nút button đã vẽ trước đó
     for (int i = 0; i < options.size(); ++i) {
         gotoxy(startX, startY + i * (buttonSpacing + 3) + 8); // Di chuyển con trỏ in đến vị trí của nút button cũ
-        cout << std::string(26, ' '); // Xóa nút button bằng cách in một chuỗi rỗng có độ dài bằng kích thước của nút button
+        cout << string(26, ' '); // Xóa nút button bằng cách in một chuỗi rỗng có độ dài bằng kích thước của nút button
     }
 
     // Vẽ các nút button mới
@@ -155,7 +152,7 @@ void NewGameandContinued(int& keyPressed) {
 
     while (true) {
 
-        drawMenu(options, highlightedOption, 47, 3);
+        drawMenu(options, highlightedOption, 47, 2);
 
         int key = _getch();
 
@@ -178,7 +175,7 @@ void NewGameandContinued(int& keyPressed) {
 }
 
 void RestartandBackMenu(int& keyPressed) {
-    std::vector<std::string> options = { "RESTART GAME", "BACK MENU" };
+    vector<string> options = { "RESTART GAME", "BACK MENU" };
     size_t highlightedOption = 0;
 
     while (true) {
@@ -251,6 +248,20 @@ void displayScoreInGame() {
     cout << "Your name: ";
     SetColor(237);
     cout << Name;
+
+    SetColor(228);
+    gotoxy(84, 14);
+    cout << "Press <P> to Pause Game";
+    gotoxy(84, 18);
+    cout << "Press <G> to Save Game";
+    gotoxy(84, 22);
+    cout << "Press <Q> to Quit Game";
+    gotoxy(84, 26);
+    cout << "MOVE SNAKE : A W S D";
+
+    gotoxy(25, 29);
+    SetColor(224);
+    cout << "FIT@HCMUS - 23CTT03 - GROUP 04";
 }
 
 // hien thi bang rankscore
@@ -352,7 +363,7 @@ void MoveFirstChar(string& source, string& dest) {
 
 // button new (dang trong giai doan nghien cuu)
 void MENU(int& keyPressed) {
-    std::vector<std::string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
+    vector<string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
     size_t highlightedOption = 0;
 
     while (true) {
@@ -436,56 +447,56 @@ void displayImage(int** image, int height, int width, int x, int y) {
         for (int j = 0; j < width; ++j) {
             switch (image[i][j]) {
             case 0:
-                std::cout << ANSI_COLOR_BLACK << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BLACK << (char)bar2 << (char)bar2;
                 break;
             case 1:
-                std::cout << ANSI_COLOR_RED << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_RED << (char)bar2 << (char)bar2;
                 break;
             case 2:
-                std::cout << ANSI_COLOR_GREEN << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_GREEN << (char)bar2 << (char)bar2;
                 break;
             case 3:
-                std::cout << ANSI_COLOR_YELLOW << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_YELLOW << (char)bar2 << (char)bar2;
                 break;
             case 4:
-                std::cout << ANSI_COLOR_BLUE << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BLUE << (char)bar2 << (char)bar2;
                 break;
             case 5:
-                std::cout << ANSI_COLOR_MAGENTA << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_MAGENTA << (char)bar2 << (char)bar2;
                 break;
             case 6:
-                std::cout << ANSI_COLOR_CYAN << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_CYAN << (char)bar2 << (char)bar2;
                 break;
             case 7:
-                std::cout << ANSI_COLOR_BRIGHTRED << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTRED << (char)bar2 << (char)bar2;
                 break;
             case 8:
-                std::cout << ANSI_COLOR_BRIGHTGREEN << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTGREEN << (char)bar2 << (char)bar2;
                 break;
             case 9:
-                std::cout << ANSI_COLOR_BRIGHTYELLOW << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTYELLOW << (char)bar2 << (char)bar2;
                 break;
             case 10:
-                std::cout << ANSI_COLOR_BRIGHTBLUE << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTBLUE << (char)bar2 << (char)bar2;
                 break;
             case 11:
-                std::cout << ANSI_COLOR_BRIGHTMAGENTA << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTMAGENTA << (char)bar2 << (char)bar2;
                 break;
             case 12:
-                std::cout << ANSI_COLOR_BRIGHTCYAN << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTCYAN << (char)bar2 << (char)bar2;
                 break;
             case 13:
-                std::cout << ANSI_COLOR_BRIGHTWHITE << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTWHITE << (char)bar2 << (char)bar2;
                 break;
             case 14:
-                std::cout << ANSI_COLOR_BRIGHTBLACK << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_BRIGHTBLACK << (char)bar2 << (char)bar2;
                 break;
             case 15:
-                std::cout << ANSI_COLOR_WHITE << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_WHITE << (char)bar2 << (char)bar2;
                 break;
 
             default:
-                std::cout << ANSI_COLOR_RESET << (char)bar2 << (char)bar2;
+                cout << ANSI_COLOR_RESET << (char)bar2 << (char)bar2;
                 break;
             }
         }
@@ -614,16 +625,19 @@ void showStartMenu() {
         printTextUTF8("FileText//logo.txt", 20, 1, 113);
         displayImage(snakePic2, 21, 21, 2, 9);
         displayImage(snakePic3, 21, 21, 76, 9);
+
         int key = 0;
         MENU(key);
-        /*if (key == '\r') {*/
+
         switch (key) {
+
         case 1:					//BUTTON START
         {
             system("cls");
             inputInfoPlayer();
             break;
         }
+
         case 2:				//BUTTON RANKING
         {
             // xem bang xep hang
@@ -639,6 +653,7 @@ void showStartMenu() {
             system("cls");
             break;
         }
+
         case 3: {
             // bat tat nhac nen
             system("cls");
@@ -655,19 +670,23 @@ void showStartMenu() {
             {
             case 1:
             {
-                gotoxy(59, 15); cout << "ON ";
+                gotoxy(59, 15); 
+                SetColor(116);
+                cout << "ON ";
                 break;
             }
 
             case 2:
             {
-                gotoxy(59, 15); cout << "OFF";
+                gotoxy(59, 15);
+                SetColor(116);
+                cout << "OFF";
                 break;
             }
             }
             gotoxy(40, 24);
             SetColor(113);
-            cout << "(*) Press enter to back to MENU" << endl;
+            cout << "(*) Press <Enter> to back to MENU" << endl;
             while (key = _getch()) {
                 if (key == '\r') {
                     PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
@@ -687,6 +706,7 @@ void showStartMenu() {
 
                 case 1: // TURN ON THE MUSIC
                     gotoxy(59, 15);
+                    SetColor(116);
                     cout << "ON ";
                     if (!checkMusic) {
                         checkMusic = true;
@@ -694,6 +714,7 @@ void showStartMenu() {
                     break;
                 case 2: // TURN OFF THE MUSIC
                     gotoxy(59, 15);
+                    SetColor(116);
                     cout << "OFF";
                     if (checkMusic) {
                         PlaySound(0, 0, 0);
@@ -702,6 +723,25 @@ void showStartMenu() {
                     break;
                 }
             }
+            break;
+        }
+
+        case 4:					//BUTTON ABOUT US
+        {
+            system("cls");
+            setConsoleBackgroundColor(7);
+            printTextUTF8("FileText//About.txt", 29, 4, 113);
+
+            gotoxy(34, 24);
+            SetColor(113);
+            cout << "(*) Press <Enter> to back to MENU" << endl;
+            while (key = _getch()) {
+                if (key == '\r') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    break;
+                }
+            }
+            system("cls");
             break;
         }
 
@@ -789,27 +829,9 @@ void showStartMenu() {
             }
             break;
         }
-
-        case 4:					//BUTTON ABOUT US
-        {
-            system("cls");
-            setConsoleBackgroundColor(7);
-            printTextUTF8("FileText//About.txt", 29, 4, 113);
-
-            gotoxy(34, 24);
-            SetColor(113);
-            cout << "(*) Press enter to back to MENU" << endl;
-            while (key = _getch()) {
-                if (key == '\r') {
-                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                    break;
-                }
-            }
-            system("cls");
-            break;
-        }
         } // end of switch
     } // end of for loop
+
     delete[] inf;
     for (int i = 0; i < 100; ++i) {
         delete[] snakePic2[i];
@@ -872,7 +894,7 @@ void inputInfoPlayer() {
                 cout << "Insert your name (Maximum 20 characters): ";
                 SetColor(116);
                 gotoxy(48, 20);
-                cout << "Press enter to continue";
+                cout << "Press <Enter> to continue";
                 cout << endl;
                 cout << endl;
                 cout << endl;
@@ -893,7 +915,6 @@ void inputInfoPlayer() {
 
                 resetSnake(CurrentSnake, 0, MSSV); // Reset snake's state
 
-                //drawBackground(120, 29, 234); // fill mau cho background
                 SetColor(234);
 
                 system("cls");
@@ -901,7 +922,6 @@ void inputInfoPlayer() {
                 printTextUTF8("FileText//guide.txt", 5, 1, 113);
                 char ch = _getch();
                 if (ch == '\r') {
-                    //PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                     setConsoleBackgroundColor(14);
                     startGame();
                 }
@@ -917,10 +937,10 @@ void inputInfoPlayer() {
                     return;
                 }
 
-                std::vector<std::string> saveFiles;
-                std::string line;
+                vector<string> saveFiles;
+                string line;
                 int lineNumber = 0;
-                while (std::getline(filein, line)) {
+                while (getline(filein, line)) {
                     saveFiles.push_back(line);
                     lineNumber++;
                 }
@@ -1064,9 +1084,9 @@ void inputInfoPlayer() {
 // man hinh pausegame
 void pauseGame() {
     // 21 - 61
-    // 8 - 16
+    // 10 - 18
     SetColor(228);
-    gotoxy(21, 8);
+    gotoxy(21, 10);
     for (int i = 21; i < 61; i++) {
 
         if (i == 21 || i == 61) cout << topLeftCorner;
@@ -1074,14 +1094,14 @@ void pauseGame() {
     }
     cout << topRightCorner;
 
-    gotoxy(21, 16);
+    gotoxy(21, 18);
     for (int i = 21; i < 61; i++) {
         if (i == 21 || i == 61) cout << topLeftCorner;
         else cout << horizontalLineBottom;
     }
     cout << bottomRightCorner;
 
-    for (int i = 8; i < 16; i++) {
+    for (int i = 10; i < 18; i++) {
         gotoxy(21, i);
         cout << verticalLine;
         gotoxy(61, i);
@@ -1090,12 +1110,12 @@ void pauseGame() {
     // Fill màu trong khung
     SetColor(234);
     for (int i = 22; i < 61; i++) {
-        for (int j = 9; j < 16; j++) {
+        for (int j = 11; j < 18; j++) {
             gotoxy(i, j);
             cout << " ";
         }
     }
-    gotoxy(29, 12);
+    gotoxy(29, 14);
     SetColor(229);
     cout << "Press enter to continue...";
 
@@ -1107,11 +1127,11 @@ void pauseGame() {
         }
         else if (ch == '\r') {
             enterPressed = true;
-            gotoxy(29, 12);
+            gotoxy(29, 14);
             cout << "                          ";
             // doi 3 giay de tiep tuc tro choi
             for (size_t i = 3; i > 0; i--) {
-                gotoxy(41, 12);
+                gotoxy(41, 14);
                 cout << i;
                 Sleep(1000);
             }
@@ -1120,7 +1140,7 @@ void pauseGame() {
 
             // --------------------------
             for (int i = 21; i <= 61; i++) {
-                for (int j = 8; j <= 16; j++) {
+                for (int j = 10; j <= 18; j++) {
                     gotoxy(i, j);
                     cout << " ";
                 }
@@ -1138,7 +1158,7 @@ void pauseGame() {
 void saveGame() {
     // Draw the frame
     SetColor(228);
-    gotoxy(21, 8);
+    gotoxy(21, 10);
     for (int i = 21; i < 61; i++) {
 
         if (i == 21 || i == 61) cout << topLeftCorner;
@@ -1146,14 +1166,14 @@ void saveGame() {
     }
     cout << topRightCorner;
 
-    gotoxy(21, 16);
+    gotoxy(21, 18);
     for (int i = 21; i < 61; i++) {
         if (i == 21 || i == 61) cout << topLeftCorner;
         else cout << horizontalLineBottom;
     }
     cout << bottomRightCorner;
 
-    for (int i = 8; i < 16; i++) {
+    for (int i = 10; i < 18; i++) {
         gotoxy(21, i);
         cout << verticalLine;
         gotoxy(61, i);
@@ -1163,13 +1183,13 @@ void saveGame() {
     // Fill color inside the frame
     SetColor(234);
     for (int i = 22; i < 61; i++) {
-        for (int j = 9; j < 16; j++) {
+        for (int j = 11; j < 18; j++) {
             gotoxy(i, j);
             cout << " ";
         }
     }
 
-    gotoxy(28, 10);
+    gotoxy(29, 12);
     SetColor(229);
     cout << "Do you want to save game?";
 
@@ -1180,11 +1200,11 @@ void saveGame() {
     bool quitConfirmed = false;
     while (!quitConfirmed) {
         // Update button colors based on the selected button
-        gotoxy(30, 14);
+        gotoxy(30, 16);
         SetColor(selectedButton == 0 ? 225 : 228);
         cout << "YES";
 
-        gotoxy(50, 14);
+        gotoxy(50, 16);
         SetColor(selectedButton == 1 ? 225 : 228);
         cout << "NO";
 
@@ -1212,7 +1232,7 @@ void saveGame() {
 
     // Clear the frame
     for (int i = 21; i <= 61; i++) {
-        for (int j = 8; j <= 16; j++) {
+        for (int j = 10; j <= 18; j++) {
             gotoxy(i, j);
             cout << " ";
         }
@@ -1227,7 +1247,7 @@ void saveGame() {
 void quitGame() {
     // Draw the frame
     SetColor(228);
-    gotoxy(21, 8);
+    gotoxy(21, 10);
     for (int i = 21; i < 61; i++) {
 
         if (i == 21 || i == 61) cout << topLeftCorner;
@@ -1235,14 +1255,14 @@ void quitGame() {
     }
     cout << topRightCorner;
 
-    gotoxy(21, 16);
+    gotoxy(21, 18);
     for (int i = 21; i < 61; i++) {
         if (i == 21 || i == 61) cout << topLeftCorner;
         else cout << horizontalLineBottom;
     }
     cout << bottomRightCorner;
 
-    for (int i = 8; i < 16; i++) {
+    for (int i = 10; i < 18; i++) {
         gotoxy(21, i);
         cout << verticalLine;
         gotoxy(61, i);
@@ -1252,13 +1272,13 @@ void quitGame() {
     // Fill color inside the frame
     SetColor(234);
     for (int i = 22; i < 61; i++) {
-        for (int j = 9; j < 16; j++) {
+        for (int j = 11; j < 18; j++) {
             gotoxy(i, j);
             cout << " ";
         }
     }
 
-    gotoxy(28, 10);
+    gotoxy(28, 12);
     SetColor(229);
     cout << "Do you really want to quit?";
 
@@ -1269,11 +1289,11 @@ void quitGame() {
     bool quitConfirmed = false;
     while (!quitConfirmed) {
         // Update button colors based on the selected button
-        gotoxy(30, 14);
+        gotoxy(30, 16);
         SetColor(selectedButton == 0 ? 225 : 228);
         cout << "YES";
 
-        gotoxy(50, 14);
+        gotoxy(50, 16);
         SetColor(selectedButton == 1 ? 225 : 228);
         cout << "NO";
 
@@ -1301,7 +1321,7 @@ void quitGame() {
 
     // Clear the frame
     for (int i = 21; i <= 61; i++) {
-        for (int j = 8; j <= 16; j++) {
+        for (int j = 10; j <= 18; j++) {
             gotoxy(i, j);
             cout << " ";
         }
@@ -1350,7 +1370,7 @@ void startGame() {
                 pauseGame();
             }
             else if (ch == 'g') {
-                saveGame(); //dang thuc hien
+                saveGame(); // luu game lai
             }
             else if (ch == 'q') // Quit game
             {
@@ -1427,7 +1447,6 @@ void showEndMenu() {
 
     int key = 0;
     for (;;) {
-
         RestartandBackMenu(key);
         switch (key) {
         case 1:					//BUTTON START
@@ -1474,7 +1493,6 @@ void readSaveGame() {
 
     string file;
 
-    // 40 - 10
     for (int i = 5; i < 25; i++) {
         for (int j = 20; j < 100; j++) {
             gotoxy(j, i);
@@ -1515,9 +1533,9 @@ void readSaveGame() {
             cout << "File da ton tai. Ban co muon ghi de len file nay?";
 
             // Display options
-            gotoxy(50, 15);
+            gotoxy(55, 15);
             cout << "> Yes";
-            gotoxy(50, 16);
+            gotoxy(55, 16);
             cout << "  No";
 
             // Handle arrow keys for selection
@@ -1525,16 +1543,16 @@ void readSaveGame() {
             while (true) {
                 char ch = _getch();
                 if (ch == 72 || ch == 'w') { // Up arrow key
-                    gotoxy(50, 15);
+                    gotoxy(55, 15);
                     cout << "> Yes";
-                    gotoxy(50, 16);
+                    gotoxy(55, 16);
                     cout << "  No";
                     overwrite = 'y';
                 }
                 else if (ch == 80 || ch == 's') { // Down arrow key
-                    gotoxy(50, 15);
+                    gotoxy(55, 15);
                     cout << "  Yes";
-                    gotoxy(50, 16);
+                    gotoxy(55, 16);
                     cout << "> No";
                     overwrite = 'n';
                 }
@@ -1551,7 +1569,20 @@ void readSaveGame() {
                     gotoxy(i, 12);
                     cout << " ";
                 }
+                // Clear the overwrite question
+                gotoxy(35, 14);
+                for (int i = 35; i < 100; i++) {
+                    SetColor(116); // Set to background color
+                    cout << " ";
+                }
+                gotoxy(55, 15);
+                SetColor(116);
+                cout << "     ";
+                gotoxy(55, 16);
+                cout << "     ";
+
                 // Move the cursor back to the input position
+                SetColor(240);
                 gotoxy(50, 12);
                 checkFile.close();
                 continue;

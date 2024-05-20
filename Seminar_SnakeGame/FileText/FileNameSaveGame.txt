@@ -7,3 +7,4 @@ chao.txt
 n.txt
 hu.txt
 hihi.txt
+chatien.txt
