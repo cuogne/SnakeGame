@@ -5,7 +5,7 @@
 
 const int WIDTH = 80;
 const int HEIGHT = 28;
-#define APPLE '0' ;
+#define APPLE '0';
 
 string MSSV = "23120223231202242312022523120250";
 string CurrentSnake = "71202132";
@@ -147,7 +147,7 @@ void drawMenu(const vector<string>& options, int highlightedOption, const int st
 }
 
 void NewGameandContinued(int& keyPressed) {
-    std::vector<std::string> options = { "NEW GAME", "CONTINUE","BACK"};
+    vector<string> options = { "NEW GAME", "CONTINUE","BACK"};
     size_t highlightedOption = 0;
 
     while (true) {
@@ -413,14 +413,14 @@ void displayFile(const string& fileName, int x, int y, int numColor) {
 void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor) {
     ifstream file(filename);
     if (file.is_open()) {
-        std::string line;
-        for (int i = 0; i < height && std::getline(file, line); ++i) {
-            std::istringstream iss(line);
+        string line;
+        for (int i = 0; i < height && getline(file, line); ++i) {
+            istringstream iss(line);
             for (int j = 0; j < width && iss; ++j) {
-                std::string token;
-                if (std::getline(iss, token, ' ')) {
+                string token;
+                if (getline(iss, token, ' ')) {
                     try {
-                        image[i][j] = std::stoi(token);
+                        image[i][j] = stoi(token);
                     }
                     catch (const std::invalid_argument&) {
                         image[i][j] = backgroundcolor;
@@ -1115,42 +1115,58 @@ void pauseGame() {
             cout << " ";
         }
     }
-    gotoxy(29, 14);
+    gotoxy(29, 12);
     SetColor(229);
-    cout << "Press enter to continue...";
+    cout << "Do you want to continue ?";
 
+    int selectedButton = 0; // 0 for "YES", 1 for "NO"
+
+    // Handle button press
     char ch;
-    bool enterPressed = false; // bien ktra xem phim enter da duoc nhan chua
-    while (!enterPressed) {
+    bool quitConfirmed = false;
+    while (!quitConfirmed) {
+        // Update button colors based on the selected button
+        gotoxy(30, 16);
+        SetColor(selectedButton == 0 ? 225 : 228);
+        cout << "SAVE";
+
+        gotoxy(45, 16);
+        SetColor(selectedButton == 1 ? 225 : 228);
+        cout << "CONTINUE";
+
         ch = _getch();
-        if (ch != '\r') {
+        if (ch == 'a') {
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            selectedButton = 0;
         }
-        else if (ch == '\r') {
-            enterPressed = true;
-            gotoxy(29, 14);
-            cout << "                          ";
-            // doi 3 giay de tiep tuc tro choi
-            for (size_t i = 3; i > 0; i--) {
-                gotoxy(41, 14);
-                cout << i;
-                Sleep(1000);
+        else if (ch == 'd') {
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            selectedButton = 1;
+        }
+        else if (ch == '\r') { // Enter key
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            if (selectedButton == 0) {
+                quitConfirmed = true;
+                readSaveGame();
             }
-            gotoxy(41, 12);
-            cout << " ";
-
-            // --------------------------
-            for (int i = 21; i <= 61; i++) {
-                for (int j = 10; j <= 18; j++) {
-                    gotoxy(i, j);
-                    cout << " ";
-                }
+            else if (selectedButton == 1) {
+                quitConfirmed = true;
+                break;
             }
         }
-
-        SetColor(225);
-        gotoxy(apple.x, apple.y);
-        cout << APPLE;
     }
+
+    // Clear the frame
+    for (int i = 21; i <= 61; i++) {
+        for (int j = 10; j <= 18; j++) {
+            gotoxy(i, j);
+            cout << " ";
+        }
+    }
+
+    SetColor(225);
+    gotoxy(apple.x, apple.y);
+    cout << APPLE;
     isPaused = false;
 }
 
@@ -1369,7 +1385,7 @@ void startGame() {
                 isPaused = true;
                 pauseGame();
             }
-            else if (ch == 'g') {
+            else if (ch == 't') {
                 saveGame(); // luu game lai
             }
             else if (ch == 'q') // Quit game
