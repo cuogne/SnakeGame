@@ -147,7 +147,7 @@ void drawMenu(const vector<string>& options, int highlightedOption, const int st
 }
 
 void NewGameandContinued(int& keyPressed) {
-    vector<string> options = { "NEW GAME", "CONTINUE","BACK"};
+    vector<string> options = { "NEW GAME", "CONTINUE","BACK" };
     size_t highlightedOption = 0;
 
     while (true) {
@@ -171,7 +171,7 @@ void NewGameandContinued(int& keyPressed) {
             break;
         }
     }
- 
+
 }
 
 void RestartandBackMenu(int& keyPressed) {
@@ -670,7 +670,7 @@ void showStartMenu() {
             {
             case 1:
             {
-                gotoxy(59, 15); 
+                gotoxy(59, 15);
                 SetColor(116);
                 cout << "ON ";
                 break;
@@ -876,207 +876,207 @@ void inputInfoPlayer() {
     for (;;) {
         NewGameandContinued(key);
         switch (key) {
-            case 1:					//BUTTON START
-            {
-                system("cls");
-                // 40 - 10
-                for (int i = 5; i < 25; i++) {
-                    for (int j = 20; j < 100; j++) {
-                        gotoxy(j, i);
-                        SetColor(116);
-                        cout << " ";
-                    }
-                }
-                // Input player's name
-                gotoxy(40, 10);
-                ShowConsoleCursor(TRUE);
-                SetColor(116);
-                cout << "Insert your name (Maximum 20 characters): ";
-                SetColor(116);
-                gotoxy(48, 20);
-                cout << "Press <Enter> to continue";
-                cout << endl;
-                cout << endl;
-                cout << endl;
-                for (int i = 50; i < 70; i++) {
-                    SetColor(240);
-                    gotoxy(i, 15);
+        case 1:					//BUTTON START
+        {
+            system("cls");
+            // 40 - 10
+            for (int i = 5; i < 25; i++) {
+                for (int j = 20; j < 100; j++) {
+                    gotoxy(j, i);
+                    SetColor(116);
                     cout << " ";
                 }
-                do {
-                    gotoxy(50, 15);
-                    getline(cin, Name);
-                } while (Name.empty()); // nhap den khi nao chuoi khong rong
+            }
+            // Input player's name
+            gotoxy(40, 10);
+            ShowConsoleCursor(TRUE);
+            SetColor(116);
+            cout << "Insert your name (Maximum 20 characters): ";
+            SetColor(116);
+            gotoxy(48, 20);
+            cout << "Press <Enter> to continue";
+            cout << endl;
+            cout << endl;
+            cout << endl;
+            for (int i = 50; i < 70; i++) {
+                SetColor(240);
+                gotoxy(i, 15);
+                cout << " ";
+            }
+            do {
+                gotoxy(50, 15);
+                getline(cin, Name);
+            } while (Name.empty()); // nhap den khi nao chuoi khong rong
 
-                PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
 
-                MSSV = "23120223231202242312022523120250";
-                CurrentSnake = "71202132";
+            MSSV = "23120223231202242312022523120250";
+            CurrentSnake = "71202132";
 
-                resetSnake(CurrentSnake, 0, MSSV); // Reset snake's state
+            resetSnake(CurrentSnake, 0, MSSV); // Reset snake's state
 
-                SetColor(234);
+            SetColor(234);
 
-                system("cls");
-                setConsoleBackgroundColor(7);
-                printTextUTF8("FileText//guide.txt", 5, 1, 113);
+            system("cls");
+            setConsoleBackgroundColor(7);
+            printTextUTF8("FileText//guide.txt", 5, 1, 113);
+            char ch = _getch();
+            if (ch == '\r') {
+                setConsoleBackgroundColor(14);
+                startGame();
+            }
+            //ready();
+            break;
+        }
+
+        case 2:
+        {
+            ifstream filein("FileText//FileNameSaveGame.txt", ios::in);
+            if (!filein.is_open()) {
+                cout << "Khong the mo file !!!" << endl;
+                return;
+            }
+
+            vector<string> saveFiles;
+            string line;
+            int lineNumber = 0;
+            while (getline(filein, line)) {
+                saveFiles.push_back(line);
+                lineNumber++;
+            }
+
+            filein.close();
+
+            system("cls");
+
+            // Tính toán vị trí cần in
+            int printStartPos = 5;
+
+            int currentFileIndex = 0;
+
+            setConsoleBackgroundColor(7);
+
+            SetColor(113);
+            gotoxy(39, 2);
+            for (int i = 39; i < 81; i++) {
+
+                if (i == 39 || i == 81) cout << topLeftCorner;
+                else cout << horizontalLineTop;
+            }
+            cout << topRightCorner;
+
+            gotoxy(39, 26);
+            for (int i = 39; i < 81; i++) {
+                if (i == 39 || i == 81) cout << topLeftCorner;
+                else cout << horizontalLineBottom;
+            }
+            cout << bottomRightCorner;
+
+            for (int i = 3; i < 26; i++) {
+                gotoxy(39, i);
+                cout << verticalLine;
+                gotoxy(81, i);
+                cout << verticalLine;
+            }
+
+            SetColor(125);
+            gotoxy(45, 3);
+            cout << "Chon file ban muon tiep tuc choi";
+            gotoxy(52, 28);
+            cout << "Press <B> to back";
+
+            while (true) {
+                // Print all files
+                for (int i = 0; i < saveFiles.size(); i++) {
+                    gotoxy(60 - saveFiles[i].length() / 2, printStartPos + i);
+                    if (i == currentFileIndex) {
+                        SetColor(113); // Highlight color
+                    }
+                    else {
+                        SetColor(124); // Normal color
+                    }
+                    cout << saveFiles[i] << endl;
+                }
+
+                // Wait for user input
                 char ch = _getch();
-                if (ch == '\r') {
-                    setConsoleBackgroundColor(14);
-                    startGame();
-                }
-                //ready();
-                break;
-            }
 
-            case 2:
-            {
-                ifstream filein("FileText//FileNameSaveGame.txt", ios::in);
-                if (!filein.is_open()) {
-                    cout << "Khong the mo file !!!" << endl;
+                switch (ch) {
+
+                case 'w':
+                case 72: // Up arrow key
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    if (currentFileIndex > 0) {
+                        currentFileIndex--;
+                    }
+                    break;
+
+                case 's':
+                case 80: // Down arrow key
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    if (currentFileIndex < saveFiles.size() - 1) {
+                        currentFileIndex++;
+                    }
+                    break;
+
+                case 'b':
+                case 'B':
+                    system("cls");
+                    setConsoleBackgroundColor(0);
+                    inputInfoPlayer();
                     return;
-                }
 
-                vector<string> saveFiles;
-                string line;
-                int lineNumber = 0;
-                while (getline(filein, line)) {
-                    saveFiles.push_back(line);
-                    lineNumber++;
-                }
 
-                filein.close();
+                case '\r': // Enter key
 
-                system("cls");
+                    string fileName = saveFiles[currentFileIndex];
+                    string filePath = "SaveGame//" + fileName;
 
-                // Tính toán vị trí cần in
-                int printStartPos = 5;
-           
-                int currentFileIndex = 0;
+                    ifstream load(filePath.c_str(), ios::in);
 
-                setConsoleBackgroundColor(7);
+                    if (load.is_open()) {
+                        // Read the first line for name
+                        getline(load, Name);
 
-                SetColor(113);
-                gotoxy(39, 2);
-                for (int i = 39; i < 81; i++) {
-
-                    if (i == 39 || i == 81) cout << topLeftCorner;
-                    else cout << horizontalLineTop;
-                }
-                cout << topRightCorner;
-
-                gotoxy(39, 26);
-                for (int i = 39; i < 81; i++) {
-                    if (i == 39 || i == 81) cout << topLeftCorner;
-                    else cout << horizontalLineBottom;
-                }
-                cout << bottomRightCorner;
-
-                for (int i = 3; i < 26; i++) {
-                    gotoxy(39, i);
-                    cout << verticalLine;
-                    gotoxy(81, i);
-                    cout << verticalLine;
-                }
-
-                SetColor(125);
-                gotoxy(45, 3);
-                cout << "Chon file ban muon tiep tuc choi";
-                gotoxy(52, 28);
-                cout << "Press <B> to back";
-
-                while (true) {
-                    // Print all files
-                    for (int i = 0; i < saveFiles.size(); i++) {
-                        gotoxy(60 - saveFiles[i].length() / 2, printStartPos + i);
-                        if (i == currentFileIndex) {
-                            SetColor(113); // Highlight color
+                        // Read the second line for score
+                        std::string score_str;
+                        getline(load, score_str);
+                        try {
+                            score = std::stoi(score_str);
                         }
-                        else {
-                            SetColor(124); // Normal color
-                        }
-                        cout << saveFiles[i] << endl;
-                    }
-
-                    // Wait for user input
-                    char ch = _getch();
-
-                    switch (ch) {
-
-                        case 'w':
-                        case 72: // Up arrow key
-                            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                            if (currentFileIndex > 0) {
-                                currentFileIndex--;
-                            }
-                            break;
-                            
-                        case 's':
-                        case 80: // Down arrow key
-                            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                            if (currentFileIndex < saveFiles.size() - 1) {
-                                currentFileIndex++;
-                            }
-                            break;
-
-                        case 'b':
-                        case 'B':
-                            system("cls");
-                            setConsoleBackgroundColor(0);
-                            inputInfoPlayer();
+                        catch (std::invalid_argument& e) {
+                            std::cerr << "Invalid score: " << score_str << '\n';
                             return;
+                        }
 
-                        
-                        case '\r': // Enter key
+                        // Read the remaining lines for coordinates
+                        getline(load, CurrentSnake);
+                        getline(load, MSSV);
 
-                            string fileName = saveFiles[currentFileIndex];
-                            string filePath = "SaveGame//" + fileName;
-
-                            ifstream load(filePath.c_str(), ios::in);
-
-                            if (load.is_open()) {
-                                // Read the first line for name
-                                getline(load, Name);
-
-                                // Read the second line for score
-                                std::string score_str;
-                                getline(load, score_str);
-                                try {
-                                    score = std::stoi(score_str);
-                                }
-                                catch (std::invalid_argument& e) {
-                                    std::cerr << "Invalid score: " << score_str << '\n';
-                                    return;
-                                }
-
-                                // Read the remaining lines for coordinates
-                                getline(load, CurrentSnake);
-                                getline(load, MSSV);
-
-                                load.close();
-                            }
-
-                            else {
-                                std::cerr << "Unable to open file";
-                                return;
-                            }
-
-                            system("cls");
-
-                            SetColor(234);
-                            resetSnake(CurrentSnake, score, MSSV);
-                            startGame();
-                            break;
+                        load.close();
                     }
+
+                    else {
+                        std::cerr << "Unable to open file";
+                        return;
+                    }
+
+                    system("cls");
+
+                    SetColor(234);
+                    resetSnake(CurrentSnake, score, MSSV);
+                    startGame();
+                    break;
                 }
-                break;
             }
-            case 3 :
-            {
-                system("cls");
-                showStartMenu();
-                break;
-            }
+            break;
+        }
+        case 3:
+        {
+            system("cls");
+            showStartMenu();
+            break;
+        }
         }
     }
 }
@@ -1385,7 +1385,7 @@ void startGame() {
                 isPaused = true;
                 pauseGame();
             }
-            else if (ch == 't') {
+            else if (ch == 'g') {
                 saveGame(); // luu game lai
             }
             else if (ch == 'q') // Quit game

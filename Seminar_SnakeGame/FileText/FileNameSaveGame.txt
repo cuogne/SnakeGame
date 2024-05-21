@@ -8,3 +8,4 @@ n.txt
 hu.txt
 hihi.txt
 chatien.txt
+binh.txt
