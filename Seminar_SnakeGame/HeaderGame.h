@@ -13,7 +13,10 @@
 #include <mmsystem.h>
 #include <chrono>
 #include <iomanip>
-
+#include <tchar.h>
+#include <strsafe.h>
+#include <locale>
+#include <codecvt>
 using namespace std;
 
 // Định nghĩa các mã màu ANSI
@@ -80,7 +83,6 @@ bool isBiteItself();
 bool isHitWall();
 bool isAteApple();
 void move();
-void handleGameSaves(vector<string>& saveFiles);
 
 //====================================== Menu Game Play Functions ======================================
 void startGame();
@@ -92,7 +94,10 @@ void quitGame();
 void saveGame();
 void showEndMenu();
 void resetSnake(string temp, int score, string idsv);
+
 void readSaveGame();
+void loadSaveFiles(std::vector<std::string>& saveFiles);
+void handleGameSaves();
 
 void readFileHighScore(Info inf[], int& n);
 void excuteReadFile();

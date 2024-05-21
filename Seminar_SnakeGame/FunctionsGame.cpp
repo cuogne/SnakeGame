@@ -36,6 +36,32 @@ const unsigned char bottomRightCorner = 219;
 vector<Point> snake;
 vector<string> saveFiles;
 
+void loadSaveFiles(std::vector<std::string>& saveFiles) {
+    saveFiles.clear(); // Clear the current list
+
+    WIN32_FIND_DATA ffd;
+    TCHAR szDir[MAX_PATH];
+    HANDLE hFind = INVALID_HANDLE_VALUE;
+
+    StringCchCopy(szDir, MAX_PATH, TEXT("SaveGame\\*"));
+
+    hFind = FindFirstFile(szDir, &ffd);
+
+    if (INVALID_HANDLE_VALUE == hFind) {
+        // Handle error
+    }
+
+    do {
+        if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+            std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+            std::string filename = converter.to_bytes(ffd.cFileName);
+            saveFiles.push_back(filename);
+        }
+    } while (FindNextFile(hFind, &ffd) != 0);
+
+    FindClose(hFind);
+}
+
 //====================================== Draw Game Functions ======================================
 // ve board game
 void drawBox() {
@@ -932,7 +958,7 @@ void inputInfoPlayer() {
 
         case 2:
         {
-            handleGameSaves(saveFiles);
+            handleGameSaves();
             break;
         }
         case 3:
@@ -1406,6 +1432,8 @@ void readSaveGame() {
         cin >> file;
         filePath = "SaveGame//" + file + ".txt";
         checkFile.open(filePath.c_str());
+        // kiem tra file trung ten trong thu muc
+
         if (checkFile.good()) {
             SetColor(113);
             gotoxy(35, 14);
@@ -1485,6 +1513,14 @@ void readSaveGame() {
         cout << "khong the mo file" << endl;
         return;
     }
+    if (saveFiles.size() > 20) {
+        SetColor(113);
+        gotoxy(35, 18);
+        cout << "Da dat gioi han luu file. Khong the luu them file.";
+        cout << "Vui long xoa cac file cu da choi";
+        return;
+    }
+
     outputFile << Name << endl;
     outputFile << score << endl;
     outputFile << CurrentSnake << endl;
@@ -1508,8 +1544,10 @@ void readSaveGame() {
 }
 
 // man hinh chon file choi lai
-void handleGameSaves(vector<string>& saveFiles) {
+void handleGameSaves() {
     system("cls");
+
+    loadSaveFiles(saveFiles);// doc toan bo file tu thu muc SaveGame
 
     // Tính toán vị trí cần in
     int printStartPos = 5;
@@ -1555,7 +1593,7 @@ void handleGameSaves(vector<string>& saveFiles) {
             gotoxy(50, 6);
             cout << "An phim <B> de tro ve";
         }
-        
+
         for (int i = 0; i < saveFiles.size(); i++) {
             gotoxy(60 - saveFiles[i].length() / 2, printStartPos + i);
             if (i == currentFileIndex) {
@@ -1566,7 +1604,7 @@ void handleGameSaves(vector<string>& saveFiles) {
             }
             cout << saveFiles[i] << endl;
         }
-        
+
         // Wait for user input
         char ch = _getch();
 
@@ -1644,7 +1682,7 @@ void handleGameSaves(vector<string>& saveFiles) {
                 SetColor(selectedButton == 0 ? 225 : 228);
                 cout << "PLAY";
 
-                gotoxy(58, 16);
+                gotoxy(57, 16);
                 SetColor(selectedButton == 1 ? 225 : 228);
                 cout << "DELETE";
 
@@ -1719,12 +1757,12 @@ void handleGameSaves(vector<string>& saveFiles) {
                                 currentFileIndex--; // Move the selection up if possible
                             }
                         }
-                        handleGameSaves(saveFiles);
+                        handleGameSaves();
                     }
                     else if (selectedButton == 2) {
                         // Handle "BACK" button press
                         quitConfirmed = true;
-                        handleGameSaves(saveFiles);
+                        handleGameSaves();
                         break;
                     }
                 }
