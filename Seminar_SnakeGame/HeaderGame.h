@@ -80,6 +80,7 @@ bool isBiteItself();
 bool isHitWall();
 bool isAteApple();
 void move();
+void handleGameSaves(vector<string>& saveFiles);
 
 //====================================== Menu Game Play Functions ======================================
 void startGame();

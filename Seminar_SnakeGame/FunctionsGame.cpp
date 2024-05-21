@@ -5,7 +5,7 @@
 
 const int WIDTH = 80;
 const int HEIGHT = 28;
-#define APPLE '0';
+#define APPLE '0' ;
 
 string MSSV = "23120223231202242312022523120250";
 string CurrentSnake = "71202132";
@@ -34,6 +34,7 @@ const unsigned char bottomLeftCorner = 219;
 const unsigned char bottomRightCorner = 219;
 
 vector<Point> snake;
+vector<string> saveFiles;
 
 //====================================== Draw Game Functions ======================================
 // ve board game
@@ -147,7 +148,7 @@ void drawMenu(const vector<string>& options, int highlightedOption, const int st
 }
 
 void NewGameandContinued(int& keyPressed) {
-    vector<string> options = { "NEW GAME", "CONTINUE","BACK" };
+    std::vector<std::string> options = { "NEW GAME", "CONTINUE","BACK" };
     size_t highlightedOption = 0;
 
     while (true) {
@@ -413,14 +414,14 @@ void displayFile(const string& fileName, int x, int y, int numColor) {
 void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor) {
     ifstream file(filename);
     if (file.is_open()) {
-        string line;
-        for (int i = 0; i < height && getline(file, line); ++i) {
-            istringstream iss(line);
+        std::string line;
+        for (int i = 0; i < height && std::getline(file, line); ++i) {
+            std::istringstream iss(line);
             for (int j = 0; j < width && iss; ++j) {
-                string token;
-                if (getline(iss, token, ' ')) {
+                std::string token;
+                if (std::getline(iss, token, ' ')) {
                     try {
-                        image[i][j] = stoi(token);
+                        image[i][j] = std::stoi(token);
                     }
                     catch (const std::invalid_argument&) {
                         image[i][j] = backgroundcolor;
@@ -931,144 +932,7 @@ void inputInfoPlayer() {
 
         case 2:
         {
-            ifstream filein("FileText//FileNameSaveGame.txt", ios::in);
-            if (!filein.is_open()) {
-                cout << "Khong the mo file !!!" << endl;
-                return;
-            }
-
-            vector<string> saveFiles;
-            string line;
-            int lineNumber = 0;
-            while (getline(filein, line)) {
-                saveFiles.push_back(line);
-                lineNumber++;
-            }
-
-            filein.close();
-
-            system("cls");
-
-            // Tính toán vị trí cần in
-            int printStartPos = 5;
-
-            int currentFileIndex = 0;
-
-            setConsoleBackgroundColor(7);
-
-            SetColor(113);
-            gotoxy(39, 2);
-            for (int i = 39; i < 81; i++) {
-
-                if (i == 39 || i == 81) cout << topLeftCorner;
-                else cout << horizontalLineTop;
-            }
-            cout << topRightCorner;
-
-            gotoxy(39, 26);
-            for (int i = 39; i < 81; i++) {
-                if (i == 39 || i == 81) cout << topLeftCorner;
-                else cout << horizontalLineBottom;
-            }
-            cout << bottomRightCorner;
-
-            for (int i = 3; i < 26; i++) {
-                gotoxy(39, i);
-                cout << verticalLine;
-                gotoxy(81, i);
-                cout << verticalLine;
-            }
-
-            SetColor(125);
-            gotoxy(45, 3);
-            cout << "Chon file ban muon tiep tuc choi";
-            gotoxy(52, 28);
-            cout << "Press <B> to back";
-
-            while (true) {
-                // Print all files
-                for (int i = 0; i < saveFiles.size(); i++) {
-                    gotoxy(60 - saveFiles[i].length() / 2, printStartPos + i);
-                    if (i == currentFileIndex) {
-                        SetColor(113); // Highlight color
-                    }
-                    else {
-                        SetColor(124); // Normal color
-                    }
-                    cout << saveFiles[i] << endl;
-                }
-
-                // Wait for user input
-                char ch = _getch();
-
-                switch (ch) {
-
-                case 'w':
-                case 72: // Up arrow key
-                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                    if (currentFileIndex > 0) {
-                        currentFileIndex--;
-                    }
-                    break;
-
-                case 's':
-                case 80: // Down arrow key
-                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-                    if (currentFileIndex < saveFiles.size() - 1) {
-                        currentFileIndex++;
-                    }
-                    break;
-
-                case 'b':
-                case 'B':
-                    system("cls");
-                    setConsoleBackgroundColor(0);
-                    inputInfoPlayer();
-                    return;
-
-
-                case '\r': // Enter key
-
-                    string fileName = saveFiles[currentFileIndex];
-                    string filePath = "SaveGame//" + fileName;
-
-                    ifstream load(filePath.c_str(), ios::in);
-
-                    if (load.is_open()) {
-                        // Read the first line for name
-                        getline(load, Name);
-
-                        // Read the second line for score
-                        std::string score_str;
-                        getline(load, score_str);
-                        try {
-                            score = std::stoi(score_str);
-                        }
-                        catch (std::invalid_argument& e) {
-                            std::cerr << "Invalid score: " << score_str << '\n';
-                            return;
-                        }
-
-                        // Read the remaining lines for coordinates
-                        getline(load, CurrentSnake);
-                        getline(load, MSSV);
-
-                        load.close();
-                    }
-
-                    else {
-                        std::cerr << "Unable to open file";
-                        return;
-                    }
-
-                    system("cls");
-
-                    SetColor(234);
-                    resetSnake(CurrentSnake, score, MSSV);
-                    startGame();
-                    break;
-                }
-            }
+            handleGameSaves(saveFiles);
             break;
         }
         case 3:
@@ -1168,95 +1032,6 @@ void pauseGame() {
     gotoxy(apple.x, apple.y);
     cout << APPLE;
     isPaused = false;
-}
-
-// ham save game (dang trong giai doan phat trien)
-void saveGame() {
-    // Draw the frame
-    SetColor(228);
-    gotoxy(21, 10);
-    for (int i = 21; i < 61; i++) {
-
-        if (i == 21 || i == 61) cout << topLeftCorner;
-        else cout << horizontalLineTop;
-    }
-    cout << topRightCorner;
-
-    gotoxy(21, 18);
-    for (int i = 21; i < 61; i++) {
-        if (i == 21 || i == 61) cout << topLeftCorner;
-        else cout << horizontalLineBottom;
-    }
-    cout << bottomRightCorner;
-
-    for (int i = 10; i < 18; i++) {
-        gotoxy(21, i);
-        cout << verticalLine;
-        gotoxy(61, i);
-        cout << verticalLine;
-    }
-
-    // Fill color inside the frame
-    SetColor(234);
-    for (int i = 22; i < 61; i++) {
-        for (int j = 11; j < 18; j++) {
-            gotoxy(i, j);
-            cout << " ";
-        }
-    }
-
-    gotoxy(29, 12);
-    SetColor(229);
-    cout << "Do you want to save game?";
-
-    int selectedButton = 0; // 0 for "YES", 1 for "NO"
-
-    // Handle button press
-    char ch;
-    bool quitConfirmed = false;
-    while (!quitConfirmed) {
-        // Update button colors based on the selected button
-        gotoxy(30, 16);
-        SetColor(selectedButton == 0 ? 225 : 228);
-        cout << "YES";
-
-        gotoxy(50, 16);
-        SetColor(selectedButton == 1 ? 225 : 228);
-        cout << "NO";
-
-        ch = _getch();
-        if (ch == 'a') {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            selectedButton = 0;
-        }
-        else if (ch == 'd') {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            selectedButton = 1;
-        }
-        else if (ch == '\r') { // Enter key
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            if (selectedButton == 0) {
-                quitConfirmed = true;
-                readSaveGame();
-            }
-            else if (selectedButton == 1) {
-                quitConfirmed = true;
-                break;
-            }
-        }
-    }
-
-    // Clear the frame
-    for (int i = 21; i <= 61; i++) {
-        for (int j = 10; j <= 18; j++) {
-            gotoxy(i, j);
-            cout << " ";
-        }
-    }
-
-    SetColor(225);
-    gotoxy(apple.x, apple.y);
-    cout << APPLE;
 }
 
 // ham quit game 
@@ -1503,6 +1278,95 @@ void resetSnake(string temp, int diem, string idsv) {
     direction = Direction::right;
 }
 
+// ham save game (dang trong giai doan phat trien)
+void saveGame() {
+    // Draw the frame
+    SetColor(228);
+    gotoxy(21, 10);
+    for (int i = 21; i < 61; i++) {
+
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineTop;
+    }
+    cout << topRightCorner;
+
+    gotoxy(21, 18);
+    for (int i = 21; i < 61; i++) {
+        if (i == 21 || i == 61) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    for (int i = 10; i < 18; i++) {
+        gotoxy(21, i);
+        cout << verticalLine;
+        gotoxy(61, i);
+        cout << verticalLine;
+    }
+
+    // Fill color inside the frame
+    SetColor(234);
+    for (int i = 22; i < 61; i++) {
+        for (int j = 11; j < 18; j++) {
+            gotoxy(i, j);
+            cout << " ";
+        }
+    }
+
+    gotoxy(29, 12);
+    SetColor(229);
+    cout << "Do you want to save game?";
+
+    int selectedButton = 0; // 0 for "YES", 1 for "NO"
+
+    // Handle button press
+    char ch;
+    bool quitConfirmed = false;
+    while (!quitConfirmed) {
+        // Update button colors based on the selected button
+        gotoxy(30, 16);
+        SetColor(selectedButton == 0 ? 225 : 228);
+        cout << "YES";
+
+        gotoxy(50, 16);
+        SetColor(selectedButton == 1 ? 225 : 228);
+        cout << "NO";
+
+        ch = _getch();
+        if (ch == 'a') {
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            selectedButton = 0;
+        }
+        else if (ch == 'd') {
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            selectedButton = 1;
+        }
+        else if (ch == '\r') { // Enter key
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            if (selectedButton == 0) {
+                quitConfirmed = true;
+                readSaveGame();
+            }
+            else if (selectedButton == 1) {
+                quitConfirmed = true;
+                break;
+            }
+        }
+    }
+
+    // Clear the frame
+    for (int i = 21; i <= 61; i++) {
+        for (int j = 10; j <= 18; j++) {
+            gotoxy(i, j);
+            cout << " ";
+        }
+    }
+
+    SetColor(225);
+    gotoxy(apple.x, apple.y);
+    cout << APPLE;
+}
+
 // doc va luu file
 void readSaveGame() {
     system("cls");
@@ -1613,10 +1477,8 @@ void readSaveGame() {
 
     ofstream outputFile(filePath.c_str(), ios::out);
     if (checkSameFile == false) {
-        ofstream fileName("FileText//FileNameSaveGame.txt", ios::app);
-        fileName << file + ".txt" << endl;
-
-        fileName.close();
+        string fileName = file + ".txt";
+        saveFiles.push_back(fileName);
     }
 
     if (!outputFile) {
@@ -1643,6 +1505,241 @@ void readSaveGame() {
     cin.ignore();  // ignore the newline character left in the buffer by the previous input
 
     showStartMenu();
+}
+
+// man hinh chon file choi lai
+void handleGameSaves(vector<string>& saveFiles) {
+    system("cls");
+
+    // Tính toán vị trí cần in
+    int printStartPos = 5;
+
+    int currentFileIndex = 0;
+
+    setConsoleBackgroundColor(7);
+
+    SetColor(113);
+    gotoxy(39, 2);
+    for (int i = 39; i < 81; i++) {
+
+        if (i == 39 || i == 81) cout << topLeftCorner;
+        else cout << horizontalLineTop;
+    }
+    cout << topRightCorner;
+
+    gotoxy(39, 26);
+    for (int i = 39; i < 81; i++) {
+        if (i == 39 || i == 81) cout << topLeftCorner;
+        else cout << horizontalLineBottom;
+    }
+    cout << bottomRightCorner;
+
+    for (int i = 3; i < 26; i++) {
+        gotoxy(39, i);
+        cout << verticalLine;
+        gotoxy(81, i);
+        cout << verticalLine;
+    }
+
+    SetColor(125);
+    gotoxy(45, 3);
+    cout << "Chon file ban muon tiep tuc choi";
+    gotoxy(52, 28);
+    cout << "Press <B> to back";
+
+    while (true) {
+        // Print all files
+        if (saveFiles.size() == 0) {
+            gotoxy(50, 5);
+            cout << "Chua co file luu ve !!!";
+            gotoxy(50, 6);
+            cout << "An phim <B> de tro ve";
+        }
+        
+        for (int i = 0; i < saveFiles.size(); i++) {
+            gotoxy(60 - saveFiles[i].length() / 2, printStartPos + i);
+            if (i == currentFileIndex) {
+                SetColor(113); // Highlight color
+            }
+            else {
+                SetColor(124); // Normal color
+            }
+            cout << saveFiles[i] << endl;
+        }
+        
+        // Wait for user input
+        char ch = _getch();
+
+        switch (ch) {
+
+        case 'w':
+        case 72: // Up arrow key
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            if (currentFileIndex > 0) {
+                currentFileIndex--;
+            }
+            break;
+
+        case 's':
+        case 80: // Down arrow key
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            if (currentFileIndex < saveFiles.size() - 1) {
+                currentFileIndex++;
+            }
+            break;
+
+        case 'b':
+        case 'B':
+            system("cls");
+            setConsoleBackgroundColor(0);
+            inputInfoPlayer();
+            return;
+
+
+        case '\r': // Enter key
+            SetColor(228);
+            gotoxy(40, 10);
+            for (int i = 40; i < 80; i++) {
+
+                if (i == 40 || i == 80) cout << topLeftCorner;
+                else cout << horizontalLineTop;
+            }
+            cout << topRightCorner;
+
+            gotoxy(40, 18);
+            for (int i = 40; i < 80; i++) {
+                if (i == 40 || i == 80) cout << topLeftCorner;
+                else cout << horizontalLineBottom;
+            }
+            cout << bottomRightCorner;
+
+            for (int i = 10; i < 18; i++) {
+                gotoxy(40, i);
+                cout << verticalLine;
+                gotoxy(80, i);
+                cout << verticalLine;
+            }
+
+            // Fill color inside the frame
+            SetColor(234);
+            for (int i = 41; i < 80; i++) {
+                for (int j = 11; j < 18; j++) {
+                    gotoxy(i, j);
+                    cout << " ";
+                }
+            }
+
+            gotoxy(48, 12);
+            SetColor(229);
+            cout << "Select the options below";
+
+            int selectedButton = 0; // 0 for "PLAY", 1 for "DELETE", 2 for "BACK"
+
+            // Handle button press
+            char ch;
+            bool quitConfirmed = false;
+            while (!quitConfirmed) {
+                // Update button colors based on the selected button
+                gotoxy(45, 16);
+                SetColor(selectedButton == 0 ? 225 : 228);
+                cout << "PLAY";
+
+                gotoxy(58, 16);
+                SetColor(selectedButton == 1 ? 225 : 228);
+                cout << "DELETE";
+
+                gotoxy(71, 16);
+                SetColor(selectedButton == 2 ? 225 : 228);
+                cout << "BACK";
+
+                ch = _getch();
+                if (ch == 'a') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    selectedButton = (selectedButton - 1 + 3) % 3; // Move to the left button
+                }
+                else if (ch == 'd') {
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    selectedButton = (selectedButton + 1) % 3; // Move to the right button
+                }
+                else if (ch == '\r') { // Enter key
+                    PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+                    if (selectedButton == 0) {
+                        string fileName = saveFiles[currentFileIndex];
+                        string filePath = "SaveGame//" + fileName;
+
+                        ifstream load(filePath.c_str(), ios::in);
+
+                        if (load.is_open()) {
+                            // Read the first line for name
+                            getline(load, Name);
+
+                            // Read the second line for score
+                            std::string score_str;
+                            getline(load, score_str);
+                            try {
+                                score = std::stoi(score_str);
+                            }
+                            catch (std::invalid_argument& e) {
+                                std::cerr << "Invalid score: " << score_str << '\n';
+                                return;
+                            }
+
+                            // Read the remaining lines for coordinates
+                            getline(load, CurrentSnake);
+                            getline(load, MSSV);
+
+                            load.close();
+                        }
+
+                        else {
+                            std::cerr << "Unable to open file";
+                            return;
+                        }
+
+                        system("cls");
+
+                        SetColor(234);
+                        resetSnake(CurrentSnake, score, MSSV);
+                        startGame();
+                        break;
+                    }
+                    else if (selectedButton == 1) {
+                        // Handle "DELETE" button press
+                        string fileName = saveFiles[currentFileIndex];
+                        string filePath = "SaveGame//" + fileName;
+                        const char* cFilePath = filePath.c_str();
+                        if (remove(cFilePath) != 0) {
+                            perror("Error deleting file");
+                        }
+                        else {
+                            cout << "File successfully deleted";
+                            // Remove the deleted file from the list
+                            saveFiles.erase(saveFiles.begin() + currentFileIndex);
+                            if (currentFileIndex > 0) {
+                                currentFileIndex--; // Move the selection up if possible
+                            }
+                        }
+                        handleGameSaves(saveFiles);
+                    }
+                    else if (selectedButton == 2) {
+                        // Handle "BACK" button press
+                        quitConfirmed = true;
+                        handleGameSaves(saveFiles);
+                        break;
+                    }
+                }
+            }
+
+            // Clear the frame
+            for (int i = 40; i <= 81; i++) {
+                for (int j = 10; j <= 18; j++) {
+                    gotoxy(i, j);
+                    cout << " ";
+                }
+            }
+
+        }
+    }
 }
 
 // doc thong tin tu file co chua ten va diem cua nguoi choi
