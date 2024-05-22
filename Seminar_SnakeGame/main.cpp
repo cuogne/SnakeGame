@@ -19,6 +19,7 @@ int main() {
     std::this_thread::sleep_for(std::chrono::seconds(3));
 
     showStartMenu();
+    //startGame(1);
 
     for (int i = 0; i < 100; i++) {
         delete[] snakePic[i];

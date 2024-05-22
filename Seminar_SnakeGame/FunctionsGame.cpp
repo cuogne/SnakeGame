@@ -10,18 +10,26 @@ const int HEIGHT = 28;
 string MSSV = "23120223231202242312022523120250";
 string CurrentSnake = "71202132";
 string fullMSSV = "2312021723120223231202242312022523120250";
-enum class Direction { up, right, down, left };
 Direction direction = Direction::right; // bien theo doi di chuyen cua con ran (mac dinh la right)
 
 Point apple;                            // bien dai dien cho vi tri cua qua tao
+Point WinPoint;                         // bien dai dien cho vi tri qua man
+Point SecondWP;
 Point prevTail;                         // bien luu vitri cua ran trc khi di chuyen
 int score = 0;                          // bien luu tru diem so
 int speed = 300;                        // bien toc do cua man choi
 string Name;                            // bien luu tru ten nguoi choi, ban dau khoi tao rong
 int n;
+int level = 1;
+int manchoi = 0;
 const int LimitPlayers = 1000;          // so luong nguoi choi toi da luu duoc
 bool checkMusic = true;                 // check trang thai nhac nen
 bool isPaused = false;                  // check trang thai pause game
+bool isOnSnake = false; // bien check trang thai cua ran
+bool checkWin = false;
+bool PointOnHeight = 0; // bien check vi tri winPoint
+bool Left = 0;          // Neu winPoint bên trai
+bool Up = 0;            // Neu winPoint bên phai
 char date[20];
 char thoigian[20];
 
@@ -34,32 +42,112 @@ const unsigned char bottomLeftCorner = 219;
 const unsigned char bottomRightCorner = 219;
 
 vector<Point> snake;
+
 vector<string> saveFiles;
 
-void loadSaveFiles(std::vector<std::string>& saveFiles) {
-    saveFiles.clear(); // Clear the current list
+vector<Point> Wall_WinPoint{
+    Point{},    // O giua phia sau Point
+    Point{},    // Ben trai phia sau
+    Point{},    // Ben phai phia sau
+    Point{},    // Ben trai
+    Point{},    // Ben phai cua ben phai phia sau
+    Point{},    // Ben phai
+};
 
-    WIN32_FIND_DATA ffd;
-    TCHAR szDir[MAX_PATH];
-    HANDLE hFind = INVALID_HANDLE_VALUE;
+vector<Point> Wall_lv1{};
 
-    StringCchCopy(szDir, MAX_PATH, TEXT("SaveGame\\*"));
+vector<Point> Wall_lv2{
+    Point{17,6},
+    Point{32,6},
+    Point{16,6},
+    Point{16,12},
+    Point{16,18},
+    Point{16,24},
+    Point{17,24},
+    Point{32,24},
+    Point{48,6},
+    Point{63,6},
+    Point{64,6},
+    Point{64,12},
+    Point{48,24},
+    Point{63,24},
+    Point{64,18},
+    Point{64,24},
+};
 
-    hFind = FindFirstFile(szDir, &ffd);
+vector<Point> Wall_lv3{
+    Point{10,5},
+    Point{60,5},
+    Point{30,12},
+    Point{75,12},
+    Point{10,19},
+    Point{60,19},
+    Point{30,26},
+    Point{75,26},
+};
 
-    if (INVALID_HANDLE_VALUE == hFind) {
-        // Handle error
+int direc = 1;
+void MoveWall_lv3() {
+
+    SetColor(228);
+
+    gotoxy(Wall_lv3[0].x, Wall_lv3[0].y);
+    cout << " ";
+    gotoxy(Wall_lv3[4].x, Wall_lv3[4].y);
+    cout << " ";
+    gotoxy(Wall_lv3[1].x, Wall_lv3[1].y);
+    cout << " ";
+    gotoxy(Wall_lv3[5].x, Wall_lv3[5].y);
+    cout << " ";
+
+    // Kiểm tra nếu tường chạm biên trái hoặc phải màn hình
+    if (Wall_lv3[0].x <= 2 || Wall_lv3[1].x >= WIDTH - 1) {
+        direc = -direc; // Đảo hướng
     }
 
-    do {
-        if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-            std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-            std::string filename = converter.to_bytes(ffd.cFileName);
-            saveFiles.push_back(filename);
-        }
-    } while (FindNextFile(hFind, &ffd) != 0);
+    Wall_lv3[0].x += direc;
+    Wall_lv3[1].x += direc;
+    Wall_lv3[4].x += direc;
+    Wall_lv3[5].x += direc;
 
-    FindClose(hFind);
+    // Vẽ lại tường sau khi cập nhật vị trí
+    drawWall(Wall_lv3);
+
+}
+
+vector<Point> Wall_lv4{
+    Point{17,24},
+    Point{64,24},
+    Point{16,6},
+    Point{16,24},
+    Point{17,6},
+    Point{63,6},
+    Point{64,6},
+    Point{64,18},
+    Point{33,18},
+    Point{63,18},
+    Point{32,12},
+    Point{32,18},
+    Point{33,12},
+    Point{48,12},
+};
+
+vector<Point> Wall(int n) {
+    switch (n) {
+    case 1:
+        return Wall_lv1;
+        break;
+    case 2:
+        return Wall_lv2;
+        break;
+    case 3:
+        return Wall_lv3;
+        break;
+    case 4:
+        return Wall_lv4;
+        break;
+    }
+    return Wall_lv1;
 }
 
 //====================================== Draw Game Functions ======================================
@@ -130,7 +218,7 @@ void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
     // Vẽ khung viền của nút button
     SetColor(borderColor); // Đặt màu sắc cho khung viền là màu mặc định
 
-    yPos += 8; // Dời các ô xuống 4 ô
+    yPos += 8; // Dời các ô xuống 8 ô
 
     SetColor(highlighted ? 10 : borderColor);
     gotoxy(xPos, yPos);
@@ -228,15 +316,201 @@ void RestartandBackMenu(int& keyPressed) {
     }
 }
 
-// ve mau nen cho background
-void drawBackground(int x, int maxX, int y, int maxY, int numColor) {
-    for (int i = x; i < maxX; i++) {
-        for (int j = y; j < maxY; j++) {
-            SetColor(numColor);
-            cout << " ";
+void drawGate(Point WP, bool OnHeight, bool Left, bool Up) {
+    if (OnHeight) {
+        if (Left) {
+            Wall_WinPoint[0].x = WP.x - 1;      //Phia sau
+            Wall_WinPoint[0].y = WP.y;
+
+            Wall_WinPoint[1].x = WP.x - 1;      //Phia sau ben trai
+            Wall_WinPoint[1].y = WP.y - 1;
+
+            Wall_WinPoint[2].x = WP.x - 1;      //Phia sau secondWP
+            Wall_WinPoint[2].y = WP.y + 1;
+
+            Wall_WinPoint[3].x = WP.x;          //Ben trai
+            Wall_WinPoint[3].y = WP.y - 1;
+
+            Wall_WinPoint[4].x = WP.x - 1;      //Ben Phai phia sau cua secondWP
+            Wall_WinPoint[4].y = WP.y + 2;
+
+            Wall_WinPoint[5].x = WP.x;          //Ben Phai
+            Wall_WinPoint[5].y = WP.y + 2;
         }
-        cout << endl;
+        else {
+            Wall_WinPoint[0].x = WP.x + 1;      //Phia sau
+            Wall_WinPoint[0].y = WP.y;
+
+            Wall_WinPoint[1].x = WP.x + 1;      //Phia sau ben trai
+            Wall_WinPoint[1].y = WP.y - 1;
+
+            Wall_WinPoint[2].x = WP.x + 1;      //Phia sau SecondWP
+            Wall_WinPoint[2].y = WP.y + 1;
+
+            Wall_WinPoint[3].x = WP.x + 1;      //Phia sau ben phai cua secondWP
+            Wall_WinPoint[3].y = WP.y + 2;
+
+            Wall_WinPoint[4].x = WP.x;          //Ben Phai
+            Wall_WinPoint[4].y = WP.y + 2;
+
+            Wall_WinPoint[5].x = WP.x;          //Ben Trai
+            Wall_WinPoint[5].y = WP.y - 1;
+        }
     }
+    else {
+        if (Up) {
+            Wall_WinPoint[0].x = WP.x;          //Phia sau
+            Wall_WinPoint[0].y = WP.y - 1;
+
+            Wall_WinPoint[1].x = WP.x - 1;      //Phia sau ben phai
+            Wall_WinPoint[1].y = WP.y - 1;
+
+            Wall_WinPoint[2].x = WP.x + 1;      //Phia sau WP
+            Wall_WinPoint[2].y = WP.y - 1;
+
+            Wall_WinPoint[3].x = WP.x - 1;      //Ben phai
+            Wall_WinPoint[3].y = WP.y;
+
+            Wall_WinPoint[4].x = WP.x + 2;      //Ben sau ben trai WP
+            Wall_WinPoint[4].y = WP.y - 1;
+
+            Wall_WinPoint[5].x = WP.x + 2;      //Ben Trai
+            Wall_WinPoint[5].y = WP.y;
+        }
+        else {
+            Wall_WinPoint[0].x = WP.x;          //Phia sau
+            Wall_WinPoint[0].y = WP.y + 1;
+
+            Wall_WinPoint[1].x = WP.x - 1;      //Phia sau ben trai
+            Wall_WinPoint[1].y = WP.y + 1;
+
+            Wall_WinPoint[2].x = WP.x + 1;      //Phia sau WP
+            Wall_WinPoint[2].y = WP.y + 1;
+
+            Wall_WinPoint[3].x = WP.x - 1;      //Ben trai
+            Wall_WinPoint[3].y = WP.y;
+
+            Wall_WinPoint[4].x = WP.x + 2;      //Phia sau ben phai WP
+            Wall_WinPoint[4].y = WP.y + 1;
+
+            Wall_WinPoint[5].x = WP.x + 2;      //Ben phai
+            Wall_WinPoint[5].y = WP.y;
+        }
+    }
+    for (int i = 0; i < Wall_WinPoint.size(); i++) {
+        gotoxy(Wall_WinPoint[i].x, Wall_WinPoint[i].y);
+        cout << char(219);
+    }
+}
+
+void deleteGate_and_WP(Point& WP, bool OnHeight, bool Left, bool Up) {
+    if (OnHeight) {
+        if (Left) {
+            Wall_WinPoint[0].x = WP.x - 1;      //Phia sau
+            Wall_WinPoint[0].y = WP.y;
+
+            Wall_WinPoint[1].x = WP.x - 1;      //Phia sau ben trai
+            Wall_WinPoint[1].y = WP.y - 1;
+
+            Wall_WinPoint[2].x = WP.x - 1;      //Phia sau secondWP
+            Wall_WinPoint[2].y = WP.y + 1;
+
+            Wall_WinPoint[3].x = WP.x;          //Ben trai
+            Wall_WinPoint[3].y = WP.y - 1;
+
+            Wall_WinPoint[4].x = WP.x - 1;      //Ben Phai phia sau cua secondWP
+            Wall_WinPoint[4].y = WP.y + 2;
+
+            Wall_WinPoint[5].x = WP.x;          //Ben Phai
+            Wall_WinPoint[5].y = WP.y + 2;
+        }
+        else {
+            Wall_WinPoint[0].x = WP.x + 1;      //Phia sau
+            Wall_WinPoint[0].y = WP.y;
+
+            Wall_WinPoint[1].x = WP.x + 1;      //Phia sau ben trai
+            Wall_WinPoint[1].y = WP.y - 1;
+
+            Wall_WinPoint[2].x = WP.x + 1;      //Phia sau SecondWP
+            Wall_WinPoint[2].y = WP.y + 1;
+
+            Wall_WinPoint[3].x = WP.x + 1;      //Phia sau ben phai cua secondWP
+            Wall_WinPoint[3].y = WP.y + 2;
+
+            Wall_WinPoint[4].x = WP.x;          //Ben Phai
+            Wall_WinPoint[4].y = WP.y + 2;
+
+            Wall_WinPoint[5].x = WP.x;          //Ben Trai
+            Wall_WinPoint[5].y = WP.y - 1;
+        }
+    }
+    else {
+        if (Up) {
+            Wall_WinPoint[0].x = WP.x;          //Phia sau
+            Wall_WinPoint[0].y = WP.y - 1;
+
+            Wall_WinPoint[1].x = WP.x - 1;      //Phia sau ben phai
+            Wall_WinPoint[1].y = WP.y - 1;
+
+            Wall_WinPoint[2].x = WP.x + 1;      //Phia sau WP
+            Wall_WinPoint[2].y = WP.y - 1;
+
+            Wall_WinPoint[3].x = WP.x - 1;      //Ben phai
+            Wall_WinPoint[3].y = WP.y;
+
+            Wall_WinPoint[4].x = WP.x + 2;      //Ben sau ben trai WP
+            Wall_WinPoint[4].y = WP.y - 1;
+
+            Wall_WinPoint[5].x = WP.x + 2;      //Ben Trai
+            Wall_WinPoint[5].y = WP.y;
+        }
+        else {
+            Wall_WinPoint[0].x = WP.x;          //Phia sau
+            Wall_WinPoint[0].y = WP.y + 1;
+
+            Wall_WinPoint[1].x = WP.x - 1;      //Phia sau ben trai
+            Wall_WinPoint[1].y = WP.y + 1;
+
+            Wall_WinPoint[2].x = WP.x + 1;      //Phia sau WP
+            Wall_WinPoint[2].y = WP.y + 1;
+
+            Wall_WinPoint[3].x = WP.x - 1;      //Ben trai
+            Wall_WinPoint[3].y = WP.y;
+
+            Wall_WinPoint[4].x = WP.x + 2;      //Phia sau ben phai WP
+            Wall_WinPoint[4].y = WP.y + 1;
+
+            Wall_WinPoint[5].x = WP.x + 2;      //Ben phai
+            Wall_WinPoint[5].y = WP.y;
+        }
+    }
+    for (int i = 0; i < Wall_WinPoint.size(); i++) {
+        gotoxy(Wall_WinPoint[i].x, Wall_WinPoint[i].y);
+        cout << " ";
+        Wall_WinPoint[i].x = 81;
+        Wall_WinPoint[i].y = 31;
+    }
+    WP.x = 81;
+    WP.y = 31;
+}
+
+void drawWall(vector<Point> WALL) {
+    SetColor(228);
+    for (int i = 0; i < WALL.size(); i += 2)
+        for (int m = WALL[i].x; m <= WALL[i + 1].x; m++)
+            for (int n = WALL[i].y; n <= WALL[i + 1].y; n++)
+            {
+                gotoxy(m, n);
+                if (WALL[i].x == WALL[i + 1].x)
+                    cout << (char)219;
+                else if ((WALL[i].y == WALL[i + 1].y) && (WALL[i].y <= 15))
+                    cout << (char)223;
+                else cout << (char)220;
+            }
+}
+
+int randomRange(int min, int max) {
+    return rand() % (max - min + 1) + min;
 }
 
 // ve con ran
@@ -257,12 +531,12 @@ void drawHeadnTail() {
 }
 
 // In cac thong tin ben canh khung board game
-void displayScoreInGame() {
+void displayScoreInGame(int level) {
     SetColor(226);
     gotoxy(WIDTH + 7, 3);
-    cout << "Speed: ";
+    cout << "Level: ";
     SetColor(237);
-    cout << speed / 10;
+    cout << level;
 
     SetColor(226);
     gotoxy(WIDTH + 7, 6);
@@ -279,10 +553,8 @@ void displayScoreInGame() {
     SetColor(228);
     gotoxy(84, 14);
     cout << "Press <P> to Pause Game";
-    gotoxy(84, 18);
-    cout << "Press <G> to Save Game";
-    gotoxy(84, 22);
-    cout << "Press <Q> to Quit Game";
+
+    SetColor(228);
     gotoxy(84, 26);
     cout << "MOVE SNAKE : A W S D";
 
@@ -356,38 +628,6 @@ void displayHighScore(Info inf[], int n) {
     }
 }
 
-// in cac ki tu dac biet chuan utf-8
-void printTextUTF8(const string& filePath, int x, int y, int numColor) {
-    ifstream file(filePath);
-    if (!file.is_open()) {
-        cout << "Khong the mo file !!!" << endl;
-        return;
-    }
-
-    UINT old_cp = GetConsoleOutputCP();
-    SetConsoleOutputCP(CP_UTF8); // Set UTF-8 for console
-
-    string line;
-    while (getline(file, line)) {
-        SetColor(numColor);
-        gotoxy(x, y);
-        cout << u8"" << line << "\n";
-        y++;
-    }
-
-    SetConsoleOutputCP(old_cp); // Reset to old code page
-    file.close();
-}
-
-// push vao con ran mssv
-void MoveFirstChar(string& source, string& dest) {
-    if (!source.empty()) {
-        char first_char = source[0]; // Lấy ký tự đầu của chuỗi nguồn
-        dest = first_char + dest; // Thêm ký tự vào cuối chuỗi đích
-        source.erase(0, 1); // Xóa ký tự đầu tiên khỏi chuỗi nguồn
-    }
-}
-
 // button new (dang trong giai doan nghien cuu)
 void MENU(int& keyPressed) {
     vector<string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
@@ -415,6 +655,46 @@ void MENU(int& keyPressed) {
         }
     }
 }
+
+void CreateWinPoint() {
+    int x, y;
+    do {
+        PointOnHeight = rand() % 2;
+        if (PointOnHeight) {
+            x = rand() % 2;
+            if (x == 0) { x = 3; Left = 1; }        
+            else { x = WIDTH - 2; Left = 0; }
+            y = randomRange(1, HEIGHT - 1);
+        }
+        else {
+            x = randomRange(2, WIDTH - 2);
+            y = rand() % 2;
+            if (y == 0) { y = 1; Up = true; }
+            else { y = HEIGHT - 1; Up = false; }
+        }
+
+        // kiem tra xem co trung voi con ran khong
+        for (size_t i = 0; i < snake.size(); i++) {
+            if (snake[i].x == x && snake[i].y == y) {
+                isOnSnake = true;
+                break;
+            }
+        }
+    } while (isOnSnake);
+
+    WinPoint = { x,y };
+    if (PointOnHeight) {
+        SecondWP.x = x;
+        SecondWP.y = y + 1;
+    }
+    else {
+        SecondWP.x = x + 1;
+        SecondWP.y = y;
+    }
+    drawGate(WinPoint, PointOnHeight, Left, Up);        //THEM CAI NAY
+}
+
+//====================================== Xu Ly File ====================================== 
 
 // doc file anh
 void displayFile(const string& fileName, int x, int y, int numColor) {
@@ -532,39 +812,125 @@ void displayImage(int** image, int height, int width, int x, int y) {
     }
 }
 
+// in cac ki tu dac biet chuan utf-8
+void printTextUTF8(const string& filePath, int x, int y, int numColor) {
+    ifstream file(filePath);
+    if (!file.is_open()) {
+        cout << "Khong the mo file !!!" << endl;
+        return;
+    }
+
+    UINT old_cp = GetConsoleOutputCP();
+    SetConsoleOutputCP(CP_UTF8); // Set UTF-8 for console
+
+    string line;
+    while (getline(file, line)) {
+        SetColor(numColor);
+        gotoxy(x, y);
+        cout << u8"" << line << "\n";
+        y++;
+    }
+
+    SetConsoleOutputCP(old_cp); // Reset to old code page
+    file.close();
+}
+
+void loadSaveFiles(vector<string>& saveFiles) {
+    saveFiles.clear(); // Clear the current list
+
+    WIN32_FIND_DATA ffd;
+    TCHAR szDir[MAX_PATH];
+    HANDLE hFind = INVALID_HANDLE_VALUE;
+
+    StringCchCopy(szDir, MAX_PATH, TEXT("SaveGame\\*"));
+
+    hFind = FindFirstFile(szDir, &ffd);
+
+    if (INVALID_HANDLE_VALUE == hFind) {
+        // Handle error
+    }
+
+    do {
+        if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+            std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+            std::string filename = converter.to_bytes(ffd.cFileName);
+            saveFiles.push_back(filename);
+        }
+    } while (FindNextFile(hFind, &ffd) != 0);
+
+    FindClose(hFind);
+}
+
 //====================================== Logic Game Functions ======================================
 
 // random vi tri cua qua tao trong board game
-void createApple() {
-    srand(static_cast<unsigned int>(time(0)));
-    int x, y;
-    bool isOnSnake; // bien check trang thai cua ran
-    do {
-        isOnSnake = false; // gia su la ran chua trung 
-        x = rand() % (WIDTH - 2) + 2;
-        y = rand() % (HEIGHT - 1) + 1;
+void createApple(vector<Point> WALL) {          //ĐÂY LÀ HÀM CREATE APPLE MỚI ĐỂ KHÔNG BỊ NGƯNG ĐỘNG THỜI GIAN
+    vector<Point> validPositions;
+    bool isOnSnake = false;
+    bool isOnWall = false;
 
-        // kiem tra xem vi tri qua tao co trung voi con ran khong
-        for (size_t i = 0; i < snake.size(); i++) {
-            if (snake[i].x == x && snake[i].y == y) {
-                isOnSnake = true;
-                break;
+    // Tạo danh sách các vị trí hợp lệ
+    for (int x = 2; x < WIDTH - 2; ++x) {
+        for (int y = 2; y < HEIGHT - 2; ++y) {
+            isOnSnake = false;
+            isOnWall = false;
+
+            // Kiểm tra xem vị trí có trùng với rắn không
+            for (const auto& segment : snake) {
+                if (segment.x == x && segment.y == y) {
+                    isOnSnake = true;
+                    break;
+                }
+            }
+
+            // Kiểm tra xem vị trí có trùng với tường không
+            if (!isOnSnake) {
+                for (size_t i = 0; i < WALL.size(); i += 2) {
+                    for (int m = WALL[i].x; m <= WALL[i + 1].x; ++m) {
+                        for (int n = WALL[i].y; n <= WALL[i + 1].y; ++n) {
+                            if (m == x && n == y) {
+                                isOnWall = true;
+                                break;
+                            }
+                        }
+                        if (isOnWall) break;
+                    }
+                    if (isOnWall) break;
+                }
+            }
+
+            // Nếu vị trí không trùng với rắn hoặc tường, thêm vào danh sách vị trí hợp lệ
+            if (!isOnSnake && !isOnWall && y != 5 && y != 19) {
+                validPositions.push_back({ x, y });
             }
         }
+    }
 
-        // kiem tra xem con ran co nam tren boardgame khong
-        if (!isOnSnake && (x == 0 || x == WIDTH || y == 0 || y == HEIGHT - 1)) {
-            isOnSnake = true;
-        }
+    // Kiểm tra nếu không có vị trí hợp lệ nào
+    if (validPositions.empty()) {
+        cerr << "Error: No valid position to place the apple.\n";
+        return;
+    }
 
-    } while (isOnSnake);
+    // Chọn ngẫu nhiên một vị trí hợp lệ
+    Point chosenPosition = validPositions[randomRange(0, validPositions.size() - 1)];
+    apple = chosenPosition;
 
-    apple = { x, y }; // set vi tri moi cho apple
-
-    gotoxy(x, y);
+    gotoxy(apple.x, apple.y);
     SetColor(225);
     cout << APPLE;
     cout.flush();
+}
+
+// Kiem tra xem neu con ran an trung qua tao
+bool isOnWinPoint() {
+    // vi tri duoi con ran trung voi vi tri cua WinPoint
+    return snake[0].x == WinPoint.x && snake[0].y == WinPoint.y;
+}
+
+bool isOnSecondWP() {
+    // vi tri duoi con ran trung voi vi tri cua Second WinPoint
+    return snake[0].x == SecondWP.x && snake[0].y == SecondWP.y;
 }
 
 // tang do dai cho con ran khi no an trung apple
@@ -580,8 +946,26 @@ void growing() {
     }
 }
 
+// push vao con ran mssv
+void MoveFirstChar(string& source, string& dest) {
+    if (!source.empty()) {
+        char first_char = source[0]; // Lấy ký tự đầu của chuỗi nguồn
+        dest = first_char + dest; // Thêm ký tự vào cuối chuỗi đích
+        source.erase(0, 1); // Xóa ký tự đầu tiên khỏi chuỗi nguồn
+    }
+}
+
 // Kiem tra xem con ran co dung vao tuong khong
-bool isHitWall() {
+bool isHitWall(vector<Point> WALL) {
+    for (int i = 0; i < WALL.size(); i += 2)
+        for (int m = WALL[i].x; m <= WALL[i + 1].x; m++)
+            for (int n = WALL[i].y; n <= WALL[i + 1].y; n++)
+                if ((snake[0].x == m) && (snake[0].y == n)) return true;
+
+    for (int i = 0; i < Wall_WinPoint.size(); i++) {
+        if ((snake[0].x == Wall_WinPoint[i].x) && (snake[0].y == Wall_WinPoint[i].y))
+            return true;
+    }
     // neu dau con ran = 0 hoac = chieu cao or chieu rong
     return snake[0].x == 1 || snake[0].y == 0 || snake[0].x == WIDTH || snake[0].y == HEIGHT;
 }
@@ -616,6 +1000,14 @@ void move() {
         else if (direction == Direction::right)
             snake[0].x += 1;
     }
+}
+
+// ham tinh toc do cua con ran
+int Adjust_speed(Direction direction, int level) {
+    if (direction == Direction::up || direction == Direction::down) {
+        return (150 - level * 10);
+    }
+    return (100 - level * 10);
 }
 
 //====================================== Menu Game Play Functions ======================================
@@ -940,7 +1332,7 @@ void inputInfoPlayer() {
             MSSV = "23120223231202242312022523120250";
             CurrentSnake = "71202132";
 
-            resetSnake(CurrentSnake, 0, MSSV); // Reset snake's state
+            resetSnake(CurrentSnake, 0, MSSV,1); // Reset snake's state
 
             SetColor(234);
 
@@ -950,7 +1342,7 @@ void inputInfoPlayer() {
             char ch = _getch();
             if (ch == '\r') {
                 setConsoleBackgroundColor(14);
-                startGame();
+                startGame(1);
             }
             //ready();
             break;
@@ -971,8 +1363,8 @@ void inputInfoPlayer() {
     }
 }
 
-// man hinh pausegame
-void pauseGame() {
+// ham pause game => co ca quit save trong nay
+void pauseGame(bool enough_score) {
     // 21 - 61
     // 10 - 18
     SetColor(228);
@@ -1016,33 +1408,49 @@ void pauseGame() {
     bool quitConfirmed = false;
     while (!quitConfirmed) {
         // Update button colors based on the selected button
-        gotoxy(30, 16);
+        gotoxy(25, 16);
         SetColor(selectedButton == 0 ? 225 : 228);
         cout << "SAVE";
 
-        gotoxy(45, 16);
+        gotoxy(38, 16);
         SetColor(selectedButton == 1 ? 225 : 228);
+        cout << "QUIT";
+
+        gotoxy(50, 16);
+        SetColor(selectedButton == 2 ? 225 : 228);
         cout << "CONTINUE";
 
         ch = _getch();
         if (ch == 'a') {
             PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            selectedButton = 0;
+            selectedButton = (selectedButton - 1 + 3) % 3; // Move to the left button
         }
         else if (ch == 'd') {
             PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            selectedButton = 1;
+            selectedButton = (selectedButton + 1) % 3; // Move to the right button
         }
         else if (ch == '\r') { // Enter key
             PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
             if (selectedButton == 0) {
                 quitConfirmed = true;
+                isPaused = false;
                 readSaveGame();
             }
             else if (selectedButton == 1) {
                 quitConfirmed = true;
+                isPaused = false;
+                showEndMenu();
+            }
+            else if (selectedButton == 2) {
+                quitConfirmed = true;
                 break;
             }
+        }
+
+        if (!enough_score) {                //THAM SỐ ĐƯỢC SÀI Ở ĐÂY
+            SetColor(225);
+            gotoxy(apple.x, apple.y);
+            cout << APPLE;
         }
     }
 
@@ -1053,123 +1461,55 @@ void pauseGame() {
             cout << " ";
         }
     }
-
-    SetColor(225);
-    gotoxy(apple.x, apple.y);
-    cout << APPLE;
     isPaused = false;
 }
 
-// ham quit game 
-void quitGame() {
-    // Draw the frame
-    SetColor(228);
-    gotoxy(21, 10);
-    for (int i = 21; i < 61; i++) {
-
-        if (i == 21 || i == 61) cout << topLeftCorner;
-        else cout << horizontalLineTop;
-    }
-    cout << topRightCorner;
-
-    gotoxy(21, 18);
-    for (int i = 21; i < 61; i++) {
-        if (i == 21 || i == 61) cout << topLeftCorner;
-        else cout << horizontalLineBottom;
-    }
-    cout << bottomRightCorner;
-
-    for (int i = 10; i < 18; i++) {
-        gotoxy(21, i);
-        cout << verticalLine;
-        gotoxy(61, i);
-        cout << verticalLine;
-    }
-
-    // Fill color inside the frame
-    SetColor(234);
-    for (int i = 22; i < 61; i++) {
-        for (int j = 11; j < 18; j++) {
-            gotoxy(i, j);
-            cout << " ";
-        }
-    }
-
-    gotoxy(28, 12);
-    SetColor(229);
-    cout << "Do you really want to quit?";
-
-    int selectedButton = 0; // 0 for "YES", 1 for "NO"
-
-    // Handle button press
-    char ch;
-    bool quitConfirmed = false;
-    while (!quitConfirmed) {
-        // Update button colors based on the selected button
-        gotoxy(30, 16);
-        SetColor(selectedButton == 0 ? 225 : 228);
-        cout << "YES";
-
-        gotoxy(50, 16);
-        SetColor(selectedButton == 1 ? 225 : 228);
-        cout << "NO";
-
-        ch = _getch();
-        if (ch == 'a') {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            selectedButton = 0;
-        }
-        else if (ch == 'd') {
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            selectedButton = 1;
-        }
-        else if (ch == '\r') { // Enter key
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            if (selectedButton == 0) {
-                quitConfirmed = true;
-                showEndMenu();
-            }
-            else if (selectedButton == 1) {
-                quitConfirmed = true;
-                break;
-            }
-        }
-    }
-
-    // Clear the frame
-    for (int i = 21; i <= 61; i++) {
-        for (int j = 10; j <= 18; j++) {
-            gotoxy(i, j);
-            cout << " ";
-        }
-    }
-
-    SetColor(225);
-    gotoxy(apple.x, apple.y);
-    cout << APPLE;
-}
-
 // ham hien thi tro choi (ran, apple,...)
-void startGame() {
+void startGame(int level) {
+    manchoi = level;
+    if (level > 4) {
+        checkWin = true;
+        showEndMenu();
+
+    }
+    resetSnake(CurrentSnake, score, MSSV,level);
+    setConsoleBackgroundColor(14);
+    ShowConsoleCursor(false);
+
     system("cls"); // clear man hinh
 
-    speed = 50; // Adjust game speed based on level
+    drawBox();
+    drawWall(Wall(level));
+    displayScoreInGame(level); // hien thi diem
 
-    bool checkReady = false;
-    ShowConsoleCursor(false); // tat con tro nhap
+    if (level == 1) ready();
 
-    drawBox();      // goi ham ve board game
-    displayScoreInGame(); // hien thi diem
+    drawSnake();
+    createApple(Wall(level));
 
-    while (checkReady == false) {
-        ready();
-        checkReady = true;
-    }
-
-    createApple();  // tao random qua tao
-    drawSnake();    // ve con ran
+    bool enough_score = 0;
+    bool isCreatedWinPoint = 0;
+    int score_win = 80 * level;
+    bool TimeWallDelay = 1;
+    bool deletedGate = 1;
 
     while (true) {
+        if (level >= 2 && deletedGate == 1) {
+            int tail = snake.size() - 1;
+            if (snake[tail].x != WinPoint.x && snake[tail].y != WinPoint.y) {
+                deleteGate_and_WP(WinPoint, PointOnHeight, Left, Up);
+                deletedGate = 0;
+            }
+            drawBox();
+        }
+        if (level == 3 && !enough_score) {
+            if (TimeWallDelay) TimeWallDelay = 0;
+            else TimeWallDelay = 1;
+            if (!TimeWallDelay) {
+                MoveWall_lv3();
+            }
+        }
+        speed = Adjust_speed(direction, level); // Adjust game speed based on level
         // ham check phim an an tu ban phim
         if (_kbhit()) { // thuoc thu vien <conio.h>
             char ch = _getch();
@@ -1184,49 +1524,68 @@ void startGame() {
                 direction = Direction::right;
             else if (ch == 'p') {
                 isPaused = true;
-                pauseGame();
-            }
-            else if (ch == 'g') {
-                saveGame(); // luu game lai
-            }
-            else if (ch == 'q') // Quit game
-            {
-                quitGame();
+                pauseGame(enough_score);
+                drawWall(Wall(level));
             }
         }
 
         move();          // ham di chuyen con ran
-        drawSnake();    // ve duoi va dau ran
+        drawSnake();    // ve duoi va dau ran		//MỚI CÓ ĐỔI MÀU RẮN
         drawHeadnTail();
 
         if (isAteApple()) {
             // add am thanh khi con ran an qua tao
             PlaySound(TEXT("Sound//pop.wav"), NULL, SND_ASYNC);
-            score += 10;        // tang 1 diem khi an trung tao
-            displayScoreInGame();     // hien thi diem vua tang
+            score += 20;        // tang 1 diem khi an trung tao
+            if (score == score_win) enough_score = true;
+            displayScoreInGame(level);     // hien thi diem vua tang
             growing();          // tang do dai cho con ran
-            createApple();      // tao lai qua tao
+            if (!enough_score)  // Neu chua du diem
+                createApple(Wall(level));      // tao lai qua tao
         }
 
-        if (isBiteItself() || isHitWall()) { // neu con ran can vao than minh hoac dung vao tuong
+        if (isBiteItself() || isHitWall(Wall(level))) { // neu con ran can vao than minh hoac dung vao tuong
             PlaySound(TEXT("Sound//gameover.wav"), NULL, SND_ASYNC);
             Sleep(1000);
             showEndMenu(); // hien thi man hinh endgame
             break;
         }
-        Sleep(speed);
+        if (isCreatedWinPoint == false)
+            if (enough_score) {
+                CreateWinPoint();         //Neu da du diem thi tao cong
+                isCreatedWinPoint = true; //Dat la da tao WinPoint de khong tao lai
+            }
+        if (!isOnWinPoint() && !isOnSecondWP())
+            Sleep(speed);
+        else {
+            PlaySound(TEXT("Sound//EnterTheGate.wav"), NULL, SND_ASYNC);
+            if (snake.size() > 0) {
+                for (int i = snake.size() - 1; i >= 0; i--) {
+                    gotoxy(snake[i].x, snake[i].y);
+                    cout << " ";
+                    Sleep(speed);
+                }
+            }
+            startGame(++level);
+        }
     }
 }
 
 // Hien thi menu khi thua
 void showEndMenu() {
     system("cls");
-    PlaySound(TEXT("Sound//lose.wav"), NULL, SND_ASYNC);
-    excuteReadFile(); // luu diem (tat se kh luu vao file nua)
+    //excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     setConsoleBackgroundColor(7);
-
-    printTextUTF8("FileText//youlose.txt", 28, 1, 116);
+    if (checkWin == true) {
+        PlaySound(TEXT("Sound//victory.wav"), NULL, SND_ASYNC);
+        printTextUTF8("FileText//victory.txt", 33, 2, 113);
+    }
+    else {
+        PlaySound(TEXT("Sound//lose.wav"), NULL, SND_ASYNC);
+        printTextUTF8("FileText//youlose.txt", 28, 1, 116);
+    }
+    
     SetColor(113);
     gotoxy(39, 11);
     for (int i = 39; i < 81; i++) {
@@ -1270,9 +1629,9 @@ void showEndMenu() {
         {
             MSSV = "23120223231202242312022523120250";
             CurrentSnake = "71202132";
-            resetSnake(CurrentSnake, 0, MSSV);
+            resetSnake(CurrentSnake, 0, MSSV,1);
             setConsoleBackgroundColor(14);
-            startGame();
+            startGame(1);
             break;
         }
         case 2:
@@ -1286,17 +1645,24 @@ void showEndMenu() {
 }
 
 // ham reset vi tri con ran khi choi lai
-void resetSnake(string temp, int diem, string idsv) {
+void resetSnake(string temp, int diem, string idsv,int level) {
     snake.clear();
     CurrentSnake = temp;
     // Xác định chiều dài của con rắn dựa trên CurrentSnake
     int length = CurrentSnake.size();
 
     // Khởi tạo lại con rắn dựa trên chiều dài của CurrentSnake
-    for (int i = 0; i < length; ++i) {
-        snake.push_back(Point{ WIDTH / 2 + 3 - i, HEIGHT / 2 }); // Khởi tạo con rắn theo chiều ngang từ (WIDTH / 2 + 3, HEIGHT / 2) giảm dần
+    if (level == 4) {
+        for (int i = 0; i < length; ++i) {
+            snake.push_back(Point{ WIDTH / 2 + 3 - i, HEIGHT / 2 - 10 }); // Khởi tạo con rắn theo chiều ngang từ (WIDTH / 2 + 3, HEIGHT / 2) giảm dần
+        }
     }
-
+    else {
+        for (int i = 0; i < length; ++i) {
+            snake.push_back(Point{ WIDTH / 2 + 3 - i, HEIGHT / 2 }); // Khởi tạo con rắn theo chiều ngang từ (WIDTH / 2 + 3, HEIGHT / 2) giảm dần
+        }
+    }
+    
     // Reset các biến khác
     MSSV = idsv;
     fullMSSV = "2312021723120223231202242312022523120250";
@@ -1525,6 +1891,7 @@ void readSaveGame() {
     outputFile << score << endl;
     outputFile << CurrentSnake << endl;
     outputFile << MSSV << endl;
+    outputFile << manchoi << endl;
 
     outputFile.close();
 
@@ -1725,6 +2092,10 @@ void handleGameSaves() {
                             // Read the remaining lines for coordinates
                             getline(load, CurrentSnake);
                             getline(load, MSSV);
+                            
+                            string capdo;
+                            getline(load, capdo);
+                            level = stoi(capdo);
 
                             load.close();
                         }
@@ -1737,8 +2108,8 @@ void handleGameSaves() {
                         system("cls");
 
                         SetColor(234);
-                        resetSnake(CurrentSnake, score, MSSV);
-                        startGame();
+                        resetSnake(CurrentSnake, score, MSSV,level);
+                        startGame(level);
                         break;
                     }
                     else if (selectedButton == 1) {

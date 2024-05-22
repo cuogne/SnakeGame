@@ -55,15 +55,18 @@ struct Point {
     int y;
 };
 
+enum class Direction { up, right, down, left };
+
 
 //====================================== Draw Game Functions ======================================
+vector<Point> Wall(int n);
+int randomRange(int min, int max);
 void drawBox();
-void drawBackground(int x, int maxX, int y, int maxY, int numColor);
 void drawButton(const std::string& text, bool highlighted, int xPos, int yPos);
 void drawMenu(const std::vector<std::string>& options, int highlightedOption, const int startX, const int startY);
 void drawSnake();
 void drawHeadnTail();
-void displayScoreInGame();
+void displayScoreInGame(int level);
 void displayHighScore(Info inf[], int n);
 void MENU(int& key);
 void NewGameandContinued(int& key);
@@ -71,29 +74,32 @@ void RestartandBackMenu(int& keyPressed);
 void MoveFirstChar(string& source, string& dest);
 void printTextUTF8(const std::string& filePath, int x, int y, int numColor);
 
+void drawGate(Point WP, bool OnHeight, bool Left, bool Up);
+void deleteGate_and_WP(Point& WP, bool OnHeight, bool Left, bool Up);
+void drawWall(vector<Point> WALL);
 void displayFile(const string& fileName, int x, int y, int numColor);
 void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor);
 void displayImage(int** image, int height, int width, int x, int y);
 
 //====================================== Logic Game Functions ======================================
 
-void createApple();
+void createApple(vector<Point> WALL);
 void growing();
 bool isBiteItself();
-bool isHitWall();
+bool isHitWall(vector<Point> WALL);
 bool isAteApple();
 void move();
+int Adjust_speed(Direction direction, int level);
 
 //====================================== Menu Game Play Functions ======================================
-void startGame();
+void startGame(int level);
 void ready();
 void showStartMenu();
 void inputInfoPlayer();
-void pauseGame();
-void quitGame();
+void pauseGame(bool enough_score);
 void saveGame();
 void showEndMenu();
-void resetSnake(string temp, int score, string idsv);
+void resetSnake(string temp, int score, string idsv, int level);
 
 void readSaveGame();
 void loadSaveFiles(std::vector<std::string>& saveFiles);
