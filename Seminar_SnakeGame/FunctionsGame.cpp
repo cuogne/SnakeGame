@@ -1340,12 +1340,39 @@ void inputInfoPlayer() {
                 gotoxy(i, 15);
                 cout << " ";
             }
-            do {
-                gotoxy(50, 15);
-                getline(cin, Name);
-            } while (Name.empty()); // nhap den khi nao chuoi khong rong
-
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            char yu;
+            Name = "";
+            gotoxy(50, 15);
+            while (true) {
+                yu = _getch();
+                if (yu == '\r') { // '\r' is the Enter key
+                    if (!Name.empty()) {
+                        break;
+                    }
+                }
+                else if ((yu == '\b' || yu == '\177')) { // '\b' is the Backspace key, '\177' is the Delete key
+                    if (Name.length() > 0) {
+                        SetColor(240);
+                        Name.pop_back();
+                        cout << "\b \b"; // Erase the last character in the console
+                        gotoxy(30, 17);
+                        SetColor(116);
+                        cout << "                                                       "; // Clear the error message
+                        gotoxy(Name.length() + 50, 15); // Move the cursor back to the input
+                    }
+                }
+                else if (Name.length() < 20) {
+                    SetColor(240);
+                    Name.push_back(yu);
+                    cout << yu;
+                }
+                else {
+                    gotoxy(44, 17);
+                    SetColor(79);
+                    cout << "Name cannot exceed 20 characters";
+                    gotoxy(70, 15);
+                }
+            }
 
             MSSV = "23120223231202242312022523120250";
             CurrentSnake = "71202132";
@@ -1618,8 +1645,6 @@ void startGame(int level) {
             if (score == score_win) enough_score = true;
             displayScoreInGame(level);     // hien thi diem vua tang
             growing();          // tang do dai cho con ran
-            if (!enough_score)  // Neu chua du diem
-                createApple(Wall(level));      // tao lai qua tao
         }
 
         if (isBiteItself() || isHitWall(Wall(level))) { // neu con ran can vao than minh hoac dung vao tuong
