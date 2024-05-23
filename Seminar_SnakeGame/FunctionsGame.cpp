@@ -876,8 +876,14 @@ void loadSaveFiles(vector<string>& saveFiles) {
 //====================================== Logic Game Functions ======================================
 
 // random
+
 int randomRange(int min, int max) {
-    return rand() % (max - min + 1) + min;
+    static bool firstTime = true;
+    if (firstTime) { // we only need to initialize the random number generator once
+        srand(time(0)); // use current time as seed for random generator
+        firstTime = false;
+    }
+    return min + rand() % (max - min + 1);
 }
 
 // random vi tri cua qua tao trong board game
@@ -1495,7 +1501,7 @@ void pauseGame(bool enough_score) {
             }
         }
 
-        if (!enough_score) {                //THAM SỐ ĐƯỢC SÀI Ở ĐÂY
+        if (!enough_score) {                
             SetColor(225);
             gotoxy(apple.x, apple.y);
             cout << APPLE;
@@ -1536,7 +1542,7 @@ void startGame(int level) {
     manchoi = level;
     bool enough_score = false;
 
-    if (score == 80 * level) {
+    if (score == 80 * level || score == 80 && checkSave == true) {
         enough_score = true;
     }
 
@@ -1582,11 +1588,12 @@ void startGame(int level) {
 
     drawSnake(); // ve con ran
 
-    if (enough_score == false) {
-        createApple(Wall(level)); // tao qua tao
-
+    if (!checkSave){
+        if (enough_score == false) {
+            createApple(Wall(level));
+        }
     }
-
+    
     if (level > 1) {
         GetReady();
         drawWall(Wall(level));
@@ -1596,6 +1603,7 @@ void startGame(int level) {
     int score_win = 80 * level;
     bool TimeWallDelay = 1;
     bool deletedGate = 1;
+    checkSave = false;
 
     while (true) {
         if (level >= 2 && deletedGate == 1) {
@@ -1645,6 +1653,9 @@ void startGame(int level) {
             if (score == score_win) enough_score = true;
             displayScoreInGame(level);     // hien thi diem vua tang
             growing();          // tang do dai cho con ran
+            if (enough_score == false) {
+                createApple(Wall(level));
+            }
         }
 
         if (isBiteItself() || isHitWall(Wall(level))) { // neu con ran can vao than minh hoac dung vao tuong
@@ -1670,7 +1681,6 @@ void startGame(int level) {
                     Sleep(speed);
                 }
             }
-            checkSave = false;
             startGame(++level);
         }
     }
