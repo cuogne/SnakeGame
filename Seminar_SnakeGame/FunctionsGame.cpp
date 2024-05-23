@@ -1330,6 +1330,7 @@ void inputInfoPlayer() {
                     cout << " ";
                 }
             }
+            
             // Input player's name
             gotoxy(40, 10);
             ShowConsoleCursor(TRUE);
@@ -1346,6 +1347,7 @@ void inputInfoPlayer() {
                 gotoxy(i, 15);
                 cout << " ";
             }
+
             char yu;
             Name = "";
             gotoxy(50, 15);
@@ -1353,6 +1355,7 @@ void inputInfoPlayer() {
                 yu = _getch();
                 if (yu == '\r') { // '\r' is the Enter key
                     if (!Name.empty()) {
+                        PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         break;
                     }
                 }
