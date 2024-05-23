@@ -258,7 +258,7 @@ void drawMenu(const vector<string>& options, int highlightedOption, const int st
 
 // menu game gom newgame, continue va back
 void NewGameandContinued(int& keyPressed) {
-    vector<string> options = {"NEW GAME", "CONTINUE", "BACK"};
+    vector<string> options = { "NEW GAME", "CONTINUE", "BACK" };
     size_t highlightedOption = 0;
 
     while (true) {
@@ -287,7 +287,7 @@ void NewGameandContinued(int& keyPressed) {
 
 // menu gom resetgame va backmenu
 void RestartandBackMenu(int& keyPressed) {
-    vector<string> options = {"RESTART GAME", "BACK MENU"};
+    vector<string> options = { "RESTART GAME", "BACK MENU" };
     size_t highlightedOption = 0;
 
     while (true) {
@@ -539,7 +539,7 @@ void drawWall(vector<Point> WALL) {
 }
 
 // ve con ran
-void drawSnake() {              
+void drawSnake() {
     for (size_t i = 0; i < snake.size(); i++) {
         if (i == 0) SetColor(226);
         else if (i == 8) SetColor(227);
@@ -673,17 +673,34 @@ void CreateWinPoint() {
     int x, y;
     do {
         PointOnHeight = rand() % 2;
+
         if (PointOnHeight) {
+            // dat 2 ben canh ngan
             x = rand() % 2;
-            if (x == 0) { x = 3; Left = 1; }        
-            else { x = WIDTH - 2; Left = 0; }
-            y = randomRange(1, HEIGHT - 1);
+
+            if (x == 0) {
+                x = 3;
+                Left = 1;
+            }
+            else {
+                x = WIDTH - 2;
+                Left = 0;
+            }
+            y = randomRange(2, HEIGHT - 2);
         }
+        // dat tren 2 canh dai
         else {
-            x = randomRange(2, WIDTH - 2);
+            x = randomRange(3, WIDTH - 3);
+
             y = rand() % 2;
-            if (y == 0) { y = 1; Up = true; }
-            else { y = HEIGHT - 1; Up = false; }
+            if (y == 0) {
+                y = 2;
+                Up = true;
+            }
+            else {
+                y = HEIGHT - 2;
+                Up = false;
+            }
         }
 
         // kiem tra xem co trung voi con ran khong
@@ -1333,7 +1350,7 @@ void inputInfoPlayer() {
             MSSV = "23120223231202242312022523120250";
             CurrentSnake = "71202132";
 
-            resetSnake(CurrentSnake, 0, MSSV,1); // Reset snake's state
+            resetSnake(CurrentSnake, 0, MSSV, 1); // Reset snake's state
 
             SetColor(234);
 
@@ -1488,7 +1505,14 @@ void GetReady() {
 // ham hien thi tro choi (ran, apple,...)
 void startGame(int level) {
     system("cls"); // clear man hinh
+
     manchoi = level;
+    bool enough_score = false;
+
+    if (score == 80 * level) {
+        enough_score = true;
+    }
+
     if (level > 4) {
         checkWin = true;
         showEndMenu();
@@ -1524,20 +1548,23 @@ void startGame(int level) {
     setConsoleBackgroundColor(14);
     ShowConsoleCursor(false);
 
-    drawBox();
-    drawWall(Wall(level));
+    drawBox(); // ve khung
+    drawWall(Wall(level)); // ve tuong
     displayScoreInGame(level); // hien thi diem
     if (level == 1) ready();
 
-    drawSnake();
-    createApple(Wall(level));
+    drawSnake(); // ve con ran
+
+    if (enough_score == false) {
+        createApple(Wall(level)); // tao qua tao
+
+    }
 
     if (level > 1) {
         GetReady();
         drawWall(Wall(level));
     }
 
-    bool enough_score = 0;
     bool isCreatedWinPoint = 0;
     int score_win = 80 * level;
     bool TimeWallDelay = 1;
@@ -1638,7 +1665,7 @@ void showEndMenu() {
         PlaySound(TEXT("Sound//lose.wav"), NULL, SND_ASYNC);
         printTextUTF8("FileText//youlose.txt", 28, 1, 116);
     }
-    
+
     SetColor(113);
     gotoxy(39, 11);
     for (int i = 39; i < 81; i++) {
@@ -1682,7 +1709,7 @@ void showEndMenu() {
         {
             MSSV = "23120223231202242312022523120250";
             CurrentSnake = "71202132";
-            resetSnake(CurrentSnake, 0, MSSV,1);
+            resetSnake(CurrentSnake, 0, MSSV, 1);
             setConsoleBackgroundColor(14);
             startGame(1);
             break;
@@ -1698,7 +1725,7 @@ void showEndMenu() {
 }
 
 // ham reset vi tri con ran khi choi lai
-void resetSnake(string temp, int diem, string idsv,int level) {
+void resetSnake(string temp, int diem, string idsv, int level) {
     snake.clear();
     CurrentSnake = temp;
     // Xác định chiều dài của con rắn dựa trên CurrentSnake
@@ -1715,7 +1742,7 @@ void resetSnake(string temp, int diem, string idsv,int level) {
             snake.push_back(Point{ WIDTH / 2 + 3 - i, HEIGHT / 2 }); // Khởi tạo con rắn theo chiều ngang từ (WIDTH / 2 + 3, HEIGHT / 2) giảm dần
         }
     }
-    
+
     // Reset các biến khác
     MSSV = idsv;
     fullMSSV = "2312021723120223231202242312022523120250";
@@ -2145,7 +2172,7 @@ void handleGameSaves() {
                             // Read the remaining lines for coordinates
                             getline(load, CurrentSnake);
                             getline(load, MSSV);
-                            
+
                             string capdo;
                             getline(load, capdo);
                             level = stoi(capdo);
@@ -2162,7 +2189,7 @@ void handleGameSaves() {
 
                         SetColor(234);
                         checkSave = true;
-                        resetSnake(CurrentSnake, score, MSSV,level);
+                        resetSnake(CurrentSnake, score, MSSV, level);
                         startGame(level);
                         break;
                     }

@@ -1,2 +1,17 @@
-﻿  main.cpp
+﻿  FunctionsGame.cpp
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(236,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(266,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(281,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(295,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(310,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(323,27): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(338,44): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(933,80): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(1528,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(1535,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(1575,22): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(1642,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(1732,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(2045,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\code\Seminar_SnakeGame\Seminar_SnakeGame\FunctionsGame.cpp(2167,54): warning C4101: 'e': unreferenced local variable
   Seminar_SnakeGame.vcxproj -> C:\code\Seminar_SnakeGame\x64\Debug\Seminar_SnakeGame.exe
