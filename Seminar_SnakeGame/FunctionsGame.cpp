@@ -686,7 +686,7 @@ void CreateWinPoint() {
                 x = WIDTH - 2;
                 Left = 0;
             }
-            y = randomRange(2, HEIGHT - 2);
+            y = randomRange(2, HEIGHT - 3);
         }
         // dat tren 2 canh dai
         else {
@@ -1421,6 +1421,7 @@ void inputInfoPlayer() {
 void pauseGame(bool enough_score) {
     // 21 - 61
     // 10 - 18
+    bool checkContinue = false;
     SetColor(228);
     gotoxy(21, 10);
     for (int i = 21; i < 61; i++) {
@@ -1466,7 +1467,7 @@ void pauseGame(bool enough_score) {
         SetColor(selectedButton == 0 ? 225 : 228);
         cout << "SAVE";
 
-        gotoxy(38, 16);
+        gotoxy(39, 16);
         SetColor(selectedButton == 1 ? 225 : 228);
         cout << "QUIT";
 
@@ -1497,14 +1498,16 @@ void pauseGame(bool enough_score) {
             }
             else if (selectedButton == 2) {
                 quitConfirmed = true;
+                checkContinue = true;
                 break;
             }
         }
-
-        if (!enough_score) {                
-            SetColor(225);
-            gotoxy(apple.x, apple.y);
-            cout << APPLE;
+        if (checkContinue == true){
+            if (!enough_score) {
+                SetColor(225);
+                gotoxy(apple.x, apple.y);
+                cout << APPLE;
+            }
         }
     }
 
@@ -1539,18 +1542,22 @@ void GetReady() {
 void startGame(int level) {
     system("cls"); // clear man hinh
 
+    // khi mo saveGame thi checkSave == true
+
     manchoi = level;
     bool enough_score = false;
 
-    if (score == 80 * level || score == 80 && checkSave == true) {
+    // diem dat toi da cua 1 man choi
+    if (score == 80 * level || score == 80 * level && checkSave == true) {
         enough_score = true;
     }
 
     if (level > 4) {
-        checkWin = true;
+        checkWin = true; // dat duoc man choi cuoi cung
         showEndMenu();
     }
 
+    // level lon hon 2 + kh mo tu saveGame thi se tao cong di qua
     if (level >= 2 && checkSave == false) {
         if (direction == Direction::left) direction = Direction::right;
         else if (direction == Direction::right) direction = Direction::left;
@@ -1573,10 +1580,7 @@ void startGame(int level) {
         }
         drawGate(WinPoint, PointOnHeight, Left, Up);
         move();
-        checkSave = false;
     }
-
-    //resetSnake(CurrentSnake, score, MSSV,level);
 
     setConsoleBackgroundColor(14);
     ShowConsoleCursor(false);
@@ -1588,12 +1592,14 @@ void startGame(int level) {
 
     drawSnake(); // ve con ran
 
-    if (!checkSave){
-        if (enough_score == false) {
-            createApple(Wall(level));
-        }
+    checkSave = false;
+
+    // neu enough_score chua du
+    if (enough_score == false) {
+        createApple(Wall(level)); // tao qua tao
     }
     
+    // neu level > 1 thi bat dau ve chuong ngai vat o cac man ke
     if (level > 1) {
         GetReady();
         drawWall(Wall(level));
@@ -1603,7 +1609,6 @@ void startGame(int level) {
     int score_win = 80 * level;
     bool TimeWallDelay = 1;
     bool deletedGate = 1;
-    checkSave = false;
 
     while (true) {
         if (level >= 2 && deletedGate == 1) {
@@ -1623,8 +1628,8 @@ void startGame(int level) {
         }
 
         speed = Adjust_speed(direction, level); // Adjust game speed based on level
-        // ham check phim an an tu ban phim
-        if (_kbhit()) { // thuoc thu vien <conio.h>
+
+        if (_kbhit()) { 
             char ch = _getch();
             ch = tolower(ch); // chuyen chu hoa thanh chu thuong de tranh loi capslock
             if (ch == 'a' && direction != Direction::right)
@@ -1636,25 +1641,28 @@ void startGame(int level) {
             else if (ch == 'd' && direction != Direction::left)
                 direction = Direction::right;
             else if (ch == 'p') {
-                isPaused = true;
-                pauseGame(enough_score);
-                drawWall(Wall(level));
+                isPaused = true; // gan trang thai dung 
+                pauseGame(enough_score); // goi ham pause
+                drawWall(Wall(level)); // ve lai tuong de tranh bi che
             }
         }
 
         move();          // ham di chuyen con ran
-        drawSnake();    // ve duoi va dau ran		//MỚI CÓ ĐỔI MÀU RẮN
+        drawSnake();     // ve duoi va dau ran		
         drawHeadnTail();
 
         if (isAteApple()) {
             // add am thanh khi con ran an qua tao
             PlaySound(TEXT("Sound//pop.wav"), NULL, SND_ASYNC);
-            score += 20;        // tang 1 diem khi an trung tao
-            if (score == score_win) enough_score = true;
-            displayScoreInGame(level);     // hien thi diem vua tang
-            growing();          // tang do dai cho con ran
+            score += 20;                    // tang 1 diem khi an trung tao
+            if (score == score_win) {
+                enough_score = true;
+            }
+            displayScoreInGame(level);       // hien thi diem vua tang
+            growing();                      // tang do dai cho con ran
+            // neu chua du diem
             if (enough_score == false) {
-                createApple(Wall(level));
+                createApple(Wall(level));   // tao lai qua tao
             }
         }
 
@@ -1665,11 +1673,13 @@ void startGame(int level) {
             showEndMenu(); // hien thi man hinh endgame
             break;
         }
+
         if (isCreatedWinPoint == false)
             if (enough_score) {
                 CreateWinPoint();         //Neu da du diem thi tao cong
                 isCreatedWinPoint = true; //Dat la da tao WinPoint de khong tao lai
             }
+
         if (!isOnWinPoint() && !isOnSecondWP())
             Sleep(speed);
         else {
@@ -2223,7 +2233,7 @@ void handleGameSaves() {
                         system("cls");
 
                         SetColor(234);
-                        checkSave = true;
+                        checkSave = true; // bao lai voi startGame rang file nay mo tu saveGame
                         resetSnake(CurrentSnake, score, MSSV, level);
                         startGame(level);
                         break;
