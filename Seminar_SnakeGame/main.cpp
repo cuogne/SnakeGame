@@ -1,7 +1,7 @@
 ﻿#include "HeaderGame.h"
 #include "SystemGame.h"
 int main() {
-    resizeConsole(120, 30); // fix kich thuoc cua so
+    //resizeConsole(120, 30); // fix kich thuoc cua so
     SetConsoleTitleW(L"Snake Game"); // set tieu de console
     FixConsoleWindow(); // fix phong to cua so
     ShowScrollbar(FALSE); // tat thanh cuon

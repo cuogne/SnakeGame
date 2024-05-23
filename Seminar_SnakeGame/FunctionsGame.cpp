@@ -4,7 +4,7 @@
 #include "SystemGame.h"
 
 const int WIDTH = 80;
-const int HEIGHT = 28;
+const int HEIGHT = 30;
 #define APPLE '0' ;
 
 string MSSV = "23120223231202242312022523120250";
@@ -27,6 +27,7 @@ bool checkMusic = true;                 // check trang thai nhac nen
 bool isPaused = false;                  // check trang thai pause game
 bool isOnSnake = false; // bien check trang thai cua ran
 bool checkWin = false;
+bool checkSave = false;
 bool PointOnHeight = 0; // bien check vi tri winPoint
 bool Left = 0;          // Neu winPoint bên trai
 bool Up = 0;            // Neu winPoint bên phai
@@ -78,12 +79,12 @@ vector<Point> Wall_lv2{
 vector<Point> Wall_lv3{
     Point{10,5},
     Point{60,5},
-    Point{30,12},
-    Point{75,12},
+    Point{15,12},
+    Point{70,12},
     Point{10,19},
     Point{60,19},
-    Point{30,26},
-    Point{75,26},
+    Point{15,24},
+    Point{70,24},
 };
 
 int direc = 1;
@@ -317,6 +318,7 @@ void RestartandBackMenu(int& keyPressed) {
 }
 
 void drawGate(Point WP, bool OnHeight, bool Left, bool Up) {
+    SetColor(225);
     if (OnHeight) {
         if (Left) {
             Wall_WinPoint[0].x = WP.x - 1;      //Phia sau
@@ -514,15 +516,18 @@ int randomRange(int min, int max) {
 }
 
 // ve con ran
-void drawSnake() {
-    SetColor(226);
+void drawSnake() {              //CON RẮN ĐỔI MÀU NÈ
     for (size_t i = 0; i < snake.size(); i++) {
+        if (i == 0) SetColor(226);
+        else if (i == 8) SetColor(227);
+        else if (i == 16) SetColor(225);
+        else if (i == 24) SetColor(237);
+        else if (i == 32) SetColor(229);
         Point p = snake[i]; // lay vi tri phan tu con ran
         gotoxy(p.x, p.y);
         cout << CurrentSnake[snake.size() - i - 1];
     }
 }
-
 // ham xoa cai duoi phia sau con ran
 void drawHeadnTail() {
     gotoxy(prevTail.x, prevTail.y); // di toi duoi ran
@@ -936,14 +941,10 @@ bool isOnSecondWP() {
 // tang do dai cho con ran khi no an trung apple
 void growing() {
     snake.push_back(prevTail); // push_back vao duoi con ran
-    // kiem tra xem chuoi mssv da het chua
-    if (!MSSV.empty()) {
-        MoveFirstChar(MSSV, CurrentSnake);
-    }
-    // neu da het thi dung chuoi fullMSSV de them vao
-    else {
-        MoveFirstChar(fullMSSV, CurrentSnake);
-    }
+    snake.push_back(prevTail);
+
+    MoveFirstChar(MSSV, CurrentSnake);
+    MoveFirstChar(MSSV, CurrentSnake);
 }
 
 // push vao con ran mssv
@@ -960,14 +961,23 @@ bool isHitWall(vector<Point> WALL) {
     for (int i = 0; i < WALL.size(); i += 2)
         for (int m = WALL[i].x; m <= WALL[i + 1].x; m++)
             for (int n = WALL[i].y; n <= WALL[i + 1].y; n++)
-                if ((snake[0].x == m) && (snake[0].y == n)) return true;
-
+                for (auto& point : snake)
+                    if ((point.x == m) && (point.y == n)) return true;
     for (int i = 0; i < Wall_WinPoint.size(); i++) {
-        if ((snake[0].x == Wall_WinPoint[i].x) && (snake[0].y == Wall_WinPoint[i].y))
-            return true;
+        if ((snake[0].x == Wall_WinPoint[i].x) && (snake[0].y == Wall_WinPoint[i].y)) return true;
     }
     // neu dau con ran = 0 hoac = chieu cao or chieu rong
-    return snake[0].x == 1 || snake[0].y == 0 || snake[0].x == WIDTH || snake[0].y == HEIGHT;
+    return snake[0].x == 0 || snake[0].y == 0 || snake[0].x == WIDTH || snake[0].y == HEIGHT;
+}
+
+void drawSnakeDie() {
+    SetColor(228);
+    for (size_t i = 0; i < snake.size(); i++) {
+        Point p = snake[i]; //Lay vi tri phan tu con ran
+        gotoxy(p.x, p.y);
+        cout << "x";
+        Sleep(100);
+    }
 }
 
 // Kiem tra xem neu con ran an trung qua tao
@@ -1464,28 +1474,74 @@ void pauseGame(bool enough_score) {
     isPaused = false;
 }
 
+void GetReady() {
+    gotoxy(35, 13);
+    SetColor(225);
+    cout << "GET READY..." << endl;
+    // doi 3 giay de BAT DAU
+    for (size_t i = 3; i > 0; i--) {
+        gotoxy(40, 15);
+        cout << i;
+        Sleep(1000);
+    }
+    gotoxy(40, 15);
+    cout << " ";
+    gotoxy(35, 13);
+    cout << "                            "; //xoa chuoi "GET READY..."
+}
+
 // ham hien thi tro choi (ran, apple,...)
 void startGame(int level) {
+    system("cls"); // clear man hinh
     manchoi = level;
     if (level > 4) {
         checkWin = true;
         showEndMenu();
-
     }
-    resetSnake(CurrentSnake, score, MSSV,level);
+
+    if (level >= 2 && checkSave == false) {
+        if (direction == Direction::left) direction = Direction::right;
+        else if (direction == Direction::right) direction = Direction::left;
+        else if (direction == Direction::up) direction = Direction::down;
+        else direction = Direction::up;
+
+        if (isOnWinPoint()) {
+            for (int i = snake.size() - 1; i >= 1; i--)
+            {
+                snake[i].x = WinPoint.x;
+                snake[i].y = WinPoint.y;
+            }
+        }
+        else if (isOnSecondWP()) {
+            for (int i = snake.size() - 1; i >= 1; i--)
+            {
+                snake[i].x = SecondWP.x;
+                snake[i].y = SecondWP.y;
+            }
+        }
+        SetColor(225);
+        drawGate(WinPoint, PointOnHeight, Left, Up);
+        move();
+        checkSave = false;
+    }
+
+    //resetSnake(CurrentSnake, score, MSSV,level);
+
     setConsoleBackgroundColor(14);
     ShowConsoleCursor(false);
-
-    system("cls"); // clear man hinh
 
     drawBox();
     drawWall(Wall(level));
     displayScoreInGame(level); // hien thi diem
-
     if (level == 1) ready();
 
     drawSnake();
     createApple(Wall(level));
+
+    if (level > 1) {
+        GetReady();
+        drawWall(Wall(level));
+    }
 
     bool enough_score = 0;
     bool isCreatedWinPoint = 0;
@@ -1509,6 +1565,7 @@ void startGame(int level) {
                 MoveWall_lv3();
             }
         }
+
         speed = Adjust_speed(direction, level); // Adjust game speed based on level
         // ham check phim an an tu ban phim
         if (_kbhit()) { // thuoc thu vien <conio.h>
@@ -1546,6 +1603,7 @@ void startGame(int level) {
 
         if (isBiteItself() || isHitWall(Wall(level))) { // neu con ran can vao than minh hoac dung vao tuong
             PlaySound(TEXT("Sound//gameover.wav"), NULL, SND_ASYNC);
+            drawSnakeDie();
             Sleep(1000);
             showEndMenu(); // hien thi man hinh endgame
             break;
@@ -1566,6 +1624,7 @@ void startGame(int level) {
                     Sleep(speed);
                 }
             }
+            checkSave = false;
             startGame(++level);
         }
     }
@@ -1574,7 +1633,7 @@ void startGame(int level) {
 // Hien thi menu khi thua
 void showEndMenu() {
     system("cls");
-    //excuteReadFile(); // luu diem (tat se kh luu vao file nua)
+    excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     setConsoleBackgroundColor(7);
     if (checkWin == true) {
@@ -2108,6 +2167,7 @@ void handleGameSaves() {
                         system("cls");
 
                         SetColor(234);
+                        checkSave = true;
                         resetSnake(CurrentSnake, score, MSSV,level);
                         startGame(level);
                         break;
