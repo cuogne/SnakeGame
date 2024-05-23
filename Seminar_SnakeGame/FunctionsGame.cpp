@@ -4,7 +4,7 @@
 #include "SystemGame.h"
 
 const int WIDTH = 80;
-const int HEIGHT = 30;
+const int HEIGHT = 28;
 #define APPLE '0' ;
 
 string MSSV = "23120223231202242312022523120250";
@@ -77,12 +77,12 @@ vector<Point> Wall_lv2{
 };
 
 vector<Point> Wall_lv3{
-    Point{10,5},
-    Point{60,5},
+    Point{10,6},
+    Point{60,6},
     Point{15,12},
     Point{70,12},
-    Point{10,19},
-    Point{60,19},
+    Point{10,18},
+    Point{60,18},
     Point{15,24},
     Point{70,24},
 };
@@ -160,14 +160,14 @@ void drawBox() {
     for (int i = 1; i < 80; i++) {
 
         if (i == 1 || i == 80) cout << topLeftCorner;
-        else cout << horizontalLineTop;
+        else cout << (char)219;
     }
     cout << topRightCorner;
 
     gotoxy(1, 28);
     for (int i = 1; i < 80; i++) {
         if (i == 1 || i == 80) cout << topLeftCorner;
-        else cout << horizontalLineBottom;
+        else cout << (char)219;
     }
     cout << bottomRightCorner;
 
@@ -528,6 +528,7 @@ void drawSnake() {              //CON RẮN ĐỔI MÀU NÈ
         cout << CurrentSnake[snake.size() - i - 1];
     }
 }
+
 // ham xoa cai duoi phia sau con ran
 void drawHeadnTail() {
     gotoxy(prevTail.x, prevTail.y); // di toi duoi ran
@@ -967,9 +968,10 @@ bool isHitWall(vector<Point> WALL) {
         if ((snake[0].x == Wall_WinPoint[i].x) && (snake[0].y == Wall_WinPoint[i].y)) return true;
     }
     // neu dau con ran = 0 hoac = chieu cao or chieu rong
-    return snake[0].x == 0 || snake[0].y == 0 || snake[0].x == WIDTH || snake[0].y == HEIGHT;
+    return snake[0].x == 1 || snake[0].y == 0 || snake[0].x == WIDTH || snake[0].y == HEIGHT;
 }
 
+// animation khi con ran chet
 void drawSnakeDie() {
     SetColor(228);
     for (size_t i = 0; i < snake.size(); i++) {
@@ -1349,11 +1351,14 @@ void inputInfoPlayer() {
             system("cls");
             setConsoleBackgroundColor(7);
             printTextUTF8("FileText//guide.txt", 5, 1, 113);
-            char ch = _getch();
-            if (ch == '\r') {
-                setConsoleBackgroundColor(14);
-                startGame(1);
-            }
+
+            char ch;
+            do {
+                ch = _getch();
+            } while (ch != '\r');
+
+            setConsoleBackgroundColor(14);
+            startGame(1);
             //ready();
             break;
         }
@@ -1474,6 +1479,7 @@ void pauseGame(bool enough_score) {
     isPaused = false;
 }
 
+// 3 giay chuan bi
 void GetReady() {
     gotoxy(35, 13);
     SetColor(225);
@@ -1519,7 +1525,6 @@ void startGame(int level) {
                 snake[i].y = SecondWP.y;
             }
         }
-        SetColor(225);
         drawGate(WinPoint, PointOnHeight, Left, Up);
         move();
         checkSave = false;

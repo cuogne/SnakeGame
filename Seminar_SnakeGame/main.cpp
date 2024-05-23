@@ -25,7 +25,9 @@ int main() {
         delete[] snakePic[i];
     }
     delete[] snakePic;
-    
+
+    //cout << (char)219 << " " << (char)220 << " " << (char)223;
+
     //printTextUTF8("check.txt", 20, 3, 233);
     // ----------------------------------------------------------------------
     //int key = 0;
