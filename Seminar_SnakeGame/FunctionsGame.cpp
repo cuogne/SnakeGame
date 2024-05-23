@@ -25,14 +25,14 @@ int manchoi = 0;
 const int LimitPlayers = 1000;          // so luong nguoi choi toi da luu duoc
 bool checkMusic = true;                 // check trang thai nhac nen
 bool isPaused = false;                  // check trang thai pause game
-bool isOnSnake = false; // bien check trang thai cua ran
-bool checkWin = false;
-bool checkSave = false;
-bool PointOnHeight = 0; // bien check vi tri winPoint
-bool Left = 0;          // Neu winPoint bên trai
-bool Up = 0;            // Neu winPoint bên phai
-char date[20];
-char thoigian[20];
+bool isOnSnake = false;                 // bien check trang thai cua ran
+bool checkWin = false;                  // bien check xem nguoi choi qua 4 man chua             
+bool checkSave = false;                 // bien check xem man choi co duoc mo tu saveGame kh
+bool PointOnHeight = 0;                 // bien check vi tri winPoint
+bool Left = 0;                          // Neu winPoint bên trai
+bool Up = 0;                            // Neu winPoint bên phai
+char date[20];                          // bien luu ngay choi
+char thoigian[20];                      // bien luu thoi gian choi
 
 const unsigned char horizontalLineTop = 223; //viền trên
 const unsigned char horizontalLineBottom = 220; // viền dưới 
@@ -155,21 +155,13 @@ vector<Point> Wall(int n) {
 // ve board game
 void drawBox() {
     SetColor(228);
-
-    gotoxy(1, 0);
-    for (int i = 1; i < 80; i++) {
-
-        if (i == 1 || i == 80) cout << topLeftCorner;
-        else cout << (char)219;
+    // ve chieu dai
+    for (int i = 1; i < 81; i++) {
+        gotoxy(i, 0);
+        cout << horizontalLineBottom;
+        gotoxy(i, 28);
+        cout << horizontalLineTop;
     }
-    cout << topRightCorner;
-
-    gotoxy(1, 28);
-    for (int i = 1; i < 80; i++) {
-        if (i == 1 || i == 80) cout << topLeftCorner;
-        else cout << (char)219;
-    }
-    cout << bottomRightCorner;
 
     for (int i = 1; i < 28; i++) {
         gotoxy(1, i);
@@ -211,7 +203,8 @@ void drawBox() {
     }
 }
 
-void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
+// ham ve cac button
+void drawButton(const string& text, bool highlighted, int xPos, int yPos) {
     const int buttonWidth = 26;
     const int buttonHeight = 3;
 
@@ -230,7 +223,7 @@ void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
 
     for (int i = 1; i <= buttonHeight - 2; ++i) {
         gotoxy(xPos, yPos + i);
-        std::cout << verticalLine << std::setw(buttonWidth - 2) << ' ' << verticalLine; // Đảm bảo kích thước của dòng là buttonWidth - 1
+        cout << verticalLine << setw(buttonWidth - 2) << ' ' << verticalLine; // Đảm bảo kích thước của dòng là buttonWidth - 1
     }
 
     gotoxy(xPos, yPos + buttonHeight - 1);
@@ -246,6 +239,7 @@ void drawButton(const std::string& text, bool highlighted, int xPos, int yPos) {
     cout << text;
 }
 
+// ham ve ra menu (gom nhieu button)
 void drawMenu(const vector<string>& options, int highlightedOption, const int startX, const int startY) {
     const int buttonSpacing = 1; // Khoảng cách giữa các nút button
 
@@ -262,8 +256,9 @@ void drawMenu(const vector<string>& options, int highlightedOption, const int st
 
 }
 
+// menu game gom newgame, continue va back
 void NewGameandContinued(int& keyPressed) {
-    std::vector<std::string> options = { "NEW GAME", "CONTINUE","BACK" };
+    vector<string> options = {"NEW GAME", "CONTINUE", "BACK"};
     size_t highlightedOption = 0;
 
     while (true) {
@@ -290,8 +285,9 @@ void NewGameandContinued(int& keyPressed) {
 
 }
 
+// menu gom resetgame va backmenu
 void RestartandBackMenu(int& keyPressed) {
-    vector<string> options = { "RESTART GAME", "BACK MENU" };
+    vector<string> options = {"RESTART GAME", "BACK MENU"};
     size_t highlightedOption = 0;
 
     while (true) {
@@ -317,6 +313,35 @@ void RestartandBackMenu(int& keyPressed) {
     }
 }
 
+// button new (dang trong giai doan nghien cuu)
+void MENU(int& keyPressed) {
+    vector<string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
+    size_t highlightedOption = 0;
+
+    while (true) {
+
+        drawMenu(options, highlightedOption, 47, 3);
+
+        int key = _getch();
+
+        if (key == 'w' || key == 72) {  // Up arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption - 1 + options.size()) % options.size();
+        }
+        else if (key == 's' || key == 80) {  // Down arrow
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            highlightedOption = (highlightedOption + 1) % options.size();
+        }
+        else if (key == 13) {  // Enter key
+            // Trả về giá trị của phím được nhấn
+            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
+            keyPressed = highlightedOption + 1; // Vì chỉ số của options bắt đầu từ 0, nên cần +1 để phù hợp với các trường hợp trong switch case
+            break;
+        }
+    }
+}
+
+// ve cong qua man moi
 void drawGate(Point WP, bool OnHeight, bool Left, bool Up) {
     SetColor(225);
     if (OnHeight) {
@@ -405,6 +430,7 @@ void drawGate(Point WP, bool OnHeight, bool Left, bool Up) {
     }
 }
 
+// xoa cong qua man
 void deleteGate_and_WP(Point& WP, bool OnHeight, bool Left, bool Up) {
     if (OnHeight) {
         if (Left) {
@@ -496,6 +522,7 @@ void deleteGate_and_WP(Point& WP, bool OnHeight, bool Left, bool Up) {
     WP.y = 31;
 }
 
+// ve tuong
 void drawWall(vector<Point> WALL) {
     SetColor(228);
     for (int i = 0; i < WALL.size(); i += 2)
@@ -511,12 +538,8 @@ void drawWall(vector<Point> WALL) {
             }
 }
 
-int randomRange(int min, int max) {
-    return rand() % (max - min + 1) + min;
-}
-
 // ve con ran
-void drawSnake() {              //CON RẮN ĐỔI MÀU NÈ
+void drawSnake() {              
     for (size_t i = 0; i < snake.size(); i++) {
         if (i == 0) SetColor(226);
         else if (i == 8) SetColor(227);
@@ -526,6 +549,17 @@ void drawSnake() {              //CON RẮN ĐỔI MÀU NÈ
         Point p = snake[i]; // lay vi tri phan tu con ran
         gotoxy(p.x, p.y);
         cout << CurrentSnake[snake.size() - i - 1];
+    }
+}
+
+// animation khi con ran chet
+void drawSnakeDie() {
+    SetColor(228);
+    for (size_t i = 0; i < snake.size(); i++) {
+        Point p = snake[i]; //Lay vi tri phan tu con ran
+        gotoxy(p.x, p.y);
+        cout << "x";
+        Sleep(100);
     }
 }
 
@@ -557,11 +591,11 @@ void displayScoreInGame(int level) {
     cout << Name;
 
     SetColor(228);
-    gotoxy(84, 14);
+    gotoxy(84, 18);
     cout << "Press <P> to Pause Game";
 
     SetColor(228);
-    gotoxy(84, 26);
+    gotoxy(84, 22);
     cout << "MOVE SNAKE : A W S D";
 
     gotoxy(25, 29);
@@ -634,34 +668,7 @@ void displayHighScore(Info inf[], int n) {
     }
 }
 
-// button new (dang trong giai doan nghien cuu)
-void MENU(int& keyPressed) {
-    vector<string> options = { "START", "RANKING", "SETTING", "ABOUT US", "EXIT" };
-    size_t highlightedOption = 0;
-
-    while (true) {
-
-        drawMenu(options, highlightedOption, 47, 3);
-
-        int key = _getch();
-
-        if (key == 'w' || key == 72) {  // Up arrow
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            highlightedOption = (highlightedOption - 1 + options.size()) % options.size();
-        }
-        else if (key == 's' || key == 80) {  // Down arrow
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            highlightedOption = (highlightedOption + 1) % options.size();
-        }
-        else if (key == 13) {  // Enter key
-            // Trả về giá trị của phím được nhấn
-            PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
-            keyPressed = highlightedOption + 1; // Vì chỉ số của options bắt đầu từ 0, nên cần +1 để phù hợp với các trường hợp trong switch case
-            break;
-        }
-    }
-}
-
+// setup vi tri tao cong
 void CreateWinPoint() {
     int x, y;
     do {
@@ -702,40 +709,20 @@ void CreateWinPoint() {
 
 //====================================== Xu Ly File ====================================== 
 
-// doc file anh
-void displayFile(const string& fileName, int x, int y, int numColor) {
-    ifstream file(fileName); // mo file
-    string line; // bien nay se duyet qua tung dong trong file .txt
-
-    if (file.is_open()) {
-        while (getline(file, line)) {
-            gotoxy(x, y);
-            SetColor(numColor);
-            //system("color 80");
-
-            cout << line << endl;
-            y++;
-        }
-        file.close(); // dong file
-    }
-    else {
-        return;
-    }
-}
-
+// doc file anh 
 void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor) {
     ifstream file(filename);
     if (file.is_open()) {
-        std::string line;
-        for (int i = 0; i < height && std::getline(file, line); ++i) {
-            std::istringstream iss(line);
+        string line;
+        for (int i = 0; i < height && getline(file, line); ++i) {
+            istringstream iss(line);
             for (int j = 0; j < width && iss; ++j) {
-                std::string token;
-                if (std::getline(iss, token, ' ')) {
+                string token;
+                if (getline(iss, token, ' ')) {
                     try {
-                        image[i][j] = std::stoi(token);
+                        image[i][j] = stoi(token);
                     }
-                    catch (const std::invalid_argument&) {
+                    catch (const invalid_argument&) {
                         image[i][j] = backgroundcolor;
                     }
                 }
@@ -747,10 +734,11 @@ void readImageFromFile(int** image, int height, int width, const string& filenam
         file.close();
     }
     else {
-        std::cerr << "Unable to open file: " << filename << std::endl;
+        cerr << "Unable to open file: " << filename << endl;
     }
 }
 
+// hien thi anh
 void displayImage(int** image, int height, int width, int x, int y) {
     // In ra hình ảnh pixel có màu
     int bar1 = 177; // mã ANSI
@@ -841,6 +829,7 @@ void printTextUTF8(const string& filePath, int x, int y, int numColor) {
     file.close();
 }
 
+// ham doc toan bo file trong thu muc SaveGame (ham nay se truy cap thu muc)
 void loadSaveFiles(vector<string>& saveFiles) {
     saveFiles.clear(); // Clear the current list
 
@@ -858,8 +847,8 @@ void loadSaveFiles(vector<string>& saveFiles) {
 
     do {
         if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-            std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-            std::string filename = converter.to_bytes(ffd.cFileName);
+            wstring_convert<codecvt_utf8<wchar_t>, wchar_t> converter;
+            string filename = converter.to_bytes(ffd.cFileName);
             saveFiles.push_back(filename);
         }
     } while (FindNextFile(hFind, &ffd) != 0);
@@ -868,6 +857,11 @@ void loadSaveFiles(vector<string>& saveFiles) {
 }
 
 //====================================== Logic Game Functions ======================================
+
+// random
+int randomRange(int min, int max) {
+    return rand() % (max - min + 1) + min;
+}
 
 // random vi tri cua qua tao trong board game
 void createApple(vector<Point> WALL) {          //ĐÂY LÀ HÀM CREATE APPLE MỚI ĐỂ KHÔNG BỊ NGƯNG ĐỘNG THỜI GIAN
@@ -928,12 +922,13 @@ void createApple(vector<Point> WALL) {          //ĐÂY LÀ HÀM CREATE APPLE M�
     cout.flush();
 }
 
-// Kiem tra xem neu con ran an trung qua tao
+// Kiem tra neu cham vao WinPoint
 bool isOnWinPoint() {
     // vi tri duoi con ran trung voi vi tri cua WinPoint
     return snake[0].x == WinPoint.x && snake[0].y == WinPoint.y;
 }
 
+// kiem tra neu cham vao secondWP
 bool isOnSecondWP() {
     // vi tri duoi con ran trung voi vi tri cua Second WinPoint
     return snake[0].x == SecondWP.x && snake[0].y == SecondWP.y;
@@ -946,6 +941,11 @@ void growing() {
 
     MoveFirstChar(MSSV, CurrentSnake);
     MoveFirstChar(MSSV, CurrentSnake);
+
+    if (MSSV.empty()) {
+        MoveFirstChar(fullMSSV, CurrentSnake);
+        MoveFirstChar(fullMSSV, CurrentSnake);
+    }
 }
 
 // push vao con ran mssv
@@ -969,17 +969,6 @@ bool isHitWall(vector<Point> WALL) {
     }
     // neu dau con ran = 0 hoac = chieu cao or chieu rong
     return snake[0].x == 1 || snake[0].y == 0 || snake[0].x == WIDTH || snake[0].y == HEIGHT;
-}
-
-// animation khi con ran chet
-void drawSnakeDie() {
-    SetColor(228);
-    for (size_t i = 0; i < snake.size(); i++) {
-        Point p = snake[i]; //Lay vi tri phan tu con ran
-        gotoxy(p.x, p.y);
-        cout << "x";
-        Sleep(100);
-    }
 }
 
 // Kiem tra xem neu con ran an trung qua tao
@@ -2143,13 +2132,13 @@ void handleGameSaves() {
                             getline(load, Name);
 
                             // Read the second line for score
-                            std::string score_str;
+                            string score_str;
                             getline(load, score_str);
                             try {
-                                score = std::stoi(score_str);
+                                score = stoi(score_str);
                             }
-                            catch (std::invalid_argument& e) {
-                                std::cerr << "Invalid score: " << score_str << '\n';
+                            catch (invalid_argument& e) {
+                                cerr << "Invalid score: " << score_str << '\n';
                                 return;
                             }
 
@@ -2165,7 +2154,7 @@ void handleGameSaves() {
                         }
 
                         else {
-                            std::cerr << "Unable to open file";
+                            cerr << "Unable to open file";
                             return;
                         }
 
@@ -2258,8 +2247,8 @@ void readFileHighScore(Info inf[], int& n) {
 void excuteReadFile() {
     Info* inf = new Info[LimitPlayers]; // su dung cap phat dong de tranh tran bo nho stack
 
-    auto now = std::chrono::system_clock::now();
-    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    auto now = chrono::system_clock::now();
+    time_t now_time = chrono::system_clock::to_time_t(now);
 
     struct tm buf;
     localtime_s(&buf, &now_time);

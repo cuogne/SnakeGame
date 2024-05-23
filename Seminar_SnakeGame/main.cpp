@@ -16,7 +16,7 @@ int main() {
     readImageFromFile(snakePic, 21, 21, "FileText//SnakePic.txt", 15);
     displayImage(snakePic, 21, 21, 38, 5);
 
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    this_thread::sleep_for(chrono::seconds(3));
 
     showStartMenu();
     //startGame(1);
@@ -26,6 +26,7 @@ int main() {
     }
     delete[] snakePic;
 
+    // test
     //cout << (char)219 << " " << (char)220 << " " << (char)223;
 
     //printTextUTF8("check.txt", 20, 3, 233);

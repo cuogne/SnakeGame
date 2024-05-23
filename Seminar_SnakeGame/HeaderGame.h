@@ -59,51 +59,58 @@ enum class Direction { up, right, down, left };
 
 
 //====================================== Draw Game Functions ======================================
+
 vector<Point> Wall(int n);
-int randomRange(int min, int max);
 void drawBox();
-void drawButton(const std::string& text, bool highlighted, int xPos, int yPos);
-void drawMenu(const std::vector<std::string>& options, int highlightedOption, const int startX, const int startY);
-void drawSnake();
-void drawHeadnTail();
-void displayScoreInGame(int level);
-void displayHighScore(Info inf[], int n);
-void MENU(int& key);
+void drawButton(const string& text, bool highlighted, int xPos, int yPos);
+void drawMenu(const vector<string>& options, int highlightedOption, const int startX, const int startY);
 void NewGameandContinued(int& key);
 void RestartandBackMenu(int& keyPressed);
-void MoveFirstChar(string& source, string& dest);
-void printTextUTF8(const std::string& filePath, int x, int y, int numColor);
-
+void MENU(int& key);
 void drawGate(Point WP, bool OnHeight, bool Left, bool Up);
 void deleteGate_and_WP(Point& WP, bool OnHeight, bool Left, bool Up);
 void drawWall(vector<Point> WALL);
-void displayFile(const string& fileName, int x, int y, int numColor);
+void drawSnake();
+void drawSnakeDie();
+void drawHeadnTail();
+void displayScoreInGame(int level);
+void displayHighScore(Info inf[], int n);
+void CreateWinPoint();
+
+//====================================== Xu Ly File ====================================== 
+
 void readImageFromFile(int** image, int height, int width, const string& filename, int backgroundcolor);
 void displayImage(int** image, int height, int width, int x, int y);
+void printTextUTF8(const std::string& filePath, int x, int y, int numColor);
+void loadSaveFiles(vector<string>& saveFiles);
 
 //====================================== Logic Game Functions ======================================
 
+int randomRange(int min, int max);
 void createApple(vector<Point> WALL);
+bool isOnWinPoint();
+bool isOnSecondWP();
 void growing();
-bool isBiteItself();
+void MoveFirstChar(string& source, string& dest);
 bool isHitWall(vector<Point> WALL);
+bool isBiteItself();
 bool isAteApple();
 void move();
 int Adjust_speed(Direction direction, int level);
 
 //====================================== Menu Game Play Functions ======================================
-void startGame(int level);
-void ready();
+
 void showStartMenu();
+void ready();
 void inputInfoPlayer();
 void pauseGame(bool enough_score);
-void saveGame();
+void GetReady();
+void startGame(int level);
 void showEndMenu();
-void resetSnake(string temp, int score, string idsv, int level);
-
+void saveGame();
 void readSaveGame();
-void loadSaveFiles(std::vector<std::string>& saveFiles);
 void handleGameSaves();
+void resetSnake(string temp, int score, string idsv, int level);
 
 void readFileHighScore(Info inf[], int& n);
 void excuteReadFile();
