@@ -4,5 +4,3 @@
 - THE NAME OF PROJECT: SNAKE GAME
 - ADVISOR : TRUONG TOAN THINH
 
-
-- When I complete and report the project Seminar SnakeGame, I will fill it in here hehee ;-;

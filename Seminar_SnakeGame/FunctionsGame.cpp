@@ -212,7 +212,7 @@ void drawButton(const string& text, bool highlighted, int xPos, int yPos) {
     // Vẽ khung viền của nút button
     SetColor(borderColor); // Đặt màu sắc cho khung viền là màu mặc định
 
-    yPos += 8; // Dời các ô xuống 8 ô
+    yPos += 7; // Dời các ô xuống 8 ô
 
     SetColor(highlighted ? 10 : borderColor);
     gotoxy(xPos, yPos);
@@ -1330,7 +1330,7 @@ void inputInfoPlayer() {
                     cout << " ";
                 }
             }
-            
+
             // Input player's name
             gotoxy(40, 10);
             ShowConsoleCursor(TRUE);
@@ -1505,7 +1505,7 @@ void pauseGame(bool enough_score) {
                 break;
             }
         }
-        if (checkContinue == true){
+        if (checkContinue == true) {
             if (!enough_score) {
                 SetColor(225);
                 gotoxy(apple.x, apple.y);
@@ -1601,7 +1601,7 @@ void startGame(int level) {
     if (enough_score == false) {
         createApple(Wall(level)); // tao qua tao
     }
-    
+
     // neu level > 1 thi bat dau ve chuong ngai vat o cac man ke
     if (level > 1) {
         GetReady();
@@ -1632,7 +1632,7 @@ void startGame(int level) {
 
         speed = Adjust_speed(direction, level); // Adjust game speed based on level
 
-        if (_kbhit()) { 
+        if (_kbhit()) {
             char ch = _getch();
             ch = tolower(ch); // chuyen chu hoa thanh chu thuong de tranh loi capslock
             if (ch == 'a' && direction != Direction::right)
@@ -1798,7 +1798,7 @@ void resetSnake(string temp, int diem, string idsv, int level) {
     direction = Direction::right;
 }
 
-// ham save game (dang trong giai doan phat trien)
+// ham save game
 void saveGame() {
     // Draw the frame
     SetColor(228);
@@ -1923,11 +1923,42 @@ void readSaveGame() {
     bool checkSameFile = false;
 
     do {
-        cin >> file;
+        char yu;
+        file = "";
+        gotoxy(50, 12);
+        while (true) {
+            yu = _getch();
+            if (yu == '\r') { // '\r' is the Enter key
+                if (!file.empty()) {
+                    break;
+                }
+            }
+            else if ((yu == '\b' || yu == '\177')) { // '\b' is the Backspace key, '\177' is the Delete key
+                if (file.length() > 0) {
+                    SetColor(240);
+                    file.pop_back();
+                    cout << "\b \b"; // Erase the last character in the console
+                    gotoxy(30, 14);
+                    SetColor(116);
+                    cout << "                                                       "; // Clear the error message
+                    gotoxy(file.length() + 50, 12); // Move the cursor back to the input
+                }
+            }
+            else if (file.length() < 20) {
+                SetColor(240);
+                file.push_back(yu);
+                cout << yu;
+            }
+            else {
+                gotoxy(42, 14);
+                SetColor(79);
+                cout << "File name cannot exceed 20 characters";
+                gotoxy(70, 12);
+            }
+        }
         filePath = "SaveGame//" + file + ".txt";
         checkFile.open(filePath.c_str());
-        // kiem tra file trung ten trong thu muc
-
+        // Rest of the code...
         if (checkFile.good()) {
             SetColor(113);
             gotoxy(35, 14);
