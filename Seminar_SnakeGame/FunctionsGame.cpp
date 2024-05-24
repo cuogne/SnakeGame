@@ -1388,8 +1388,6 @@ void inputInfoPlayer() {
 
             resetSnake(CurrentSnake, 0, MSSV, 1); // Reset snake's state
 
-            SetColor(234);
-
             system("cls");
             setConsoleBackgroundColor(7);
             printTextUTF8("FileText//guide.txt", 5, 1, 113);
@@ -1705,9 +1703,12 @@ void showEndMenu() {
     excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     setConsoleBackgroundColor(7);
+    
     if (checkWin == true) {
         PlaySound(TEXT("Sound//victory.wav"), NULL, SND_ASYNC);
         printTextUTF8("FileText//victory.txt", 33, 2, 113);
+        checkWin = false;
+        level = 1;
     }
     else {
         PlaySound(TEXT("Sound//lose.wav"), NULL, SND_ASYNC);
@@ -2035,7 +2036,6 @@ void readSaveGame() {
     }
 
     if (!outputFile) {
-        cout << "khong the mo file" << endl;
         return;
     }
     if (saveFiles.size() > 20) {
@@ -2278,10 +2278,10 @@ void handleGameSaves() {
                         string filePath = "SaveGame//" + fileName;
                         const char* cFilePath = filePath.c_str();
                         if (remove(cFilePath) != 0) {
-                            perror("Error deleting file");
+                            //perror("Error deleting file");
                         }
                         else {
-                            cout << "File successfully deleted";
+                            //cout << "File successfully deleted";
                             // Remove the deleted file from the list
                             saveFiles.erase(saveFiles.begin() + currentFileIndex);
                             if (currentFileIndex > 0) {
