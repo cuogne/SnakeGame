@@ -4,3 +4,4 @@
 - THE NAME OF PROJECT: SNAKE GAME
 - ADVISOR : TRUONG TOAN THINH
 
+Link Youtube video DEMO game: https://www.youtube.com/watch?v=BgFtEHzorik
