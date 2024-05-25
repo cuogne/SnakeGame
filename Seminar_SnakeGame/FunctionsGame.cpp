@@ -263,7 +263,7 @@ void NewGameandContinued(int& keyPressed) {
 
     while (true) {
 
-        drawMenu(options, highlightedOption, 47, 2);
+        drawMenu(options, highlightedOption, 47, 3);
 
         int key = _getch();
 
@@ -292,7 +292,7 @@ void RestartandBackMenu(int& keyPressed) {
 
     while (true) {
 
-        drawMenu(options, highlightedOption, 47, 12);
+        drawMenu(options, highlightedOption, 47, 13);
 
         int key = _getch();
 
@@ -959,13 +959,17 @@ bool isOnSecondWP() {
 
 // tang do dai cho con ran khi no an trung apple
 void growing() {
-    snake.push_back(prevTail); // push_back vao duoi con ran
-    snake.push_back(prevTail);
+    if (!MSSV.empty()) {
+        snake.push_back(prevTail); // push_back vao duoi con ran
+        snake.push_back(prevTail);
 
-    MoveFirstChar(MSSV, CurrentSnake);
-    MoveFirstChar(MSSV, CurrentSnake);
+        MoveFirstChar(MSSV, CurrentSnake);
+        MoveFirstChar(MSSV, CurrentSnake);
+    }
+    else {
+        snake.push_back(prevTail); // push_back vao duoi con ran
+        snake.push_back(prevTail);
 
-    if (MSSV.empty()) {
         MoveFirstChar(fullMSSV, CurrentSnake);
         MoveFirstChar(fullMSSV, CurrentSnake);
     }
@@ -987,6 +991,7 @@ bool isHitWall(vector<Point> WALL) {
             for (int n = WALL[i].y; n <= WALL[i + 1].y; n++)
                 for (auto& point : snake)
                     if ((point.x == m) && (point.y == n)) return true;
+
     for (int i = 0; i < Wall_WinPoint.size(); i++) {
         if ((snake[0].x == Wall_WinPoint[i].x) && (snake[0].y == Wall_WinPoint[i].y)) return true;
     }
@@ -1190,7 +1195,7 @@ void showStartMenu() {
 
         case 5:					//BUTTON EXIT
         {
-            SetColor(228);
+            SetColor(116);
             gotoxy(38, 12);
             for (int i = 38; i < 78; i++) {
 
@@ -1214,7 +1219,7 @@ void showStartMenu() {
             }
 
             // Fill color inside the frame
-            SetColor(238);
+            SetColor(116);
             for (int i = 39; i < 78; i++) { // adjusted loop range
                 for (int j = 13; j < 20; j++) {
                     gotoxy(i, j);
@@ -1223,7 +1228,7 @@ void showStartMenu() {
             }
 
             gotoxy(45, 14); // subtracted 2 from x-coordinate
-            SetColor(228);
+            SetColor(116);
             cout << "Do you really want to quit?";
 
             int selectedButton = 0; // 0 for "YES", 1 for "NO"
@@ -1234,11 +1239,11 @@ void showStartMenu() {
             while (!quitConfirmed) {
                 // Update button colors based on the selected button
                 gotoxy(48, 18); // subtracted 2 from x-coordinate
-                SetColor(selectedButton == 0 ? 225 : 228);
+                SetColor(selectedButton == 0 ? 113 : 116);
                 cout << "YES";
 
                 gotoxy(65, 18); // subtracted 2 from x-coordinate
-                SetColor(selectedButton == 1 ? 225 : 228);
+                SetColor(selectedButton == 1 ? 113 : 116);
                 cout << "NO";
 
                 ch = _getch();
@@ -1703,7 +1708,7 @@ void showEndMenu() {
     excuteReadFile(); // luu diem (tat se kh luu vao file nua)
 
     setConsoleBackgroundColor(7);
-    
+
     if (checkWin == true) {
         PlaySound(TEXT("Sound//victory.wav"), NULL, SND_ASYNC);
         printTextUTF8("FileText//victory.txt", 33, 2, 113);
