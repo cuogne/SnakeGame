@@ -212,7 +212,7 @@ void drawButton(const string& text, bool highlighted, int xPos, int yPos) {
     // Vẽ khung viền của nút button
     SetColor(borderColor); // Đặt màu sắc cho khung viền là màu mặc định
 
-    yPos += 7; // Dời các ô xuống 8 ô
+    yPos += 7; // Dời các ô xuống 7 ô
 
     SetColor(highlighted ? 10 : borderColor);
     gotoxy(xPos, yPos);
@@ -1068,8 +1068,9 @@ void showStartMenu() {
 
     system("cls");
 
+    setConsoleBackgroundColor(7);
+
     for (;;) {
-        setConsoleBackgroundColor(7);
         printTextUTF8("FileText//logo.txt", 20, 1, 113);
         displayImage(snakePic2, 21, 21, 2, 9);
         displayImage(snakePic3, 21, 21, 76, 9);
@@ -1344,9 +1345,6 @@ void inputInfoPlayer() {
             SetColor(116);
             gotoxy(48, 20);
             cout << "Press <Enter> to continue";
-            cout << endl;
-            cout << endl;
-            cout << endl;
             for (int i = 50; i < 70; i++) {
                 SetColor(240);
                 gotoxy(i, 15);
@@ -1709,10 +1707,10 @@ void showEndMenu() {
 
     setConsoleBackgroundColor(7);
 
-    if (checkWin == true) {
+    if (checkWin == true) { // qua 4 man moi checkWin == true dc
         PlaySound(TEXT("Sound//victory.wav"), NULL, SND_ASYNC);
         printTextUTF8("FileText//victory.txt", 33, 2, 113);
-        checkWin = false;
+        checkWin = false; // dat lai trang thai
         level = 1;
     }
     else {
@@ -1788,7 +1786,7 @@ void resetSnake(string temp, int diem, string idsv, int level) {
     // Khởi tạo lại con rắn dựa trên chiều dài của CurrentSnake
     if (level == 4) {
         for (int i = 0; i < length; ++i) {
-            snake.push_back(Point{ WIDTH / 2 + 3 - i, HEIGHT / 2 - 10 }); // Khởi tạo con rắn theo chiều ngang từ (WIDTH / 2 + 3, HEIGHT / 2) giảm dần
+            snake.push_back(Point{ WIDTH / 2 + 3 - i, HEIGHT / 2 - 10 }); // neu la man 4 thi set phia tren
         }
     }
     else {
@@ -1934,6 +1932,10 @@ void readSaveGame() {
         gotoxy(50, 12);
         while (true) {
             yu = _getch();
+            if (yu == ' ') { // If the input character is a space
+                gotoxy(file.length() + 50, 12);
+                continue; // Skip the rest of the loop and start over
+            }
             if (yu == '\r') { // '\r' is the Enter key
                 if (!file.empty()) {
                     break;
@@ -1962,6 +1964,7 @@ void readSaveGame() {
                 gotoxy(70, 12);
             }
         }
+
         filePath = "SaveGame//" + file + ".txt";
         checkFile.open(filePath.c_str());
         // Rest of the code...
@@ -2166,7 +2169,7 @@ void handleGameSaves() {
 
 
         case '\r': // Enter key
-            SetColor(228);
+            SetColor(116);
             gotoxy(40, 10);
             for (int i = 40; i < 80; i++) {
 
@@ -2190,7 +2193,7 @@ void handleGameSaves() {
             }
 
             // Fill color inside the frame
-            SetColor(234);
+            SetColor(116);
             for (int i = 41; i < 80; i++) {
                 for (int j = 11; j < 18; j++) {
                     gotoxy(i, j);
@@ -2199,7 +2202,7 @@ void handleGameSaves() {
             }
 
             gotoxy(48, 12);
-            SetColor(229);
+            SetColor(117);
             cout << "Select the options below";
 
             int selectedButton = 0; // 0 for "PLAY", 1 for "DELETE", 2 for "BACK"
@@ -2210,15 +2213,15 @@ void handleGameSaves() {
             while (!quitConfirmed) {
                 // Update button colors based on the selected button
                 gotoxy(45, 16);
-                SetColor(selectedButton == 0 ? 225 : 228);
+                SetColor(selectedButton == 0 ? 113 : 116);
                 cout << "PLAY";
 
                 gotoxy(57, 16);
-                SetColor(selectedButton == 1 ? 225 : 228);
+                SetColor(selectedButton == 1 ? 113 : 116);
                 cout << "DELETE";
 
                 gotoxy(71, 16);
-                SetColor(selectedButton == 2 ? 225 : 228);
+                SetColor(selectedButton == 2 ? 113 : 116);
                 cout << "BACK";
 
                 ch = _getch();
