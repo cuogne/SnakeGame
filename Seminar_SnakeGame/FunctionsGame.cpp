@@ -7,9 +7,9 @@ const int WIDTH = 80;
 const int HEIGHT = 28;
 #define APPLE '0' ;
 
-string MSSV = "23120223231202242312022523120250";
+string MSSV = "23120223231202242312011323120250";
 string CurrentSnake = "71202132";
-string fullMSSV = "2312021723120223231202242312022523120250";
+string fullMSSV = "2312021723120223231202242312011323120250";
 Direction direction = Direction::right; // bien theo doi di chuyen cua con ran (mac dinh la right)
 
 Point apple;                            // bien dai dien cho vi tri cua qua tao
@@ -90,7 +90,7 @@ vector<Point> Wall_lv3{
 int direc = 1;
 void MoveWall_lv3() {
 
-    SetColor(228);
+    SetColor(116);
 
     gotoxy(Wall_lv3[0].x, Wall_lv3[0].y);
     cout << " ";
@@ -154,7 +154,7 @@ vector<Point> Wall(int n) {
 //====================================== Draw Game Functions ======================================
 // ve board game
 void drawBox() {
-    SetColor(228);
+    SetColor(116);
     // ve chieu dai
     for (int i = 1; i < 81; i++) {
         gotoxy(i, 0);
@@ -171,7 +171,7 @@ void drawBox() {
     }
 
     // -----------------------------------------------------
-    SetColor(225);
+    SetColor(113);
     gotoxy(82, 0);
     for (int i = 82; i < 118; i++) {
 
@@ -343,7 +343,7 @@ void MENU(int& keyPressed) {
 
 // ve cong qua man moi
 void drawGate(Point WP, bool OnHeight, bool Left, bool Up) {
-    SetColor(225);
+    SetColor(113);
     if (OnHeight) {
         if (Left) {
             Wall_WinPoint[0].x = WP.x - 1;      //Phia sau
@@ -524,7 +524,7 @@ void deleteGate_and_WP(Point& WP, bool OnHeight, bool Left, bool Up) {
 
 // ve tuong
 void drawWall(vector<Point> WALL) {
-    SetColor(228);
+    SetColor(116);
     for (int i = 0; i < WALL.size(); i += 2)
         for (int m = WALL[i].x; m <= WALL[i + 1].x; m++)
             for (int n = WALL[i].y; n <= WALL[i + 1].y; n++)
@@ -541,11 +541,11 @@ void drawWall(vector<Point> WALL) {
 // ve con ran
 void drawSnake() {
     for (size_t i = 0; i < snake.size(); i++) {
-        if (i == 0) SetColor(226);
-        else if (i == 8) SetColor(227);
-        else if (i == 16) SetColor(225);
-        else if (i == 24) SetColor(237);
-        else if (i == 32) SetColor(229);
+        if (i == 0) SetColor(114);
+        else if (i == 8) SetColor(115);
+        else if (i == 16) SetColor(113);
+        else if (i == 24) SetColor(125);
+        else if (i == 32) SetColor(117);
         Point p = snake[i]; // lay vi tri phan tu con ran
         gotoxy(p.x, p.y);
         cout << CurrentSnake[snake.size() - i - 1];
@@ -554,7 +554,7 @@ void drawSnake() {
 
 // animation khi con ran chet
 void drawSnakeDie() {
-    SetColor(228);
+    SetColor(116);
     for (size_t i = 0; i < snake.size(); i++) {
         Point p = snake[i]; //Lay vi tri phan tu con ran
         gotoxy(p.x, p.y);
@@ -566,40 +566,40 @@ void drawSnakeDie() {
 // ham xoa cai duoi phia sau con ran
 void drawHeadnTail() {
     gotoxy(prevTail.x, prevTail.y); // di toi duoi ran
-    SetColor(226);
+    SetColor(114);
     cout << ' ';                    // xoa cai tail cu
 }
 
 // In cac thong tin ben canh khung board game
 void displayScoreInGame(int level) {
-    SetColor(226);
+    SetColor(112);
     gotoxy(WIDTH + 7, 3);
     cout << "Level: ";
-    SetColor(237);
+    SetColor(113);
     cout << level;
 
-    SetColor(226);
+    SetColor(112);
     gotoxy(WIDTH + 7, 6);
     cout << "Your score: ";
-    SetColor(237);
+    SetColor(113);
     cout << score;
 
-    SetColor(226);
+    SetColor(112);
     gotoxy(WIDTH + 7, 9);
     cout << "Your name: ";
-    SetColor(237);
+    SetColor(113);
     cout << Name;
 
-    SetColor(228);
+    SetColor(116);
     gotoxy(84, 18);
     cout << "Press <P> to Pause Game";
 
-    SetColor(228);
+    SetColor(116);
     gotoxy(84, 22);
     cout << "MOVE SNAKE : A W S D";
 
     gotoxy(25, 29);
-    SetColor(224);
+    SetColor(112);
     cout << "FIT@HCMUS - 23CTT03 - GROUP 04";
 }
 
@@ -940,7 +940,7 @@ void createApple(vector<Point> WALL) {          //ĐÂY LÀ HÀM CREATE APPLE M�
     apple = chosenPosition;
 
     gotoxy(apple.x, apple.y);
-    SetColor(225);
+    SetColor(112);
     cout << APPLE;
     cout.flush();
 }
@@ -1054,7 +1054,7 @@ void showStartMenu() {
     }
 
     setConsoleBackgroundColor(7);
-    SetColor(7);
+    SetColor(113);
     int** snakePic2 = new int* [100];
     for (int i = 0; i < 100; ++i)
         snakePic2[i] = new int[100];
@@ -1063,8 +1063,8 @@ void showStartMenu() {
     for (int i = 0; i < 100; ++i)
         snakePic3[i] = new int[100];
 
-    readImageFromFile(snakePic2, 21, 21, "FileText//SnakePic2.txt", 15);
-    readImageFromFile(snakePic3, 21, 21, "FileText//SnakePic3.txt", 15);
+    readImageFromFile(snakePic2, 21, 21, "FileText//SnakePic2.txt", 113);
+    readImageFromFile(snakePic3, 21, 21, "FileText//SnakePic3.txt", 113);
 
     system("cls");
 
@@ -1107,7 +1107,6 @@ void showStartMenu() {
             // bat tat nhac nen
             system("cls");
             setConsoleBackgroundColor(7);
-            SetColor(7);
             printTextUTF8("FileText//setting.txt", 30, 2, 113);
             static int count = 1;
             gotoxy(47, 15); cout << "MUSIC";
@@ -1220,7 +1219,7 @@ void showStartMenu() {
             }
 
             // Fill color inside the frame
-            SetColor(116);
+            SetColor(113);
             for (int i = 39; i < 78; i++) { // adjusted loop range
                 for (int j = 13; j < 20; j++) {
                     gotoxy(i, j);
@@ -1295,23 +1294,23 @@ void ready() {
     //system("cls");
     PlaySound(TEXT("Sound//3-2-1.wav"), NULL, SND_ASYNC);
 
-    printTextUTF8("FileText//ba.txt", 37, 10, 225);
+    printTextUTF8("FileText//ba.txt", 37, 10, 113);
     Sleep(1000);
-    printTextUTF8("FileText//hai.txt", 37, 10, 225);
+    printTextUTF8("FileText//hai.txt", 37, 10, 113);
     Sleep(1000);
     for (int i = 37; i < 47; i++) {
         for (int j = 10; j < 18; j++) {
             gotoxy(i, j);
-            SetColor(234);
+            SetColor(122);
             cout << " ";
         }
     }
-    printTextUTF8("FileText//mot.txt", 37, 10, 225);
+    printTextUTF8("FileText//mot.txt", 37, 10, 113);
     Sleep(1000);
     for (int i = 37; i < 47; i++) {
         for (int j = 10; j < 18; j++) {
             gotoxy(i, j);
-            SetColor(234);
+            SetColor(122);
             cout << " ";
         }
     }
@@ -1386,7 +1385,7 @@ void inputInfoPlayer() {
                 }
             }
 
-            MSSV = "23120223231202242312022523120250";
+            MSSV = "23120223231202242312011323120250";
             CurrentSnake = "71202132";
 
             resetSnake(CurrentSnake, 0, MSSV, 1); // Reset snake's state
@@ -1400,7 +1399,7 @@ void inputInfoPlayer() {
                 ch = _getch();
             } while (ch != '\r');
 
-            setConsoleBackgroundColor(14);
+            setConsoleBackgroundColor(7);
             startGame(1);
             //ready();
             break;
@@ -1426,7 +1425,7 @@ void pauseGame(bool enough_score) {
     // 21 - 61
     // 10 - 18
     bool checkContinue = false;
-    SetColor(228);
+    SetColor(116);
     gotoxy(21, 10);
     for (int i = 21; i < 61; i++) {
 
@@ -1449,7 +1448,7 @@ void pauseGame(bool enough_score) {
         cout << verticalLine;
     }
     // Fill màu trong khung
-    SetColor(234);
+    SetColor(122);
     for (int i = 22; i < 61; i++) {
         for (int j = 11; j < 18; j++) {
             gotoxy(i, j);
@@ -1457,7 +1456,7 @@ void pauseGame(bool enough_score) {
         }
     }
     gotoxy(29, 12);
-    SetColor(229);
+    SetColor(117);
     cout << "Do you want to continue ?";
 
     int selectedButton = 0; // 0 for "YES", 1 for "NO"
@@ -1468,15 +1467,15 @@ void pauseGame(bool enough_score) {
     while (!quitConfirmed) {
         // Update button colors based on the selected button
         gotoxy(25, 16);
-        SetColor(selectedButton == 0 ? 225 : 228);
+        SetColor(selectedButton == 0 ? 113 : 116);
         cout << "SAVE";
 
         gotoxy(39, 16);
-        SetColor(selectedButton == 1 ? 225 : 228);
+        SetColor(selectedButton == 1 ? 113 : 116);
         cout << "QUIT";
 
         gotoxy(50, 16);
-        SetColor(selectedButton == 2 ? 225 : 228);
+        SetColor(selectedButton == 2 ? 113 : 116);
         cout << "CONTINUE";
 
         ch = _getch();
@@ -1508,7 +1507,7 @@ void pauseGame(bool enough_score) {
         }
         if (checkContinue == true) {
             if (!enough_score) {
-                SetColor(225);
+                SetColor(112);
                 gotoxy(apple.x, apple.y);
                 cout << APPLE;
             }
@@ -1528,7 +1527,7 @@ void pauseGame(bool enough_score) {
 // 3 giay chuan bi
 void GetReady() {
     gotoxy(35, 13);
-    SetColor(225);
+    SetColor(113);
     cout << "GET READY..." << endl;
     // doi 3 giay de BAT DAU
     for (size_t i = 3; i > 0; i--) {
@@ -1586,7 +1585,7 @@ void startGame(int level) {
         move();
     }
 
-    setConsoleBackgroundColor(14);
+    setConsoleBackgroundColor(7);
     ShowConsoleCursor(false);
 
     drawBox(); // ve khung
@@ -1759,7 +1758,7 @@ void showEndMenu() {
         switch (key) {
         case 1:					//BUTTON START
         {
-            MSSV = "23120223231202242312022523120250";
+            MSSV = "23120223231202242312011323120250";
             CurrentSnake = "71202132";
             resetSnake(CurrentSnake, 0, MSSV, 1);
             setConsoleBackgroundColor(14);
@@ -1797,7 +1796,7 @@ void resetSnake(string temp, int diem, string idsv, int level) {
 
     // Reset các biến khác
     MSSV = idsv;
-    fullMSSV = "2312021723120223231202242312022523120250";
+    fullMSSV = "2312021723120223231202242312011323120250";
     score = diem;
     direction = Direction::right;
 }
@@ -1805,7 +1804,7 @@ void resetSnake(string temp, int diem, string idsv, int level) {
 // ham save game
 void saveGame() {
     // Draw the frame
-    SetColor(228);
+    SetColor(116);
     gotoxy(21, 10);
     for (int i = 21; i < 61; i++) {
 
@@ -1838,7 +1837,7 @@ void saveGame() {
     }
 
     gotoxy(29, 12);
-    SetColor(229);
+    SetColor(117);
     cout << "Do you want to save game?";
 
     int selectedButton = 0; // 0 for "YES", 1 for "NO"
@@ -1849,11 +1848,11 @@ void saveGame() {
     while (!quitConfirmed) {
         // Update button colors based on the selected button
         gotoxy(30, 16);
-        SetColor(selectedButton == 0 ? 225 : 228);
+        SetColor(selectedButton == 0 ? 113 : 116);
         cout << "YES";
 
         gotoxy(50, 16);
-        SetColor(selectedButton == 1 ? 225 : 228);
+        SetColor(selectedButton == 1 ? 113 : 116);
         cout << "NO";
 
         ch = _getch();
@@ -1886,7 +1885,7 @@ void saveGame() {
         }
     }
 
-    SetColor(225);
+    SetColor(113);
     gotoxy(apple.x, apple.y);
     cout << APPLE;
 }
@@ -1894,7 +1893,7 @@ void saveGame() {
 // doc va luu file
 void readSaveGame() {
     system("cls");
-
+    setConsoleBackgroundColor(0);
     string file;
 
     for (int i = 5; i < 25; i++) {
