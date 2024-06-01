@@ -1320,6 +1320,7 @@ void ready() {
 // Man hinh nhap thong tin nguoi choi
 void inputInfoPlayer() {
     system("cls");
+    setConsoleBackgroundColor(7);
     int key = 0;
     for (;;) {
         NewGameandContinued(key);
@@ -1328,10 +1329,11 @@ void inputInfoPlayer() {
         {
             system("cls");
             // 40 - 10
+            setConsoleBackgroundColor(7);
             for (int i = 5; i < 25; i++) {
                 for (int j = 20; j < 100; j++) {
                     gotoxy(j, i);
-                    SetColor(116);
+                    SetColor(233);
                     cout << " ";
                 }
             }
@@ -1339,9 +1341,9 @@ void inputInfoPlayer() {
             // Input player's name
             gotoxy(40, 10);
             ShowConsoleCursor(TRUE);
-            SetColor(116);
+            SetColor(225);
             cout << "Insert your name (Maximum 20 characters): ";
-            SetColor(116);
+            SetColor(225);
             gotoxy(48, 20);
             cout << "Press <Enter> to continue";
             for (int i = 50; i < 70; i++) {
@@ -1355,30 +1357,38 @@ void inputInfoPlayer() {
             gotoxy(50, 15);
             while (true) {
                 yu = _getch();
+
+                if (yu == '\t') {
+                    continue;
+                }
+
                 if (yu == '\r') { // '\r' is the Enter key
                     if (!Name.empty()) {
                         PlaySound(TEXT("Sound//click1.wav"), NULL, SND_ASYNC);
                         break;
                     }
                 }
+
                 else if ((yu == '\b' || yu == '\177')) { // '\b' is the Backspace key, '\177' is the Delete key
                     if (Name.length() > 0) {
                         SetColor(240);
                         Name.pop_back();
                         cout << "\b \b"; // Erase the last character in the console
                         gotoxy(30, 17);
-                        SetColor(116);
+                        SetColor(228);
                         cout << "                                                       "; // Clear the error message
                         gotoxy(Name.length() + 50, 15); // Move the cursor back to the input
                     }
                 }
+
                 else if (Name.length() < 20) {
                     SetColor(240);
                     Name.push_back(yu);
                     cout << yu;
                 }
+
                 else {
-                    gotoxy(44, 17);
+                    gotoxy(45, 17);
                     SetColor(79);
                     cout << "Name cannot exceed 20 characters";
                     gotoxy(70, 15);
@@ -1410,12 +1420,14 @@ void inputInfoPlayer() {
             handleGameSaves();
             break;
         }
+
         case 3:
         {
             system("cls");
             showStartMenu();
             break;
         }
+
         }
     }
 }
@@ -1712,6 +1724,7 @@ void showEndMenu() {
         checkWin = false; // dat lai trang thai
         level = 1;
     }
+
     else {
         PlaySound(TEXT("Sound//lose.wav"), NULL, SND_ASYNC);
         printTextUTF8("FileText//youlose.txt", 28, 1, 116);
@@ -1893,16 +1906,17 @@ void saveGame() {
 // doc va luu file
 void readSaveGame() {
     system("cls");
-    setConsoleBackgroundColor(0);
+    setConsoleBackgroundColor(7);
     string file;
 
     for (int i = 5; i < 25; i++) {
         for (int j = 20; j < 100; j++) {
             gotoxy(j, i);
-            SetColor(116);
+            SetColor(225);
             cout << " ";
         }
     }
+    SetColor(228);
     gotoxy(35, 20);
     cout << "Luu y: Ten file nhap vao khong co khoang trang !!!" << endl;
     gotoxy(35, 21);
@@ -1911,9 +1925,9 @@ void readSaveGame() {
     // Input player's name
     gotoxy(50, 10);
     ShowConsoleCursor(TRUE);
-    SetColor(116);
+    SetColor(225);
     cout << "Nhap ten file de luu: " << endl;
-    SetColor(116);
+    SetColor(225);
     for (int i = 50; i < 70; i++) {
         SetColor(240);
         gotoxy(i, 12);
@@ -1946,7 +1960,7 @@ void readSaveGame() {
                     file.pop_back();
                     cout << "\b \b"; // Erase the last character in the console
                     gotoxy(30, 14);
-                    SetColor(116);
+                    SetColor(228);
                     cout << "                                                       "; // Clear the error message
                     gotoxy(file.length() + 50, 12); // Move the cursor back to the input
                 }
@@ -1968,7 +1982,7 @@ void readSaveGame() {
         checkFile.open(filePath.c_str());
         // Rest of the code...
         if (checkFile.good()) {
-            SetColor(113);
+            SetColor(224);
             gotoxy(35, 14);
             // File already exists, ask for a different name
             cout << "File da ton tai. Ban co muon ghi de len file nay?";
@@ -2013,11 +2027,11 @@ void readSaveGame() {
                 // Clear the overwrite question
                 gotoxy(35, 14);
                 for (int i = 35; i < 100; i++) {
-                    SetColor(116); // Set to background color
+                    SetColor(224); // Set to background color
                     cout << " ";
                 }
                 gotoxy(55, 15);
-                SetColor(116);
+                SetColor(224);
                 cout << "     ";
                 gotoxy(55, 16);
                 cout << "     ";
@@ -2062,7 +2076,7 @@ void readSaveGame() {
     outputFile.close();
 
     // in thong bao sau khi nhap thanh cong
-    SetColor(113);
+    SetColor(226);
     gotoxy(35, 18);
     cout << "Da luu file thanh cong. An phim enter de tiep tuc." << endl;
     char hi;
@@ -2071,7 +2085,7 @@ void readSaveGame() {
     } while (hi != '\r');  // '\r' là mã ASCII của phím Enter
 
     // Chờ người dùng nhấn enter
-    cin.ignore();  // ignore the newline character left in the buffer by the previous input
+    //cin.ignore();  // ignore the newline character left in the buffer by the previous input
 
     showStartMenu();
 }
