@@ -1774,7 +1774,7 @@ void showEndMenu() {
             MSSV = "23120223231202242312011323120250";
             CurrentSnake = "71202132";
             resetSnake(CurrentSnake, 0, MSSV, 1);
-            setConsoleBackgroundColor(14);
+            setConsoleBackgroundColor(7);
             startGame(1);
             break;
         }
@@ -2287,7 +2287,7 @@ void handleGameSaves() {
 
                         system("cls");
 
-                        SetColor(234);
+                        SetColor(112);
                         checkSave = true; // bao lai voi startGame rang file nay mo tu saveGame
                         resetSnake(CurrentSnake, score, MSSV, level);
                         startGame(level);
